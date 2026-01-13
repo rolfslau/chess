@@ -8,6 +8,9 @@ import java.util.Collection;
  * Note: You can add to this class, but you may not alter
  * signature of the existing methods.
  */
+
+// don't make a class for each kind of piece -- problems when you need to add it to the database
+
 public class ChessPiece {
 
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
@@ -46,6 +49,8 @@ public class ChessPiece {
      *
      * @return Collection of valid moves
      */
+
+    // dr robins vid tells us the better way to do this without subclasses
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         throw new RuntimeException("Not implemented");
     }

@@ -9,6 +9,7 @@ package chess;
 public class ChessBoard {
 
     public ChessBoard() {
+        // we can represent the chess board as a 2 dimensional array
         
     }
 
@@ -19,6 +20,8 @@ public class ChessBoard {
      * @param piece    the piece to add
      */
     public void addPiece(ChessPosition position, ChessPiece piece) {
+
+
         throw new RuntimeException("Not implemented");
     }
 
