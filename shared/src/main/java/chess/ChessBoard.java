@@ -10,7 +10,7 @@ public class ChessBoard {
 
     public ChessBoard() {
         // we can represent the chess board as a 2 dimensional array
-        
+        ChessPiece[] this.board; // should this start filled in like the start of a game?
     }
 
     /**
@@ -33,7 +33,8 @@ public class ChessBoard {
      * position
      */
     public ChessPiece getPiece(ChessPosition position) {
-        throw new RuntimeException("Not implemented");
+
+        return board[position.row][position.col]; // is this even close?
     }
 
     /**
