@@ -74,4 +74,7 @@ PHASE 0 - CHESS MOVES
 + take calculation of how a piece moves and put it in separate class
   + move calculator that has a common parent class
   + calculator subclass for each piece 
++ create an interface/abstract class/base class [pieceMovesCalculator]
+  + create a set of classes who calculate piece movements
+  + 
 

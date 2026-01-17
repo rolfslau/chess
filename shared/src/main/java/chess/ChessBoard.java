@@ -8,9 +8,10 @@ package chess;
  */
 public class ChessBoard {
 
+    ChessPiece[][] squares = new ChessPiece[8][8];
     public ChessBoard() {
         // we can represent the chess board as a 2 dimensional array
-        ChessPiece[] this.board; // should this start filled in like the start of a game?
+//        ChessPiece[] this.board; // should this start filled in like the start of a game?
     }
 
     /**
@@ -20,9 +21,7 @@ public class ChessBoard {
      * @param piece    the piece to add
      */
     public void addPiece(ChessPosition position, ChessPiece piece) {
-
-
-        throw new RuntimeException("Not implemented");
+        squares[position.getRow()-1][position.getColumn()-1] = piece;
     }
 
     /**
@@ -33,8 +32,8 @@ public class ChessBoard {
      * position
      */
     public ChessPiece getPiece(ChessPosition position) {
-
-        return board[position.row][position.col]; // is this even close?
+        return squares[position.getRow()-1][position.getColumn()-1];
+//        return board[position.row][position.col]; // is this even close?
     }
 
     /**

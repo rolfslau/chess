@@ -7,8 +7,8 @@ package chess;
  * signature of the existing methods.
  */
 public class ChessPosition {
-    private int row;
-    private int col;
+    private final int row;
+    private final int col;
 
     public ChessPosition(int row, int col) {
         this.row = row;
@@ -20,7 +20,6 @@ public class ChessPosition {
      * 1 codes for the bottom row
      */
     public int getRow() {
-
         return row;
     }
 
@@ -29,7 +28,12 @@ public class ChessPosition {
      * 1 codes for the left row
      */
     public int getColumn() {
-
         return col;
+    }
+
+
+    @Override
+    public String toString() {
+        return String.format("%d%d", row, col);
     }
 }
