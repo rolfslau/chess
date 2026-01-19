@@ -41,10 +41,15 @@ public class ChessBoard {
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
-
+        ChessPiece.PieceType[] order = {ChessPiece.PieceType.ROOK, ChessPiece.PieceType.KNIGHT,
+                ChessPiece.PieceType.BISHOP, ChessPiece.PieceType.QUEEN, ChessPiece.PieceType.KING,
+                ChessPiece.PieceType.BISHOP, ChessPiece.PieceType.KNIGHT, ChessPiece.PieceType.ROOK};
         // initialize black board
         for(int i = 0; i < 8; i++) {
             board[1][i] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN);
+        }
+        for (int i = 0; i < 8; i++) {
+            board[0][i] = new ChessPiece(ChessGame.TeamColor.BLACK, order[i]);
         }
 
         //initialize white board
