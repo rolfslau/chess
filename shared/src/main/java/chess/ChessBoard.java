@@ -1,5 +1,8 @@
 package chess;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 /**
  * A chessboard that can hold and rearrange chess pieces.
  * <p>
@@ -47,6 +50,8 @@ public class ChessBoard {
                 ChessPiece.PieceType.BISHOP, ChessPiece.PieceType.QUEEN, ChessPiece.PieceType.KING,
                 ChessPiece.PieceType.BISHOP, ChessPiece.PieceType.KNIGHT, ChessPiece.PieceType.ROOK};
 
+        board = new ChessPiece[8][8];
+
         // initialize black board
         for (int i = 0; i < 8; i++) {
             board[1][i] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN);
@@ -64,12 +69,26 @@ public class ChessBoard {
         }
 
         // clear the rest of the board
-        for (int i = 2; i < 6; i++) {
-            for (int j = 0; j < 8; j++) {
-                board[i][j] = null;
+//        for (int i = 2; i < 6; i++) {
+//            for (int j = 0; j < 8; j++) {
+//                board[i][j] = null;
             }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
         }
-        // what if we create an empty board first and then add in the pieces? that way i don't have to
-        // go through and clear anything?
+        ChessBoard that = (ChessBoard) o;
+        return Objects.deepEquals(board, that.board);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.deepHashCode(board);
     }
 }
+        // what if we create an empty board first and then add in the pieces? that way i don't have to
+        // go through and clear anything?
+
+
