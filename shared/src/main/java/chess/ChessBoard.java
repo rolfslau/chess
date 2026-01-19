@@ -56,6 +56,8 @@ public class ChessBoard {
         for(int i = 0; i < 8; i++) {
             board[6][i] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
         }
-        throw new RuntimeException("Not implemented");
+        for (int i = 0; i < 8; i++) {
+            board[7][i] = new ChessPiece(ChessGame.TeamColor.WHITE, order[i]);
+        }
     }
 }
