@@ -41,11 +41,14 @@ public class ChessBoard {
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
+
+        // order of pieces so that I don't have to hard code each and every one
         ChessPiece.PieceType[] order = {ChessPiece.PieceType.ROOK, ChessPiece.PieceType.KNIGHT,
                 ChessPiece.PieceType.BISHOP, ChessPiece.PieceType.QUEEN, ChessPiece.PieceType.KING,
                 ChessPiece.PieceType.BISHOP, ChessPiece.PieceType.KNIGHT, ChessPiece.PieceType.ROOK};
+
         // initialize black board
-        for(int i = 0; i < 8; i++) {
+        for (int i = 0; i < 8; i++) {
             board[1][i] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN);
         }
         for (int i = 0; i < 8; i++) {
@@ -53,11 +56,20 @@ public class ChessBoard {
         }
 
         //initialize white board
-        for(int i = 0; i < 8; i++) {
+        for (int i = 0; i < 8; i++) {
             board[6][i] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
         }
         for (int i = 0; i < 8; i++) {
             board[7][i] = new ChessPiece(ChessGame.TeamColor.WHITE, order[i]);
         }
+
+        // clear the rest of the board
+        for (int i = 2; i < 6; i++) {
+            for (int j = 0; j < 8; j++) {
+                board[i][j] = null;
+            }
+        }
+        // what if we create an empty board first and then add in the pieces? that way i don't have to
+        // go through and clear anything?
     }
 }
