@@ -8,9 +8,9 @@ package chess;
  */
 public class ChessBoard {
 
-    ChessPiece[][] squares = new ChessPiece[8][8];
+    ChessPiece[][] board = new ChessPiece[8][8];
     public ChessBoard() {
-        // we can represent the chess board as a 2 dimensional array
+        // we can represent the chess board as a 2-dimensional array
 //        ChessPiece[] this.board; // should this start filled in like the start of a game?
     }
 
@@ -21,7 +21,7 @@ public class ChessBoard {
      * @param piece    the piece to add
      */
     public void addPiece(ChessPosition position, ChessPiece piece) {
-        squares[position.getRow()-1][position.getColumn()-1] = piece;
+        board[position.getRow()-1][position.getColumn()-1] = piece;
     }
 
     /**
@@ -32,7 +32,7 @@ public class ChessBoard {
      * position
      */
     public ChessPiece getPiece(ChessPosition position) {
-        return squares[position.getRow()-1][position.getColumn()-1];
+        return board[position.getRow()-1][position.getColumn()-1];
 //        return board[position.row][position.col]; // is this even close?
     }
 
@@ -41,6 +41,16 @@ public class ChessBoard {
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
+
+        // initialize black board
+        for(int i = 0; i < 8; i++) {
+            board[1][i] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN);
+        }
+
+        //initialize white board
+        for(int i = 0; i < 8; i++) {
+            board[6][i] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
+        }
         throw new RuntimeException("Not implemented");
     }
 }
