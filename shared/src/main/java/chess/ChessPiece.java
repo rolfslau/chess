@@ -62,14 +62,22 @@ public class ChessPiece {
         ChessPiece piece = board.getPiece(myPosition);
         // look up a switch statement
         // make an instance of the class first, and then use that instance for the calculations
-//        if (piece.getPieceType() == PieceType.ROOK) { return RookMovesCalc(myPosition); }
-//        else if (piece.getPieceType() == PieceType.BISHOP) { return BishMovesCalc(myPosition); }
-//        else if (piece.getPieceType() == PieceType.KNIGHT) { return KnightMovesCalc(myPosition); }
-//        else if (piece.getPieceType() == PieceType.QUEEN) { return QueenMovesCalc(myPosition); }
-//        else if (piece.getPieceType() == PieceType.KING) { return KingMovesCalc(myPosition); }
-//        else if (piece.getPieceType() == PieceType.PAWN) { return PawnMovesCalc(myPosition); }
-//        else { return List.of(); }
-        return List.of();
+        switch (piece.getPieceType()) {
+            case PAWN:
+                return PawnMovesCalc.getMoves(myPosition);
+            case ROOK:
+                return RookMovesCalc.getMoves(myPosition);
+            case KNIGHT:
+                return KnightMovesCalc.getMoves(myPosition);
+            case KING:
+                return KingMovesCalc.getMoves(myPosition);
+            case QUEEN:
+                return QueenMovesCalc.getMoves(myPosition);
+            case BISHOP:
+                return BishopMovesCalc.getMoves(myPosition);
+            default:
+                return List.of();
+        }
 //        if (piece.getPieceType() == PieceType.BISHOP) {
 //            return list.of(new ChessMove(new ChessPosition()));
 //        }
