@@ -65,6 +65,15 @@ JAVA BASICS
   + you can print a backspace! "\b"
 + ARRAYS OF ARRAYS
 + argument list does not contain the name of the program
++ PACKAGES IMPORTS AND CLASSPATH
+  + packages - provide a way to organize classes into logical groups (denoted by a statement at the top of a file)
+  + package structure needs to match folder structure
+  + package becomes part of class name
+  + imports allow you to shorten the name so you don't have to type the whole thing every time
+  + "*" imports all classes in the package but not subpackages
+  + you don't need to import java.lang or classes in your same package
+  + classpath - starting point for all of your packages - colon separated
+  + classpath is basically all the places your program will look for things
 
 
 PHASE 0 - CHESS MOVES
@@ -76,5 +85,27 @@ PHASE 0 - CHESS MOVES
   + calculator subclass for each piece 
 + create an interface/abstract class/base class [pieceMovesCalculator]
   + create a set of classes who calculate piece movements
-  + 
+
+
+CLASSES AND OBJECTS:
++ classes - compile time things, objects - runtime things
++ objects are created with the 'new' keyword
++ references are places memories that hold memory addresses - tell you where an object is in memory
++ objects are allocated on the heap, references on the stack 
++ instance variables - each object gets its own copy of all the instance vars in the class
++ static variables - associated with the class not with instances (ex: MATH.pi)
++ instance methods - associated with a specific instance/object (invoked fom a reference to that instance)
++ static methods - associated with a class (not an instance) (ex: MATH.pow() doesn't require an instance)
+
+ACCESSORS AND MUTATORS
++ (getter and setter)
++ accessor - get val, mutator - set val
++ when you create a class, make instance vars private so only instances can access them
+
+CONSTRUCTORS
++ constructor name must match class name
++ like a method without a return type
++ classes can have multiple constructors 
+  + you might have multiple different requirements that still constitute an instance
++ every constructor calls another constructor
 
