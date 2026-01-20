@@ -60,6 +60,13 @@ public class ChessPiece {
     // dr robins vid tells us the better way to do this without subclasses
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         ChessPiece piece = board.getPiece(myPosition);
+        if (piece.getPieceType() == PieceType.ROOK) { return RookMovesCalc(myPosition); }
+        else if (piece.getPieceType() == PieceType.BISHOP) { return BishMovesCalc(myPosition); }
+        else if (piece.getPieceType() == PieceType.KNIGHT) { return KnightMovesCalc(myPosition); }
+        else if (piece.getPieceType() == PieceType.QUEEN) { return QueenMovesCalc(myPosition); }
+        else if (piece.getPieceType() == PieceType.KING) { return KingMovesCalc(myPosition); }
+        else if (piece.getPieceType() == PieceType.PAWN) { return PawnMovesCalc(myPosition); }
+        else { return List.of(); }
         return List.of();
 //        if (piece.getPieceType() == PieceType.BISHOP) {
 //            return list.of(new ChessMove(new ChessPosition()));
