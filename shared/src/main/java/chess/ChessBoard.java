@@ -54,18 +54,18 @@ public class ChessBoard {
 
         // initialize black board
         for (int i = 0; i < 8; i++) {
-            board[1][i] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN);
+            board[1][i] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
         }
         for (int i = 0; i < 8; i++) {
-            board[0][i] = new ChessPiece(ChessGame.TeamColor.BLACK, order[i]);
+            board[0][i] = new ChessPiece(ChessGame.TeamColor.WHITE, order[i]);
         }
 
         //initialize white board
         for (int i = 0; i < 8; i++) {
-            board[6][i] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
+            board[6][i] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN);
         }
         for (int i = 0; i < 8; i++) {
-            board[7][i] = new ChessPiece(ChessGame.TeamColor.WHITE, order[i]);
+            board[7][i] = new ChessPiece(ChessGame.TeamColor.BLACK, order[i]);
         }
 
         // clear the rest of the board
@@ -86,6 +86,19 @@ public class ChessBoard {
     @Override
     public int hashCode() {
         return Arrays.deepHashCode(board);
+    }
+
+    @Override
+    public String toString() {
+        String string = "";
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; i < 8; i++) {
+                string = string + board[i][j];
+            }
+        }
+
+        return "ChessBoard{" + string;
+
     }
 }
         // what if we create an empty board first and then add in the pieces? that way i don't have to
