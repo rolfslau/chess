@@ -10,14 +10,15 @@ public class BishopMovesCalc {
         if (color == ChessGame.TeamColor.WHITE) {
             for (int i = 1; i + position.getRow() < 8 && i + position.getColumn() < 8; i++) {
                 ChessPosition newPos = new ChessPosition(position.getRow() + i, position.getColumn() + i);
-                if (board.getPiece(newPos).getTeamColor() == ChessGame.TeamColor.BLACK) {
+                if (board.getPiece(newPos).getTeamColor() == ChessGame.TeamColor.WHITE) { break; }
+                if (board.getPiece(newPos) == null) {
+                    ChessMove muv = new ChessMove(position, newPos, null);
+                    moves.add(muv);
+                }
+                else if (board.getPiece(newPos).getTeamColor() == ChessGame.TeamColor.BLACK) {
                     ChessMove muv = new ChessMove(position, newPos, null);
                     moves.add(muv);
                     break;
-                }
-                else if (board.getPiece(newPos).getPieceType() == null) {
-                    ChessMove muv = new ChessMove(position, newPos, null);
-                    moves.add(muv);
                 }
                 else { break; }
             }
@@ -25,18 +26,28 @@ public class BishopMovesCalc {
         else {
             for (int i = 1; position.getRow()-i > 0 && position.getColumn()-i > 0; i--) {
                 ChessPosition newPos = new ChessPosition(position.getRow() + i, position.getColumn() + i);
-                if (board.getPiece(newPos).getTeamColor() == ChessGame.TeamColor.WHITE) {
+                if (board.getPiece(newPos) == null) {
+                    ChessMove muv = new ChessMove(position, newPos, null);
+                    moves.add(muv);
+                }
+                else if (board.getPiece(newPos).getTeamColor() == ChessGame.TeamColor.WHITE) {
                     ChessMove muv = new ChessMove(position, newPos, null);
                     moves.add(muv);
                     break;
-                }
-                else if (board.getPiece(newPos).getPieceType() == null) {
-                    ChessMove muv = new ChessMove(position, newPos, null);
-                    moves.add(muv);
                 }
                 else { break; }
             }
         }
         return moves;
+    }
+
+    public ChessMove findMove(ChessBoard board, ChessPosition pos, ChessPosition newPos) {
+        if (board.getPiece(newPos) == null) {
+             return new ChessMove(pos, newPos, null);
+        }
+        else if (board.getPiece(newPos).getTeamColor() == ChessGame.TeamColor.BLACK) {
+            return new ChessMove(pos, newPos, null);
+        }
+        else { return; }
     }
 }
