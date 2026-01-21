@@ -64,7 +64,7 @@ public class PawnMovesCalc {
                 // regular move
                 else {
                     ChessPosition newPos = new ChessPosition(pos.getRow() + 1, pos.getColumn());
-                    if (inBounds(newPos) && notBlocked(newPos)) {
+                    if (inBounds(newPos) && notBlocked(board, newPos, color)) {
                         muvs.add(new ChessMove(pos, newPos, null));
                     }
                 }
@@ -90,7 +90,7 @@ public class PawnMovesCalc {
                 // regular move
                 else {
                     ChessPosition newPos = new ChessPosition(pos.getRow() - 1, pos.getColumn());
-                    if (inBounds(newPos) && notBlocked(newPos)) {
+                    if (inBounds(newPos) && notBlocked(board, newPos, color)) {
                         muvs.add(new ChessMove(pos, newPos, null));
                     }
                 }
@@ -106,5 +106,42 @@ public class PawnMovesCalc {
         else if {}
 
         return muvs;
+    }
+
+    public static Boolean inBounds(ChessPosition pos) {
+        return pos.getRow() <=8 && pos.getRow() > 0 && pos.getColumn() <=8 && pos.getColumn() > 0;
+    }
+
+    public static Boolean notBlocked(ChessBoard board, ChessPosition pos, ChessGame.TeamColor color) {
+        return board.getPiece(pos) == null;
+    }
+
+    public static Boolean FirstMove(ChessBoard board, ChessPosition pos, ChessGame.TeamColor color) {
+        ChessPosition newPos;
+        ChessPosition newPos2;
+        if (pos.getRow() == 2 && color == ChessGame.TeamColor.WHITE) {
+            newPos = new ChessPosition(pos.getRow() + 1, pos.getColumn());
+            newPos2 = new ChessPosition(pos.getRow() + 2, pos.getColumn());
+        }
+        else if (pos.getRow() == 7 && color == ChessGame.TeamColor.BLACK) {
+            newPos = new ChessPosition(pos.getRow() - 1, pos.getColumn());
+            newPos2 = new ChessPosition(pos.getRow() - 2, pos.getColumn());
+        }
+        else { return false; }
+
+        return inBounds(newPos) && inBounds(newPos2) && notBlocked(board, newPos, color) && notBlocked(board, newPos2, color);
+    }
+
+    public static Boolean Promote(ChessBoard board, ChessPosition pos, ChessGame.TeamColor color) {
+        ChessPosition newPos;
+        if (pos.getRow() == 2 && color == ChessGame.TeamColor.BLACK) {
+            newPos = new ChessPosition(pos.getRow() - 1, pos.getColumn());
+        }
+        else if (pos.getRow() == 7 && color == ChessGame.TeamColor.WHITE) {
+            newPos = new ChessPosition(pos.getRow() + 1, pos.getColumn());
+        }
+        else { return false; }
+
+        return notBlocked(board, newPos, color);
     }
 }
