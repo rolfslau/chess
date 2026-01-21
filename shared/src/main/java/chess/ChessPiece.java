@@ -66,15 +66,15 @@ public class ChessPiece {
             case PAWN:
                 return PawnMovesCalc.getMoves(board, myPosition, piece.pieceColor);
             case ROOK:
-                return RookMovesCalc.getMoves(board, myPosition, piece.pieceColor);
+                return RookMovesCalc.getMoves(board, myPosition);
             case KNIGHT:
-                return KnightMovesCalc.getMoves(board, myPosition, piece.pieceColor);
+                return KnightMovesCalc.getMoves(board, myPosition);
             case KING:
-                return KingMovesCalc.getMoves(board, myPosition, piece.pieceColor);
+                return KingMovesCalc.getMoves(board, myPosition);
             case QUEEN:
-                return QueenMovesCalc.getMoves(board, myPosition, piece.pieceColor);
+                return QueenMovesCalc.getMoves(board, myPosition);
             case BISHOP:
-                return BishopMovesCalc.getMoves(board, myPosition, piece.pieceColor);
+                return BishopMovesCalc.getMoves(board, myPosition);
             default:
                 return List.of();
         }
