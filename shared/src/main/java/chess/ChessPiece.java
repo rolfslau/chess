@@ -64,15 +64,15 @@ public class ChessPiece {
         // make an instance of the class first, and then use that instance for the calculations
         switch (piece.getPieceType()) {
             case PAWN:
-                return PawnMovesCalc.getMoves(myPosition, piece.pieceColor);
+                return PawnMovesCalc.getMoves(board, myPosition, piece.pieceColor);
             case ROOK:
-                return RookMovesCalc.getMoves(myPosition, piece.pieceColor);
+                return RookMovesCalc.getMoves(board, myPosition, piece.pieceColor);
             case KNIGHT:
-                return KnightMovesCalc.getMoves(myPosition, piece.pieceColor);
+                return KnightMovesCalc.getMoves(board, myPosition, piece.pieceColor);
             case KING:
-                return KingMovesCalc.getMoves(myPosition, piece.pieceColor);
+                return KingMovesCalc.getMoves(board, myPosition, piece.pieceColor);
             case QUEEN:
-                return QueenMovesCalc.getMoves(myPosition, piece.pieceColor);
+                return QueenMovesCalc.getMoves(board, myPosition, piece.pieceColor);
             case BISHOP:
                 return BishopMovesCalc.getMoves(board, myPosition, piece.pieceColor);
             default:

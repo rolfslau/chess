@@ -2,7 +2,6 @@ package chess;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 public class BishopMovesCalc {
 
@@ -20,6 +19,7 @@ public class BishopMovesCalc {
                     ChessMove muv = new ChessMove(position, newPos, null);
                     moves.add(muv);
                 }
+                else { break; }
             }
         }
         else {
@@ -34,6 +34,7 @@ public class BishopMovesCalc {
                     ChessMove muv = new ChessMove(position, newPos, null);
                     moves.add(muv);
                 }
+                else { break; }
             }
         }
         return moves;
