@@ -14,26 +14,53 @@ public class PawnMovesCalc {
 
     public static Collection<ChessMove> diag(ChessBoard board, ChessPosition pos, ChessGame.TeamColor color) {
         ArrayList<ChessMove> muvs = new ArrayList<>();
-        int[][] poses;
-        if (color == ChessGame.TeamColor.WHITE) { poses = new int[][] {{-1, 1}, {1, 1}}; }
-        else { poses = new int[][] {{-1, -1}, {1, -1}}; }
-        for (int[] p : poses) {
-            if (pos.getRow() + p[0] > 0 && pos.getRow() + p[0] <=8 && pos.getColumn() + p[1] > 0 && pos.getColumn() + p[1] <= 8) {
-                ChessPosition newPos = new ChessPosition(pos.getRow() + p[0], pos.getColumn() + p[1]);
-                Boolean promote = false;
-                if (newPos.getRow() == 1 || newPos.getRow() == 8) {
-                    promote = true;
-                }
+        ChessPosition newPos;
+        ChessPosition newPos2;
+        switch (color) {
+            case WHITE:
+                newPos = new ChessPosition(pos.getRow() + 1, pos.getColumn() + 1);
+                newPos2 = new ChessPosition(pos.getRow() + 1, pos.getColumn() - 1);
                 if (board.getPiece(newPos) != null && board.getPiece(newPos).getTeamColor() != color) {
-                    ChessPiece.PieceType promotion;
-                    if (promote) {
-                        promotion = ChessPiece.PieceType.KNIGHT;
-                    } else {
-                        promotion = null;
+                    if (Promote(board, pos, color)) {
+                        muvs.add(new ChessMove(pos, newPos, ChessPiece.PieceType.KNIGHT));
+                        muvs.add(new ChessMove(pos, newPos, ChessPiece.PieceType.QUEEN));
+                        muvs.add(new ChessMove(pos, newPos, ChessPiece.PieceType.ROOK));
+                        muvs.add(new ChessMove(pos, newPos, ChessPiece.PieceType.BISHOP));
                     }
-                    muvs.add(new ChessMove(pos, newPos, promotion));
+                    else {  muvs.add(new ChessMove(pos, newPos, null)); }
                 }
-            }
+                if (board.getPiece(newPos2) != null && board.getPiece(newPos).getTeamColor() != color) {
+                    if (Promote(board, pos, color)) {
+                        muvs.add(new ChessMove(pos, newPos2, ChessPiece.PieceType.KNIGHT));
+                        muvs.add(new ChessMove(pos, newPos2, ChessPiece.PieceType.QUEEN));
+                        muvs.add(new ChessMove(pos, newPos2, ChessPiece.PieceType.ROOK));
+                        muvs.add(new ChessMove(pos, newPos2, ChessPiece.PieceType.BISHOP));
+                    }
+                    else {  muvs.add(new ChessMove(pos, newPos2, null)); }
+                }
+
+            case BLACK:
+                newPos = new ChessPosition(pos.getRow() - 1, pos.getColumn() + 1);
+                newPos2 = new ChessPosition(pos.getRow() - 1, pos.getColumn() - 1);
+                if (board.getPiece(newPos) != null && board.getPiece(newPos).getTeamColor() != color) {
+                    if (Promote(board, pos, color)) {
+                        muvs.add(new ChessMove(pos, newPos, ChessPiece.PieceType.KNIGHT));
+                        muvs.add(new ChessMove(pos, newPos, ChessPiece.PieceType.QUEEN));
+                        muvs.add(new ChessMove(pos, newPos, ChessPiece.PieceType.ROOK));
+                        muvs.add(new ChessMove(pos, newPos, ChessPiece.PieceType.BISHOP));
+                    }
+                    else {  muvs.add(new ChessMove(pos, newPos, null)); }
+                }
+                if (board.getPiece(newPos2) != null && board.getPiece(newPos).getTeamColor() != color) {
+                    if (Promote(board, pos, color)) {
+                        muvs.add(new ChessMove(pos, newPos2, ChessPiece.PieceType.KNIGHT));
+                        muvs.add(new ChessMove(pos, newPos2, ChessPiece.PieceType.QUEEN));
+                        muvs.add(new ChessMove(pos, newPos2, ChessPiece.PieceType.ROOK));
+                        muvs.add(new ChessMove(pos, newPos2, ChessPiece.PieceType.BISHOP));
+                    }
+                    else {  muvs.add(new ChessMove(pos, newPos2, null)); }
+                }
+
         }
         return muvs;
     }
@@ -94,17 +121,7 @@ public class PawnMovesCalc {
                         muvs.add(new ChessMove(pos, newPos, null));
                     }
                 }
-
-
-
         }
-        // initial move
-        if (pos.getRow() == 1 && color == ChessGame.TeamColor.WHITE) {}
-        else if (pos.getRow() == 8 && color == ChessGame.TeamColor.BLACK) {}
-
-        // regular move
-        else if {}
-
         return muvs;
     }
 
