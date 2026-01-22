@@ -109,3 +109,51 @@ CONSTRUCTORS
   + you might have multiple different requirements that still constitute an instance
 + every constructor calls another constructor
 
+
+PROGRAMMING EXAM
++ all info is on the schedule
++ look at practice programming exam
+
+
+RECORDS AND EXCEPTIONS
++ java records
+  + data objects - carry data between parts of a program
+  + even a simple data object class declaration can easily 50+ lines
+    + most of the code is boilerplate/repetitive and easy to get wrong
+  + a record can do the same thing with less code
+    + automatically includes the immutable fields, getters, equals, hash, toString, and constructor
+    + compact way to define data objects
+  + records don't have setters and cannot be modified (if you think you're changing it youre actually making a new one)
+  + getters use format t.varName() (not t.getVarName())
+  + can have other methods but are more for data manipulation rather than behavior
+    + derived values
+    + formatting
+    + updated copy operations (return a new record)
+  + good when class is mostly data, want immutability, equality defined by value equivalence
+  + bad when object has lots of mutable state, complex life cycle/behavior heavy logic, identity shouldn't be based on all fields
++ exceptions
+  + abnormal conditions that occur in a java class
+  + not necessarily errors
+  + allows you to separate normal processing logic from abnormal processing logic
+  + command B - takes you to the reference of something
+  + try/catch blocks
+    + catching but not resolving is !!bad!! practice - you should handle it
+    + you can have multiple catch blocks connected to one try block (each catch block catches a particular type of exception)
+    + multi catch -- basically an or in the catch block 'declaration'
+  + checked exception --> won't let your code compile until you put a try/catch (handle it) or throw (declare it)
+  + unchecked exception --> code will still compile
+  + finally block -- regardless of what happens you run this section of code
+  + try with resources
+    + in declaration of try block, can specify if you want to open file
+    + automatically creates finally for you so that if you have an exception those files get closed
+  + rethrowing an exception
+    + when you catch it, just throw it instead of handling it (it'll go back to wherever that method was called)
+  + overridden method exception
+    + can throw fewer or the same exceptions, but cannot throw more than the base class
+    + throws same or narrower exceptions
+    + 
+  
+
+
+
+
