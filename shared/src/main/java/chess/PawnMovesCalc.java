@@ -2,7 +2,6 @@ package chess;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 public class PawnMovesCalc {
     public static Collection<ChessMove> getMoves(ChessBoard board, ChessPosition position, ChessGame.TeamColor color) {
@@ -20,7 +19,7 @@ public class PawnMovesCalc {
             case WHITE:
                 newPos = new ChessPosition(pos.getRow() + 1, pos.getColumn() + 1);
                 newPos2 = new ChessPosition(pos.getRow() + 1, pos.getColumn() - 1);
-                if (board.getPiece(newPos) != null && board.getPiece(newPos).getTeamColor() != color) {
+                if (inBounds(newPos) && board.getPiece(newPos) != null && board.getPiece(newPos).getTeamColor() != color) {
                     if (Promote(board, pos, color)) {
                         muvs.add(new ChessMove(pos, newPos, ChessPiece.PieceType.KNIGHT));
                         muvs.add(new ChessMove(pos, newPos, ChessPiece.PieceType.QUEEN));
@@ -29,7 +28,7 @@ public class PawnMovesCalc {
                     }
                     else {  muvs.add(new ChessMove(pos, newPos, null)); }
                 }
-                if (board.getPiece(newPos2) != null && board.getPiece(newPos).getTeamColor() != color) {
+                if (inBounds(newPos2) && board.getPiece(newPos2) != null && board.getPiece(newPos2).getTeamColor() != color) {
                     if (Promote(board, pos, color)) {
                         muvs.add(new ChessMove(pos, newPos2, ChessPiece.PieceType.KNIGHT));
                         muvs.add(new ChessMove(pos, newPos2, ChessPiece.PieceType.QUEEN));
@@ -38,11 +37,12 @@ public class PawnMovesCalc {
                     }
                     else {  muvs.add(new ChessMove(pos, newPos2, null)); }
                 }
+                return muvs;
 
             case BLACK:
                 newPos = new ChessPosition(pos.getRow() - 1, pos.getColumn() + 1);
                 newPos2 = new ChessPosition(pos.getRow() - 1, pos.getColumn() - 1);
-                if (board.getPiece(newPos) != null && board.getPiece(newPos).getTeamColor() != color) {
+                if (inBounds(newPos) && board.getPiece(newPos) != null && board.getPiece(newPos).getTeamColor() != color) {
                     if (Promote(board, pos, color)) {
                         muvs.add(new ChessMove(pos, newPos, ChessPiece.PieceType.KNIGHT));
                         muvs.add(new ChessMove(pos, newPos, ChessPiece.PieceType.QUEEN));
@@ -51,7 +51,7 @@ public class PawnMovesCalc {
                     }
                     else {  muvs.add(new ChessMove(pos, newPos, null)); }
                 }
-                if (board.getPiece(newPos2) != null && board.getPiece(newPos).getTeamColor() != color) {
+                if (inBounds(newPos2) && board.getPiece(newPos2) != null && board.getPiece(newPos2).getTeamColor() != color) {
                     if (Promote(board, pos, color)) {
                         muvs.add(new ChessMove(pos, newPos2, ChessPiece.PieceType.KNIGHT));
                         muvs.add(new ChessMove(pos, newPos2, ChessPiece.PieceType.QUEEN));
@@ -69,7 +69,6 @@ public class PawnMovesCalc {
         ArrayList<ChessMove> muvs = new ArrayList<>();
 
         switch (color) {
-
             case WHITE:
                 // initial move
                 if (FirstMove(board, pos, color)) {
@@ -86,7 +85,7 @@ public class PawnMovesCalc {
                     muvs.add(new ChessMove(pos, newPos, ChessPiece.PieceType.QUEEN));
                     muvs.add(new ChessMove(pos, newPos, ChessPiece.PieceType.ROOK));
                     muvs.add(new ChessMove(pos, newPos, ChessPiece.PieceType.BISHOP));
-            }
+                }
 
                 // regular move
                 else {
@@ -95,6 +94,7 @@ public class PawnMovesCalc {
                         muvs.add(new ChessMove(pos, newPos, null));
                     }
                 }
+                return muvs;
 
             case BLACK:
                 // initial move
@@ -121,6 +121,7 @@ public class PawnMovesCalc {
                         muvs.add(new ChessMove(pos, newPos, null));
                     }
                 }
+                return muvs;
         }
         return muvs;
     }
