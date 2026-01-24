@@ -139,7 +139,6 @@ CLASSES AND OBJECTS:
   + static vars, instance vars, main method, constructors, methods - grouped by functionality not accessibility (in that order)
 
 
-
 ACCESSORS AND MUTATORS
 + (getter and setter)
 + accessor - get val, mutator - set val
@@ -194,7 +193,38 @@ RECORDS AND EXCEPTIONS
   + overridden method exception
     + can throw fewer or the same exceptions, but cannot throw more than the base class
     + throws same or narrower exceptions
-    + 
+
+
+INTERFACES AND ABSTRACT CLASSES
++ POLYMORPHISM
+  + many forms -- an object can take on many forms
+  + each object can take on the form of its parents classes
+  + heterogeneous collections 
+    + collection of parent class type so you can put multiple different types of children in it
+  + polymorphic parameters
+    + parameter of parent class type to method
++ ABSTRACT CLASSES
+  + don't give a method a body -- so now you have to override it in the subclasses
+  + basically this class has a behavior that will be defined in the subclass
+  + cannot be instantiated
+  + can be used as reference types and array types and can have non-abstract methods
++ INTERFACES
+  + allow objects to take on different forms when not related through inheritance
+  + have all abstract methods
+  + cannot be instantiated
+  + can be used as reference types, collection types
+  + can NOT have non-abstract methods
+  + all methods are public
+  + breaks inheritance barrier of polymorphism
+  + can have constant variables -- all are public static and final
++ CREATING AN INTERFACE
+  + use interface instead of class
+  + create methods but without bodies
+  + no single inheritance limit with interfaces
++ IMPLEMENTING AN INTERFACE
+  + use implements keyword
+  + can implement multiple at same time, just use a comma -- make sure you implement all the methods of both
+  + 
   
 
 
