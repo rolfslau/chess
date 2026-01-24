@@ -96,6 +96,49 @@ CLASSES AND OBJECTS:
 + static variables - associated with the class not with instances (ex: MATH.pi)
 + instance methods - associated with a specific instance/object (invoked fom a reference to that instance)
 + static methods - associated with a class (not an instance) (ex: MATH.pow() doesn't require an instance)
++ inheritance
+  + can receive members from the parent class in child class
+  + extends key word
+  + "is-a" rule -- should always be able to say child class "is a" parent class
+  + every class extends object (directly or indirectly)
+  + all instance vars, all non-private, non-static methods inherited
++ method overriding
+  + methods in parent should do something different in child - do with same signature in child
+  + can't make access model more restrictive
+  + if want to call the overidden method -- use super
+  + @Override -- not actually required, but prevents potential bugs
++ implementing a hashcode method
+  + represents an object as an integer
+  + hashcode method invoked on same/equivalent object should produce the same result
+  + its not required that two unequal objects (according to equals method) produce distinct hash codes
+  + standard method = convert instance vars to integers and add together
+  + multiply by 31 (prime number) to avoid hash collisions
++ method overloading
+  + reuse a method name with different argument list
+  + lets you reuse name for conceptually the same thing, but different data types
++ final keyword
+  + create constants and non virtual methods
+  + thing declared cannot be changed
+  + for reference variables, like an array list, the reference can't change, but the array list can
+  + methods cannot be overwritten if they are final
++ "this" reference
+  + all objects have, can refer to itself
+  + like "self"
+  + sometimes the compiler can infer it so it doesn't need to be written
++ enums
+  + like a class
+  + use in place of unrestricted string
+  + make it a finite set of values that can be passed in
++ object oriented design
+  + decompose a program into classes
+  + separate class for each concept in application domain
+  + identify relationships between classes
+  + "has-a"/"uses-a" relationships with references
+  + keep data private - not all fields need getters and setters
+  + static methods as an exception not a rule
+  + static vars, instance vars, main method, constructors, methods - grouped by functionality not accessibility (in that order)
+
+
 
 ACCESSORS AND MUTATORS
 + (getter and setter)
