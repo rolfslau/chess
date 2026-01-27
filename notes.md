@@ -224,7 +224,79 @@ INTERFACES AND ABSTRACT CLASSES
 + IMPLEMENTING AN INTERFACE
   + use implements keyword
   + can implement multiple at same time, just use a comma -- make sure you implement all the methods of both
-  + 
+
+
+COLLECTIONS
++ when regular arrays [] don't suffice
++ can only store objects not primitives
++ program to the interface -- reference type should be to the interface (ex: Collection<object> = new ArrayList(); )
+  + what you hide you can change
++ list interface
+  + sequence of elements accessed by index (order matters) - get, set
+  + ArrayList class (resizable array implementation)
+  + LinkedList class (doubly linked list implementation)
+  + support more powerful iterator called ListIterator
++ Set interface
+  + collection that contains no duplicates - order doesn't matter tho so no indexing
+  + add, contains, remove
+  + HashSet class (hash table implementation)
+  + TreeSet class (bst implementation)
+  + LinkedHashSet class (hash table + linked list impl)
++ Queue interface
+  + designed for holding elements prior to processing
+  + add, peek (returns it but doesn't remove it from queue), remove
+  + ArrayDeque (FIFO, resizable array implementation)
+  + LinkedList class (FIFO, linked list impl) [can implement as list or queue]
+  + PriorityQueue (binary heap impl)
++ Deque interface
+  + supports insertion and removal at both ends
+  + addFirst, addLast, peekFirst, peekLast, removeFirst, removeLast
+  + ArrayDeque (resizable array impl)
+  + Linked list 
++ Stack class
+  + deprecated
+  + if you need stack, use a Deque
+    + push -> Deque.addFirst
+    + pop -> Deque.removeFirst
+    + peek -> Deque.peekFirst
++ Map interface
+  + basically a dictionary - maps keys to vals
+  + keys are unique
+  + put (k, v), get(k), contains(k), remove(k), keySet(), values(), entrySet()
+  + HashMap (hash table implementation)
+  + TreeMap (bst implementation)
+  + LinkedHashMap (hash table + linked list impl)
++ Iterable interface
+  + all collections (not maps - can do map.keys/.values etc) implement this
+  + allows them to work with "for each" loops
++ equality checking
+  + by default, checks if exact same object (like the same place in memory)
+  + override to see if the values are the same
++ hashing based collections
+  + by default simply returns object's address
+  + override to be based on value rather than identity
+  + equals and hashcode should be based on the same thing (ie values or reference) and should use same fields in calcs
+  + can't change information in objects that are used as keys in data structures (remove and re insert)
++ Sorted Collections
+  + TreeSet, TreeMap, PriorityQueue
+  + elements must be sortable, be able to compare elements and determine < > or ==
+  + Comparable interface (can implement in any obj, obj becomes sortable) and Comparator interface (objs that aren't comparable, 
+     you specify algorithm to compare them)
+  + can't change information in objects that are used as keys in data structures (remove and re insert)
+
+
+COPYING OBJECTS
++ it is common to need to make a copy of an existing object 
+  + support "undo" capability in a program
++ two ways
+  + shallow copy -- copy the variable values from the original object to the copy (usually not what you want)
+    + basically a copy of a reference of something, so if you change something it changes in both places
+  + deep copy -- copy the object and all objects it references, recursively
+  + if the thing you copy is mutable - use deep copy
++ safe to shallow copy strings, ints, bools, doubels etc (object versions of the primitives)
++ writing classes that support copying
+  + clone method
+  + copy constructors
   
 
 
