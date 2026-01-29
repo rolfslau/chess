@@ -293,10 +293,73 @@ COPYING OBJECTS
     + basically a copy of a reference of something, so if you change something it changes in both places
   + deep copy -- copy the object and all objects it references, recursively
   + if the thing you copy is mutable - use deep copy
-+ safe to shallow copy strings, ints, bools, doubels etc (object versions of the primitives)
++ safe to shallow copy strings, ints, bools, doubles etc (object versions of the primitives)
 + writing classes that support copying
   + clone method
   + copy constructors
+
+
+INNER CLASSES/NESTED CLASSES
++ private class inside of another class
++ static class = simplest class that can be nested - doesn't have access to instance variables of outer class
++ can make package less messy (for example putting the iterator for each type of collection inside it)
++ can only have one top level non-static class per file
++ inside but not static
+  + associated with instance that it is declared inside of - can access containing class's vars and methods
++ declare things as close as possible to where you use them
++ you can declare inside of the method where it is needed
+  + doesn't need "private" or "public"
+  + doesn't need a constructor now bc can access local vars of method
+  + local inner classes cannot access all local vars, only ones marked as final or 'effectively final' (they don't change)
++ anonymous inner class (doesn't have a name)
+  + declare class inside of a statement
+    + ex: return  new Iterator() { declare a class here that implements iterator interface }
+
+
+PHASE 1
++ have to move king out of check if he is in check
+  + move king out of check, capture threat piece, block threat piece
++ pare down all moves to ones that are currently valid
++ staleMate - no legal moves but king not in check
++ check
+  + is king's position in a list of valid moves of other team
+  + iterate over board
++ validMoves
+  + moves that don't put you in check, or that get you out of it
+  + simulate another board where move happens and then call "isInCheck"
+    + make a copy of the board (make board clonable)
+    + on every iteration clone your board
+    + make the move on cloned board
+      + find every one of your pieces and all their possible moves
+      + check each move to see if after that move you're in check
++ makeMove
+  + call valid moves first, if move they are trying to make isn't in there, throw error
+  + invalid if not valid for that piece, or not that team's turn
++ check mate
+  + no valid moves
+  + call valid moves and if empty then it's true
+  + also check to make sure it's your turn, and you're already in check
++ extra credit moves: castling
+  + king and rook move at the same time
+  + king moves 2 to left or right (toward rook) and rook goes on other side
+  + only if neither have moved since start of game, no pieces between them, king is never in check
++ extra credit moves: en passant
+  + opponent double moves pawn so its right next to you
+  + your pawn moves to where you would have captured them - you still capture
+
+
+DESIGN PRINCIPLES
++ goals
+  + create systems that work, satisfy customers, easy to understand/debug/maintain, hold up well under changes
++ design is inherently iterative
+  + design implement test repeat
+  + interweave design and implementation activities in relatively short iterations
++ abstraction
+  + primary tool to deal with complexity
+  + abstractions are classes in OOP
+  + sometimes correspond to things in real world sometimes not (ex a chess move isn't something physical)
+  + remember you can't fully represent real world things - just focus on what is relevant
++ good naming
   
 
 
