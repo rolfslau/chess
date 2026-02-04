@@ -1,5 +1,6 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -56,7 +57,13 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        throw new RuntimeException("Not implemented");
+        Collection<ChessMove> validMoves = validMoves(move.getStartPosition());
+        if (!validMoves.contains(move)) {
+            throw new InvalidMoveException("not a valid move");
+        }
+        else {
+           // how do I actually make the move?
+        }
     }
 
     /**
@@ -66,7 +73,22 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        Collection<ChessMove> opMoves = new ArrayList<>();
+        ChessPosition kingPos = findKing();
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (getBoard().getPiece(board[i][j]) != null && getBoard().getPiece(board[i][j]).getTeamColor() != teamColor) {
+                    opMoves.addAll(validMoves(board[i][j]));
+                    // how do I get the board if I can't add to
+                    // the class constructor?
+                }
+            }
+        }
+
+        for (ChessMove muv : opMoves) {
+            if (muv.getEndPosition() == kingPos) { return true; }
+        }
+        return false;
     }
 
     /**
@@ -76,7 +98,21 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        if (getTeamTurn() != teamColor) { return false; }
+        if (!isInCheck(teamColor)) { return false; }
+
+        Collection<ChessMove> validMoves = new ArrayList<>();
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (getBoard().getPiece(board[i][j]) != null && getBoard().getPiece(board[i][j]).getTeamColor() == teamColor) {
+                    validMoves.addAll(validMoves(board[i][j]));
+                    // how do I get the board if I can't add to
+                    // the class constructor?
+                }
+            }
+        }
+        if (validMoves.isEmpty()) { return true; }
+        return false;
     }
 
     /**
