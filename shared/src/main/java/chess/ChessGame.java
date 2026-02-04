@@ -11,6 +11,7 @@ import java.util.Collection;
  */
 public class ChessGame {
 
+    private TeamColor team;
     public ChessGame() {
 
     }
@@ -19,7 +20,7 @@ public class ChessGame {
      * @return Which team's turn it is
      */
     public TeamColor getTeamTurn() {
-        throw new RuntimeException("Not implemented");
+        return team;
     }
 
     /**
@@ -28,7 +29,7 @@ public class ChessGame {
      * @param team the team whose turn it is
      */
     public void setTeamTurn(TeamColor team) {
-        throw new RuntimeException("Not implemented");
+        this.team = team;
     }
 
     /**
@@ -75,10 +76,12 @@ public class ChessGame {
     public boolean isInCheck(TeamColor teamColor) {
         Collection<ChessMove> opMoves = new ArrayList<>();
         ChessPosition kingPos = findKing();
+        ChessBoard board = getBoard();
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                if (getBoard().getPiece(board[i][j]) != null && getBoard().getPiece(board[i][j]).getTeamColor() != teamColor) {
-                    opMoves.addAll(validMoves(board[i][j]));
+                ChessPosition pos = new ChessPosition(i, j);
+                if (board.getPiece(pos) != null && board.getPiece(pos).getTeamColor() != teamColor) {
+                    opMoves.addAll(validMoves(pos);
                     // how do I get the board if I can't add to
                     // the class constructor?
                 }
@@ -100,19 +103,20 @@ public class ChessGame {
     public boolean isInCheckmate(TeamColor teamColor) {
         if (getTeamTurn() != teamColor) { return false; }
         if (!isInCheck(teamColor)) { return false; }
+        ChessBoard board = getBoard();
 
         Collection<ChessMove> validMoves = new ArrayList<>();
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                if (getBoard().getPiece(board[i][j]) != null && getBoard().getPiece(board[i][j]).getTeamColor() == teamColor) {
-                    validMoves.addAll(validMoves(board[i][j]));
+                ChessPosition pos = new ChessPosition(i, j);
+                if (board.getPiece(pos) != null && board.getPiece(pos).getTeamColor() == teamColor) {
+                    validMoves.addAll(validMoves(pos));
                     // how do I get the board if I can't add to
                     // the class constructor?
                 }
             }
         }
-        if (validMoves.isEmpty()) { return true; }
-        return false;
+        return validMoves.isEmpty();
     }
 
     /**
