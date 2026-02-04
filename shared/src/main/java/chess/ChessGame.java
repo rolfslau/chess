@@ -12,6 +12,7 @@ import java.util.Collection;
 public class ChessGame {
 
     private TeamColor team;
+    private ChessBoard board;
     public ChessGame() {
 
     }
@@ -58,6 +59,8 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
+        // invalid if not valid for that piece or not that teams turn
+        // do I check that here or in validMoves?
         Collection<ChessMove> validMoves = validMoves(move.getStartPosition());
         if (!validMoves.contains(move)) {
             throw new InvalidMoveException("not a valid move");
@@ -127,7 +130,20 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        ChessBoard board = getBoard();
+
+        Collection<ChessMove> validMoves = new ArrayList<>();
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                ChessPosition pos = new ChessPosition(i, j);
+                if (board.getPiece(pos) != null && board.getPiece(pos).getTeamColor() == teamColor) {
+                    validMoves.addAll(validMoves(pos));
+                    // how do I get the board if I can't add to
+                    // the class constructor?
+                }
+            }
+        }
+        return validMoves.isEmpty() && !isInCheck(teamColor);
     }
 
     /**
@@ -136,7 +152,7 @@ public class ChessGame {
      * @param board the new board to use
      */
     public void setBoard(ChessBoard board) {
-        throw new RuntimeException("Not implemented");
+        this.board = board;
     }
 
     /**
@@ -145,6 +161,6 @@ public class ChessGame {
      * @return the chessboard
      */
     public ChessBoard getBoard() {
-        throw new RuntimeException("Not implemented");
+        return board;
     }
 }
