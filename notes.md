@@ -360,8 +360,41 @@ DESIGN PRINCIPLES
   + sometimes correspond to things in real world sometimes not (ex a chess move isn't something physical)
   + remember you can't fully represent real world things - just focus on what is relevant
 + good naming
+  + should convey function or purpose
+  + Class and variable names are usually nouns
+  + Method names are usually verbs
++ Single-Responsibility Principle
+  + Each class/method should have a single responsibility
+  + each class should represent one well defined concept
+  + each method should perform one well defined task
+  + some methods should delegate if they need to perform multiple tasks
++ Decomposition
+  + large problems divided into smaller sub-problems
   
 
+STREAMS AND FILES (I/O OVERVIEW)
++ streams - read or write a file sequentially
+  + primary way of working with data
+  + writing to / reading data from files
+  + binary formatted or text formatted
+  + InputStream and OutputStream - reading/writing bytes/binary-formatted data
+    + you can attach streams to each other; each one changes the data (Filter Input/Output streams)
+    + every input stream has a corresponding output stream
+  + Reader and Writer - reading/writing characters/text-formatted data [interfaces]
+    + PrintWriter -- lets you write text formatted things (String, Bool etc)
+    + InputStreamReader/OutputStreamReader - convert from in/output stream to a reader/writer
+  + DataOutputStream class lets you write binary-formatted data values
+  + DataInputStream class lets you read binary-formatted data values (float, int, bool etc)
++ scanner class - tokenize stream input
+  + default delimiter is whitespace (to create the tokens)
++ files class - read, copy, etc whole files
+  + need a path first
++ randomAccessFile class - use a file pointer to read and write from random parts of the file
+  + the pointer represents the current location in the file (similar to array index)
+  + seek(long) (from origin go this many bytes in) or skipBytes(int) (wherever you are move this many bytes) to move the file pointer
++ File Class
+  + represents a file in the system
+  + used to represent, create, or delete a file, but not to read one
 
 
 
