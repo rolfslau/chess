@@ -56,24 +56,21 @@ public class ChessGame {
         Collection<ChessMove> muvs = new ArrayList<>();
         if (board.getPiece(startPosition) == null) {
             return null;
-        // this should be in makeMove
-        } else if (board.getPiece(startPosition).getTeamColor() != team) {
-            return muvs;
         } else {
             ChessPiece curr = new ChessPiece(board.getPiece(startPosition).getTeamColor(), board.getPiece(startPosition).getPieceType());
             Collection<ChessMove> potMoves = curr.pieceMoves(board, startPosition);
             for (ChessMove p : potMoves) {
-                // clone board
-                // SUPER CONFUSED ON THIS PART!!
-                // how do I check if its in check on the cloned board?
-                // also am I cloning correctly?
                 ChessBoard cloneBoard = board.clone(board);
                 cloneBoard.makeMove(p);
-                if (!isInCheck(team, cloneBoard)) {
+                System.out.println(isInCheck(team, cloneBoard));
+                System.out.println(p);
+                System.out.println(team);
+                if (!isInCheck(board.getPiece(startPosition).getTeamColor(), cloneBoard)) {
                     muvs.add(p);
                 }
             }
         }
+        System.out.println(muvs);
         return muvs;
     }
 
@@ -86,6 +83,8 @@ public class ChessGame {
     public void makeMove(ChessMove move) throws InvalidMoveException {
         // invalid if not valid for that piece or not that teams turn
         // do I check that here or in validMoves?
+        if (board.getPiece(move.getStartPosition()) == null) { throw new InvalidMoveException("no piece"); }
+        if (board.getPiece(move.getStartPosition()).getTeamColor() != team) { throw new InvalidMoveException("not your turn"); }
         Collection<ChessMove> validMoves = validMoves(move.getStartPosition());
         if (!validMoves.contains(move)) {
             throw new InvalidMoveException("not a valid move: " + move);
@@ -132,14 +131,14 @@ public class ChessGame {
         for (int i = 1; i < 9; i++) {
             for (int j = 1; j < 9; j++) {
                 ChessPosition pos = new ChessPosition(i, j);
-                if (board.getPiece(pos) != null && board.getPiece(pos).getTeamColor().equals(teamColor)) {
+                if (board.getPiece(pos) != null && board.getPiece(pos).getTeamColor() != teamColor) {
                     opMoves.addAll(board.getPiece(pos).pieceMoves(board, pos));
                 }
             }
         }
-
         for (ChessMove muv : opMoves) {
-            if (muv.getEndPosition() == kingPos) {
+
+            if (muv.getEndPosition().equals(kingPos)) {
                 return true;
             }
         }
@@ -224,7 +223,7 @@ public class ChessGame {
                 ChessPosition pos = new ChessPosition(i, j);
                 //board.getpiece() returns null if no piece is found. check for null first
                 if (board.getPiece(pos) != null && board.getPiece(pos).getPieceType() == ChessPiece.PieceType.KING) {
-                    if (board.getPiece(pos).getTeamColor() == team) {
+                    if (board.getPiece(pos).getTeamColor().equals(team)) {
                         return pos;
                     }
                 }
