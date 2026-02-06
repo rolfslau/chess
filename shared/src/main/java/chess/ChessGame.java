@@ -49,7 +49,20 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        throw new RuntimeException("Not implemented");
+        Collection<ChessMove> muvs = new ArrayList<>();
+        if (board.getPiece(startPosition) == null) { return muvs; }
+        else if (board.getPiece(startPosition).getTeamColor() != team) { return muvs; }
+        else {
+            ChessPiece curr = new ChessPiece(board.getPiece(startPosition).getTeamColor(), board.getPiece(startPosition).getPieceType());
+            Collection<ChessMove> potMoves = curr.pieceMoves(board, startPosition);
+            for (ChessMove p : potMoves) {
+                // clone board
+                newBoard.addPiece(p.getStartPosition(), null);
+                newBoard.addPiece(p.getEndPosition(), board.getPiece(p.getStartPosition()));
+                if (not in check) { muvs.add(p); }
+            }
+        }
+        return muvs;
     }
 
     /**
@@ -66,6 +79,8 @@ public class ChessGame {
             throw new InvalidMoveException("not a valid move");
         }
         else {
+            board.addPiece(move.getStartPosition(), null);
+            board.addPiece(move.getEndPosition(), board.getPiece(move.getStartPosition()));
            // how do I actually make the move?
         }
     }
