@@ -57,8 +57,12 @@ public class ChessGame {
             Collection<ChessMove> potMoves = curr.pieceMoves(board, startPosition);
             for (ChessMove p : potMoves) {
                 // clone board
-                newBoard.addPiece(p.getStartPosition(), null);
+                // SUPER CONFUSED ON THIS PART!!
+                // how do I check if its in check on the cloned board?
+                // also am I cloning correctly?
+                ChessBoard newBoard = board.clone();
                 newBoard.addPiece(p.getEndPosition(), board.getPiece(p.getStartPosition()));
+                newBoard.addPiece(p.getStartPosition(), null);
                 if (not in check) { muvs.add(p); }
             }
         }
@@ -79,9 +83,10 @@ public class ChessGame {
             throw new InvalidMoveException("not a valid move");
         }
         else {
-            board.addPiece(move.getStartPosition(), null);
             board.addPiece(move.getEndPosition(), board.getPiece(move.getStartPosition()));
-           // how do I actually make the move?
+            board.addPiece(move.getStartPosition(), null);
+            if (team == TeamColor.WHITE) { setTeamTurn(TeamColor.BLACK); }
+            else { setTeamTurn(TeamColor.WHITE); }
         }
     }
 
@@ -180,6 +185,12 @@ public class ChessGame {
     }
 
     public ChessPosition findKing() {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                ChessPosition pos = new ChessPosition(i, j);
+                if (board.getPiece(pos).getPieceType() == ChessPiece.PieceType.KING) { return pos; }
+            }
+        }
         return new ChessPosition(0, 0);
     }
 }
