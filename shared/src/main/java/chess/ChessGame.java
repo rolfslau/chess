@@ -13,6 +13,10 @@ public class ChessGame {
 
     private TeamColor team;
     private ChessBoard board;
+
+    // this is my only idea of how to solve it but i'm sure theres a simpler way
+    private ChessBoard cloneBoard;
+    private Boolean useClone;
     public ChessGame() {
 
     }
@@ -60,10 +64,12 @@ public class ChessGame {
                 // SUPER CONFUSED ON THIS PART!!
                 // how do I check if its in check on the cloned board?
                 // also am I cloning correctly?
-                ChessBoard newBoard = board.clone();
-                newBoard.addPiece(p.getEndPosition(), board.getPiece(p.getStartPosition()));
-                newBoard.addPiece(p.getStartPosition(), null);
-                if (not in check) { muvs.add(p); }
+                cloneBoard = board.clone();
+                cloneBoard.addPiece(p.getEndPosition(), board.getPiece(p.getStartPosition()));
+                cloneBoard.addPiece(p.getStartPosition(), null);
+                useClone = true;
+                if (!isInCheck(team)) { muvs.add(p); }
+                useClone = false;
             }
         }
         return muvs;
@@ -97,24 +103,8 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        Collection<ChessMove> opMoves = new ArrayList<>();
-        ChessPosition kingPos = findKing();
-        ChessBoard board = getBoard();
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                ChessPosition pos = new ChessPosition(i, j);
-                if (board.getPiece(pos) != null && board.getPiece(pos).getTeamColor() != teamColor) {
-                    opMoves.addAll(validMoves(pos));
-                    // how do I get the board if I can't add to
-                    // the class constructor?
-                }
-            }
-        }
-
-        for (ChessMove muv : opMoves) {
-            if (muv.getEndPosition() == kingPos) { return true; }
-        }
-        return false;
+        if (useClone) { return checkHelper(board, teamColor); }
+        else { return checkHelper(cloneBoard, teamColor); }
     }
 
     /**
@@ -184,7 +174,7 @@ public class ChessGame {
         return board;
     }
 
-    public ChessPosition findKing() {
+    public ChessPosition findKing(ChessBoard board) {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 ChessPosition pos = new ChessPosition(i, j);
@@ -192,5 +182,25 @@ public class ChessGame {
             }
         }
         return new ChessPosition(0, 0);
+    }
+
+    public Boolean checkHelper(ChessBoard board, TeamColor teamColor) {
+        Collection<ChessMove> opMoves = new ArrayList<>();
+        ChessPosition kingPos = findKing(board);
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                ChessPosition pos = new ChessPosition(i, j);
+                if (board.getPiece(pos) != null && board.getPiece(pos).getTeamColor() != teamColor) {
+                    opMoves.addAll(validMoves(pos));
+                    // how do I get the board if I can't add to
+                    // the class constructor?
+                }
+            }
+        }
+
+        for (ChessMove muv : opMoves) {
+            if (muv.getEndPosition() == kingPos) { return true; }
+        }
+        return false;
     }
 }
