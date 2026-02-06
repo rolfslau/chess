@@ -110,6 +110,11 @@ public class ChessBoard implements Cloneable {
             throw new RuntimeException(e);
         }
     }
+
+    public void makeMove(ChessMove move) {
+        this.addPiece(move.getEndPosition(), this.getPiece(move.getStartPosition()));
+        this.addPiece(move.getStartPosition(), null);
+    }
 }
         // what if we create an empty board first and then add in the pieces? that way i don't have to
         // go through and clear anything?

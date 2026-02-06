@@ -2,6 +2,7 @@ package chess;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * For a class that can manage a chess game, making moves on a board
@@ -11,14 +12,13 @@ import java.util.Collection;
  */
 public class ChessGame {
 
-    private TeamColor team;
+    private TeamColor team = TeamColor.WHITE;
     private ChessBoard board;
 
     // this is my only idea of how to solve it but i'm sure theres a simpler way
-    private ChessBoard cloneBoard;
-    private Boolean useClone;
     public ChessGame() {
-
+        board = new ChessBoard();
+        board.resetBoard();
     }
 
     /**
@@ -54,9 +54,11 @@ public class ChessGame {
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
         Collection<ChessMove> muvs = new ArrayList<>();
-        if (board.getPiece(startPosition) == null) { return muvs; }
-        else if (board.getPiece(startPosition).getTeamColor() != team) { return muvs; }
-        else {
+        if (board.getPiece(startPosition) == null) {
+            return muvs;
+        } else if (board.getPiece(startPosition).getTeamColor() != team) {
+            return muvs;
+        } else {
             ChessPiece curr = new ChessPiece(board.getPiece(startPosition).getTeamColor(), board.getPiece(startPosition).getPieceType());
             Collection<ChessMove> potMoves = curr.pieceMoves(board, startPosition);
             for (ChessMove p : potMoves) {
@@ -64,12 +66,11 @@ public class ChessGame {
                 // SUPER CONFUSED ON THIS PART!!
                 // how do I check if its in check on the cloned board?
                 // also am I cloning correctly?
-                cloneBoard = board.clone();
-                cloneBoard.addPiece(p.getEndPosition(), board.getPiece(p.getStartPosition()));
-                cloneBoard.addPiece(p.getStartPosition(), null);
-                useClone = true;
-                if (!isInCheck(team)) { muvs.add(p); }
-                useClone = false;
+                ChessBoard cloneBoard = board.clone();
+                cloneBoard.makeMove(p);
+                if (!isInCheck(team, cloneBoard)) {
+                    muvs.add(p);
+                }
             }
         }
         return muvs;
@@ -87,12 +88,13 @@ public class ChessGame {
         Collection<ChessMove> validMoves = validMoves(move.getStartPosition());
         if (!validMoves.contains(move)) {
             throw new InvalidMoveException("not a valid move");
-        }
-        else {
-            board.addPiece(move.getEndPosition(), board.getPiece(move.getStartPosition()));
-            board.addPiece(move.getStartPosition(), null);
-            if (team == TeamColor.WHITE) { setTeamTurn(TeamColor.BLACK); }
-            else { setTeamTurn(TeamColor.WHITE); }
+        } else {
+            board.makeMove(move);
+            if (team == TeamColor.WHITE) {
+                setTeamTurn(TeamColor.BLACK);
+            } else {
+                setTeamTurn(TeamColor.WHITE);
+            }
         }
     }
 
@@ -103,9 +105,45 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        if (useClone) { return checkHelper(board, teamColor); }
-        else { return checkHelper(cloneBoard, teamColor); }
+        Collection<ChessMove> opMoves = new ArrayList<>();
+        ChessPosition kingPos = findKing(board, teamColor);
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                ChessPosition pos = new ChessPosition(i, j);
+                if (board.getPiece(pos) != null && board.getPiece(pos).getTeamColor() != teamColor) {
+                    opMoves.addAll(validMoves(pos));
+                }
+            }
+        }
+
+        for (ChessMove muv : opMoves) {
+            if (muv.getEndPosition() == kingPos) {
+                return true;
+            }
+        }
+        return false;
     }
+
+    public boolean isInCheck(TeamColor teamColor, ChessBoard board) {
+        Collection<ChessMove> opMoves = new ArrayList<>();
+        ChessPosition kingPos = findKing(board, teamColor);
+        for (int i = 1; i < 9; i++) {
+            for (int j = 1; j < 9; j++) {
+                ChessPosition pos = new ChessPosition(i, j);
+                if (board.getPiece(pos) != null && board.getPiece(pos).getTeamColor() != teamColor) {
+                    opMoves.addAll(validMoves(pos));
+                }
+            }
+        }
+
+        for (ChessMove muv : opMoves) {
+            if (muv.getEndPosition() == kingPos) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     /**
      * Determines if the given team is in checkmate
@@ -114,8 +152,12 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        if (getTeamTurn() != teamColor) { return false; }
-        if (!isInCheck(teamColor)) { return false; }
+        if (getTeamTurn() != teamColor) {
+            return false;
+        }
+        if (!isInCheck(teamColor)) {
+            return false;
+        }
         ChessBoard board = getBoard();
 
         Collection<ChessMove> validMoves = new ArrayList<>();
@@ -148,8 +190,6 @@ public class ChessGame {
                 ChessPosition pos = new ChessPosition(i, j);
                 if (board.getPiece(pos) != null && board.getPiece(pos).getTeamColor() == teamColor) {
                     validMoves.addAll(validMoves(pos));
-                    // how do I get the board if I can't add to
-                    // the class constructor?
                 }
             }
         }
@@ -174,33 +214,35 @@ public class ChessGame {
         return board;
     }
 
-    public ChessPosition findKing(ChessBoard board) {
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
+    public ChessPosition findKing(ChessBoard board, TeamColor team) {
+        //find king should look for a TEAMS king not just any king
+        // if a king is at position [0][whatever] or [whatever][0] somethng dies
+        for (int i = 1; i < 9; i++) {
+            for (int j = 1; j < 9; j++) {
                 ChessPosition pos = new ChessPosition(i, j);
-                if (board.getPiece(pos).getPieceType() == ChessPiece.PieceType.KING) { return pos; }
+                //board.getpiece() returns null if no piece is found. check for null first
+                if (board.getPiece(pos) != null && board.getPiece(pos).getPieceType() == ChessPiece.PieceType.KING) {
+                    if (board.getPiece(pos).getTeamColor() == team) {
+                        return pos;
+                    }
+                }
             }
         }
         return new ChessPosition(0, 0);
     }
 
-    public Boolean checkHelper(ChessBoard board, TeamColor teamColor) {
-        Collection<ChessMove> opMoves = new ArrayList<>();
-        ChessPosition kingPos = findKing(board);
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                ChessPosition pos = new ChessPosition(i, j);
-                if (board.getPiece(pos) != null && board.getPiece(pos).getTeamColor() != teamColor) {
-                    opMoves.addAll(validMoves(pos));
-                    // how do I get the board if I can't add to
-                    // the class constructor?
-                }
+        @Override
+        public boolean equals (Object o){
+            if (o == null || getClass() != o.getClass()) {
+                return false;
             }
+            ChessGame chessGame = (ChessGame) o;
+            return team == chessGame.team && Objects.equals(board, chessGame.board);
         }
 
-        for (ChessMove muv : opMoves) {
-            if (muv.getEndPosition() == kingPos) { return true; }
+        @Override
+        public int hashCode() {
+            return Objects.hash(team, board);
         }
-        return false;
-    }
+
 }
