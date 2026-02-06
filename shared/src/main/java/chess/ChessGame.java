@@ -55,7 +55,8 @@ public class ChessGame {
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
         Collection<ChessMove> muvs = new ArrayList<>();
         if (board.getPiece(startPosition) == null) {
-            return muvs;
+            return null;
+        // this should be in makeMove
         } else if (board.getPiece(startPosition).getTeamColor() != team) {
             return muvs;
         } else {
@@ -66,7 +67,7 @@ public class ChessGame {
                 // SUPER CONFUSED ON THIS PART!!
                 // how do I check if its in check on the cloned board?
                 // also am I cloning correctly?
-                ChessBoard cloneBoard = board.clone();
+                ChessBoard cloneBoard = board.clone(board);
                 cloneBoard.makeMove(p);
                 if (!isInCheck(team, cloneBoard)) {
                     muvs.add(p);
@@ -87,7 +88,7 @@ public class ChessGame {
         // do I check that here or in validMoves?
         Collection<ChessMove> validMoves = validMoves(move.getStartPosition());
         if (!validMoves.contains(move)) {
-            throw new InvalidMoveException("not a valid move");
+            throw new InvalidMoveException("not a valid move: " + move);
         } else {
             board.makeMove(move);
             if (team == TeamColor.WHITE) {
@@ -105,23 +106,24 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        Collection<ChessMove> opMoves = new ArrayList<>();
-        ChessPosition kingPos = findKing(board, teamColor);
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                ChessPosition pos = new ChessPosition(i, j);
-                if (board.getPiece(pos) != null && board.getPiece(pos).getTeamColor() != teamColor) {
-                    opMoves.addAll(validMoves(pos));
-                }
-            }
-        }
-
-        for (ChessMove muv : opMoves) {
-            if (muv.getEndPosition() == kingPos) {
-                return true;
-            }
-        }
-        return false;
+//        Collection<ChessMove> opMoves = new ArrayList<>();
+//        ChessPosition kingPos = findKing(board, teamColor);
+//        for (int i = 1; i < 9; i++) {
+//            for (int j = 1; j < 9; j++) {
+//                ChessPosition pos = new ChessPosition(i, j);
+//                if (board.getPiece(pos) != null && board.getPiece(pos).getTeamColor() != teamColor) {
+//                    opMoves.addAll(validMoves(pos));
+//                }
+//            }
+//        }
+//
+//        for (ChessMove muv : opMoves) {
+//            if (muv.getEndPosition() == kingPos) {
+//                return true;
+//            }
+//        }
+//        return false;
+        return isInCheck(teamColor, board);
     }
 
     public boolean isInCheck(TeamColor teamColor, ChessBoard board) {
@@ -130,8 +132,8 @@ public class ChessGame {
         for (int i = 1; i < 9; i++) {
             for (int j = 1; j < 9; j++) {
                 ChessPosition pos = new ChessPosition(i, j);
-                if (board.getPiece(pos) != null && board.getPiece(pos).getTeamColor() != teamColor) {
-                    opMoves.addAll(validMoves(pos));
+                if (board.getPiece(pos) != null && board.getPiece(pos).getTeamColor().equals(teamColor)) {
+                    opMoves.addAll(board.getPiece(pos).pieceMoves(board, pos));
                 }
             }
         }
@@ -161,8 +163,8 @@ public class ChessGame {
         ChessBoard board = getBoard();
 
         Collection<ChessMove> validMoves = new ArrayList<>();
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
+        for (int i = 1; i < 9; i++) {
+            for (int j = 1; j < 9; j++) {
                 ChessPosition pos = new ChessPosition(i, j);
                 if (board.getPiece(pos) != null && board.getPiece(pos).getTeamColor() == teamColor) {
                     validMoves.addAll(validMoves(pos));
@@ -185,8 +187,8 @@ public class ChessGame {
         ChessBoard board = getBoard();
 
         Collection<ChessMove> validMoves = new ArrayList<>();
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
+        for (int i = 1; i < 9; i++) {
+            for (int j = 1; j < 9; j++) {
                 ChessPosition pos = new ChessPosition(i, j);
                 if (board.getPiece(pos) != null && board.getPiece(pos).getTeamColor() == teamColor) {
                     validMoves.addAll(validMoves(pos));

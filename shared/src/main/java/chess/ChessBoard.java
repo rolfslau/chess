@@ -9,9 +9,9 @@ import java.util.Objects;
  * Note: You can add to this class, but you may not alter
  * signature of the existing methods.
  */
-public class ChessBoard implements Cloneable {
+public class ChessBoard {
 
-    ChessPiece[][] board = new ChessPiece[8][8];
+    private ChessPiece[][] board = new ChessPiece[8][8];
     public ChessBoard() {
         // we can represent the chess board as a 2-dimensional array
 //        ChessPiece[] this.board; // should this start filled in like the start of a game?
@@ -101,18 +101,24 @@ public class ChessBoard implements Cloneable {
 
     }
 
-    @Override public ChessBoard clone() {
-        try {
-            ChessBoard clone = (ChessBoard) super.clone();
-            clone.board = (ChessPiece[][]) board.clone();
-            return clone;
-        } catch (CloneNotSupportedException e) {
-            throw new RuntimeException(e);
+    public ChessBoard clone(ChessBoard board) {
+        //instead of overriding clone, diy it (loop through and copy all into a new array)
+        ChessBoard clonedBoard = new ChessBoard();
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                clonedBoard.board[i][j] = board.board[i][j];
+            }
         }
+        return clonedBoard;
     }
 
     public void makeMove(ChessMove move) {
-        this.addPiece(move.getEndPosition(), this.getPiece(move.getStartPosition()));
+        if (this.getPiece(move.getStartPosition()).getPieceType() == ChessPiece.PieceType.PAWN && move.getPromotionPiece() != null) {
+            this.addPiece(move.getEndPosition(), new ChessPiece(this.getPiece(move.getStartPosition()).getTeamColor(), move.getPromotionPiece()));
+        }
+        else {
+            this.addPiece(move.getEndPosition(), this.getPiece(move.getStartPosition()));
+        }
         this.addPiece(move.getStartPosition(), null);
     }
 }
