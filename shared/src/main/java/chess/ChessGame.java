@@ -84,7 +84,7 @@ public class ChessGame {
             for (int j = 0; j < 8; j++) {
                 ChessPosition pos = new ChessPosition(i, j);
                 if (board.getPiece(pos) != null && board.getPiece(pos).getTeamColor() != teamColor) {
-                    opMoves.addAll(validMoves(pos);
+                    opMoves.addAll(validMoves(pos));
                     // how do I get the board if I can't add to
                     // the class constructor?
                 }
@@ -162,5 +162,9 @@ public class ChessGame {
      */
     public ChessBoard getBoard() {
         return board;
+    }
+
+    public ChessPosition findKing() {
+        return new ChessPosition(0, 0);
     }
 }

@@ -397,4 +397,35 @@ STREAMS AND FILES (I/O OVERVIEW)
   + used to represent, create, or delete a file, but not to read one
 
 
+JSON
++ curly brace represents objects
++ square brackets represent arrays
++ types of values: string, integer, double, other object
++ objects in an array do not have to have the same type
++ only one object at the very top level (so that it is a tree)
++ create POJOs that match the structure of a json doc
 
+
+SERIALIZER
++ takes a tree and then returns java objects from the tree
++ use gson
+
+
+PHASE 2
++ create a set of diagrams 
++ make sure you understand the phase 3 spec
++ sequence diagram
++ our client is terminal based
++ chess server
+  + server - receives network requests
+  + handlers - deserialize information into java objects
+  + services - process business logic for the application
+  + DataAccess - provide methods that persistently store and retrieve the application data
++ read entire phase 2 spec, then read phase 3 spec in detail, and then do the assignment
++ create a diagram for each end point (urls with code attached)
+
+
+PHASE 3
++ you can group related servies into the same class (ex: login/out and register)
+  + create game, join game, list games
++ make a parent response class that the other classes inherit so you don't have to write it seven times
