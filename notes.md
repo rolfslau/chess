@@ -429,3 +429,42 @@ PHASE 3
 + you can group related servies into the same class (ex: login/out and register)
   + create game, join game, list games
 + make a parent response class that the other classes inherit so you don't have to write it seven times
+
+
+GENERICS
++ allow you to specify placeholder class whose actual type is determined when instance is created
++ to instantiate, use <> and put what those objects will be
++ using generic classes
+  + specify types in extends clause
+  + you can pass generic types from a generic subclass (ex. you specify one type, and make one generic)
++ generic interfaces
+  + when you implement, you need to specify what the type will be
++ generic type wildcards
+  + List<? super T> -- list has objects which can be type T or any of its parent classes
+  + can also do extends and it would work with any of its subclasses?
+
+LAMBDA EXPRESSIONS
++ anything you can do with a variable, you can do with a lambda
++ block of code that can be stored in variable, passed as parameters and executed later
++ like a function without actually declaring a function
++ how they work
+  + at runtime infers data type for lambda, return type, and parameter types
+  + constructs in mem instance of a class expected by called method
+  + part before arrow names parameters
++ what is the data type of lambda expression?
+  + functional interface - interface with exactly one abstract method (can have any number of 
+  static default and redeclared object methods)
++ syntax
+  + (Parameter List) -> Body
+  + don't need to specify data types in parameter list
+  + () if no parameters
+  + the return is inferred for single expression
+  + can have a single line or a block
++ function/lambda variables
++ creating APIs with lambdas
++ method references
+  + even shorter than lambdas
+  + system.out::println
+  + not a method call
+  + don't give a parameter list
+  + 
