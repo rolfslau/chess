@@ -562,6 +562,49 @@ cURL ALTERNATIVES
 + Postman VS code extension
 
 
+WEB API
++ Javalin 
+  + open source framework for building java applications and web apis
+  + handles the http
+  + create handler methods for handling http requests and returning http responses
++ standard port for http is 80
++ port 0 just goes to whatever port in available
+
+
+HANDLERS
++ handlers matched in the order they are defined
++ first handler that matches the request is invoked
++ "/____" the path or the specific handler you will use
++ use inheritance so that all which deal with authentication deal with it in the parent class
++ to deal with duplication
+  + before and after handlers
+  + before does the things that are common
+  + "after" runs after whatever code matched url executes
+
+
+CHESS SERVER TIPS
++ lambda invokes separate handler class
++ handler duties
+  + validate auth token
+  + deserialize the json request body so it can pass to the service classes
+  + call service class
+  + receive response from service
+  + serialize the response
+  + send http response back to client
++ maybe put serialization inside a separate class
++ create one instance of every handler when I create the server class
++ AVOID CODE DUPLICATION
+  + use inheritance!
++ JSON
+  + parent response class with all things they share
+  + child classes have their specific things
++ generate auth token
+  + uuid something -- check slides for feb 12
++ 
+
+
+
+
 
 
 
