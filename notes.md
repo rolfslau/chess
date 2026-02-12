@@ -467,4 +467,103 @@ LAMBDA EXPRESSIONS
   + system.out::println
   + not a method call
   + don't give a parameter list
-  + 
+
+
+HTTP
++ hyper text transfer protocol
++ client app --- web --- server
++ client establishes connection to server
+  + http request -- contains all the information necessary to do 
+  what it is asking server to do
+  + http response -- sending back what it wants
+  + client only opens connection when it needs it
++ a connection allows the client and server to exchange data (bytes)
++ in order to participate in this, both sides need an ip address
+  + usually we use the domain name because it is easier to remember and use
+  + uses the DNS to convert domain name to ip address
++ we also need to know the port number to connect to a particular program
+
+
+HTTP GET REQUESTS
++ urls
+  + protocol://www.domainName.com:portNumber/path
+  + there is a default port number
++ request
+  + method (request type); URL path; HTTP version
+  + headers
+    + key value pairs that contain metadata that describe the request
+    + each one has name: value
++ response
+  + HTTP version; status code (200 good, 300 redirect, 400 bad request, 500 server error) ; 
+  reason phrase (describes status code)
+  + headers
+    + key value pairs that provide meta data about the response
+  + empty line (\n)
+  + response body
+    + contains for example the image data we requested
+    + bytes/information we are returning 
++ WebAPI call with HTTP
+  + get "event" request
+  + method (request type); URL path; http version
+  + auth token header
++ Web API call response
+  + http version; status code; reason phrase
+  + headers
+  + empty line
+  + response body - data about the event as a JSON string
+
+
+HTTP POST REQUESTS
++ client wants to send data to the server
++ request
+  + method: url path; http version
+  + headers
+  + empty line
+  + request body
++ response
+  + http version; status code; reason phrase
+  + headers
+  + empty line
+  + response body
++ for webAPI - we can specify the path (ex for login) (function we want to use)
+
+
+HTTP METHODS - other request types
++ PUT
+  + replace the specified resource
+  + an update operation in a REST API
+  + body included
++ DELETE
+  + delete the specified resource
+  + body should not normally be included
++ other rarely used
+  + HEAD
+  + OPTIONS
+  + TRACE
+  + PATCH
+
+  
+cURL - client for urls
++ command line program that lets you see messages between server and client
++ syntax
+  + curl url
+  + can also call a web api 
++ other tools
+  + curl -X POST url (use -X to specify which method to use)
+  + -v -- verbose
+  + -d -- body data (you can specify)
+  + -H -- provide an http header
+  + -o -- output response to a file
+  + --data-binary -- body data from file
+  + -D -- dump headers to file
+
+cURL ALTERNATIVES
++ Postman -- provides a graphical user interface
++ Postman VS code extension
+
+
+
+
+
+
+
