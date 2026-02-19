@@ -600,7 +600,49 @@ CHESS SERVER TIPS
   + child classes have their specific things
 + generate auth token
   + uuid something -- check slides for feb 12
-+ 
+
+
+CODE QUALITY
++ strong cohesion
+  + cohesive method does only one thing
+  + classes should also be cohesive
++ good method names
+  + should clearly and completely describe what method does
+  + method with no return value -- verb or verb phrase
+  + method has return val -- verb or verb phrase OR what it returns
+  + avoid meaningless verbs
+  + avoid stuttering (person.copy(Person person) vs person.clone())
+  + follow naming conventions (establish and follow)
++ why create methods:
+  + algorithm decomposition
+  + avoid code duplication
+  + excessive nesting of statements
++ don't over comment
++ parameters
+  + use all 
+  + the fewer parameters the better
+  + ideal number is 3-4 params
+  + order parameters: in, in-out, out
++ initializing data
+  + initialize vars when they're declared and declare close to where used
++ code layout
+  + pick a style that you like and consistently use it
+  + organize code into paragraphs
+  + separate conditions on different lines -- ands and ors
+  + use spaces to make method parameters readable
+  + declare each var on a separate line
+  + wrap long lines
++ pseudo-code
+  + when an algorithm is complex, write an outline of the method before starting
+  + avoid syntactic elements
+  + write at level of intent -- what not how
++ variable names
+  + don't make too long or too short
+  + naming conventions -- Camel-case or underscore separation (constants in java)
+  + first char of class uppercase, first char of method lowercase
+  + don't differentiate names by capitalization
+  + avoid vars with similar names but dif meanings
+  + 
 
 
 
