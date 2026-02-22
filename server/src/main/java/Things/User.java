@@ -1,5 +1,5 @@
 package Things;
 
-public record User(int id, String username, String password, String email) {
+public record User(String username, String password, String email) {
 
 }

@@ -1,5 +1,6 @@
 package server;
 
+import dataaccess.MemoryUserDAO;
 import io.javalin.*;
 import service.UserService;
 
@@ -8,7 +9,12 @@ public class Server {
     private final Javalin javalin;
 
     public Server() { // how do i pass in all the services
-        UserHandler userHandler = new UserHandler();
+        MemoryUserDAO userDAO = new MemoryUserDAO();
+        UserService userService = new UserService(userDAO);
+        UserHandler userHandler = new UserHandler(userService);
+
+        // var server = new Server(service).run(port);
+
         javalin = Javalin.create(config -> config.staticFiles.add("web"))
                 .post("/user", userHandler::register)
                 .post("/session", this::login)
