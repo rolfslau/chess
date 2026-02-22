@@ -1,11 +1,11 @@
 import server.Server;
 //import service.Service;
-import dataaccess.MemoryDataAccess;
+import dataaccess.MemoryUserDAO;
 
 public class Main {
     public static void main(String[] args) {
 
-        MemoryDataAccess dataAccess = new MemoryDataAccess();
+        MemoryUserDAO dataAccess = new MemoryUserDAO();
         // variable for service
         // var service = new Service(dataAccess);
         Server server = new Server();
