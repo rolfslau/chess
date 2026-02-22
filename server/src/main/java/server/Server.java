@@ -1,12 +1,13 @@
 package server;
 
 import io.javalin.*;
+import service.UserService;
 
 public class Server {
 
     private final Javalin javalin;
 
-    public Server() {
+    public Server() { // how do i pass in all the services
         UserHandler userHandler = new UserHandler();
         javalin = Javalin.create(config -> config.staticFiles.add("web"))
                 .post("/user", userHandler::register)

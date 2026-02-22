@@ -6,13 +6,13 @@ import com.google.gson.Gson;
 import service.UserService;
 import Things.User;
 
-public class UserHandler {
+public class UserHandler { // should this inherit from server?
 
     private final UserService service;
 
     public UserHandler() {
-        this(new UserService(new MemoryUserDAO()));
-    }
+
+        }
 
     public void register(Context ctx) {
         User user = new Gson().fromJson(ctx.body(), User.class);
