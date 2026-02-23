@@ -2,12 +2,14 @@ package dataaccess;
 
 import java.util.HashMap;
 import Things.User;
+import Things.Auth;
 
 public class MemoryUserDAO implements UserDataAccess {
 
     public MemoryUserDAO() {}
 
     final public HashMap<String, User> users = new HashMap<>();
+    final public HashMap<String, String> auths = new HashMap<>();
 
     public User register(User user) {
         user = new User(user.username(), user.password(), user.email());
@@ -15,6 +17,11 @@ public class MemoryUserDAO implements UserDataAccess {
         users.put(user.username(), user);
         return user;
 
+    }
+
+    public Auth authorization(Auth auth) {
+        auths.put(auth.authToken(), auth.username());
+        return auth;
     }
 
     public User getUser(String username) {

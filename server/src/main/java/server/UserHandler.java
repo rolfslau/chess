@@ -1,10 +1,12 @@
 package server;
 
 import dataaccess.MemoryUserDAO;
+import exceptions.AlreadyExistsException;
 import io.javalin.http.Context;
 import com.google.gson.Gson;
 import service.UserService;
 import Things.User;
+import Things.Auth;
 
 public class UserHandler { // should this inherit from server?
 
@@ -14,10 +16,10 @@ public class UserHandler { // should this inherit from server?
             this.service = service;
         }
 
-    public void register(Context ctx) {
+    public void register(Context ctx) throws AlreadyExistsException {
         // check for errors
         User user = new Gson().fromJson(ctx.body(), User.class);
-        user = service.register(user);
-        ctx.result(new Gson().toJson(user));
+        Auth auth = service.register(user);
+        ctx.result(new Gson().toJson(auth));
     }
 }

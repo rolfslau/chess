@@ -2,7 +2,10 @@ package server;
 
 import dataaccess.MemoryUserDAO;
 import io.javalin.*;
+import io.javalin.http.Context;
+import org.jetbrains.annotations.NotNull;
 import service.UserService;
+import java.util.Map;
 
 public class Server {
 
@@ -17,16 +20,22 @@ public class Server {
 
         javalin = Javalin.create(config -> config.staticFiles.add("web"))
                 .post("/user", userHandler::register)
-                .post("/session", this::login)
-                .delete("/session", this::logout)
-                .get("/game", this::listGames)
-                .post("/game", this::newGame)
-                .put("/game", this::joinGame)
-                .delete("/db", this::deleteGames)
-                .exception(ResponseException.class, this::exceptionHandler);
+//                .post("/session", this::login)
+//                .delete("/session", this::logout)
+//                .get("/game", this::listGames)
+//                .post("/game", this::newGame)
+//                .put("/game", this::joinGame)
+//                .delete("/db", this::deleteGames)
+                  .exception(RuntimeException.class, this::exceptionHandler);
 
         // Register your endpoints and exception handlers here.
 
+    }
+
+    private void exceptionHandler(RuntimeException e, @NotNull Context context) {
+        context.status(400);
+        String json = "{\"error\" : \"" + e.getMessage() + "\"}";
+        context.result(json);
     }
 
     public int run(int desiredPort) {
