@@ -21,7 +21,7 @@ public class Server {
         javalin = Javalin.create(config -> config.staticFiles.add("web"))
                 .post("/user", userHandler::register)
                 .post("/session", userHandler::login)
-//                .delete("/session", this::logout)
+                .delete("/session", userHandler::logout)
 //                .get("/game", this::listGames)
 //                .post("/game", this::newGame)
 //                .put("/game", this::joinGame)

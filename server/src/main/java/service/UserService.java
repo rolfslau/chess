@@ -39,6 +39,13 @@ public class UserService {
         return dataAccess.authorization(auth);
     }
 
+    public String logout(String auth) throws DoesNotExistException {
+        if (dataAccess.getAuth(auth) == null) {
+            throw new DoesNotExistException("no user to logout");
+        }
+        return dataAccess.logout(auth);
+    }
+
     public static String generateToken() {
         return UUID.randomUUID().toString();
     }

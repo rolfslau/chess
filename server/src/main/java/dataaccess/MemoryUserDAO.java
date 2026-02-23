@@ -19,6 +19,10 @@ public class MemoryUserDAO implements UserDataAccess {
 
     }
 
+    public String logout(String auth) {
+        return auths.remove(auth);
+    }
+
     public Auth authorization(Auth auth) {
         auths.put(auth.authToken(), auth.username());
         return auth;
@@ -26,5 +30,9 @@ public class MemoryUserDAO implements UserDataAccess {
 
     public User getUser(String username) {
         return users.get(username);
+    }
+
+    public String getAuth(String auth) {
+        return auths.get(auth);
     }
 }

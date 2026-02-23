@@ -29,4 +29,10 @@ public class UserHandler { // should this inherit from server?
         Auth auth = service.login(user);
         ctx.result(new Gson().toJson(auth));
     }
+
+    public void logout(Context ctx) throws DoesNotExistException {
+        String authToken = new Gson().fromJson(ctx.header("authorization"), String.class);
+        String result = service.logout(authToken);
+        ctx.result(new Gson().toJson(result));
+    }
 }
