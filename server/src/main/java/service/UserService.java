@@ -3,6 +3,9 @@ import dataaccess.MemoryUserDAO;
 import Things.User;
 import Things.Auth;
 import exceptions.AlreadyExistsException;
+import exceptions.DoesNotExistException;
+
+import java.util.Objects;
 import java.util.UUID;
 
 
@@ -19,6 +22,18 @@ public class UserService {
             throw new AlreadyExistsException("User previously registered");
         }
         dataAccess.register(user);
+        String authToken = generateToken();
+        Auth auth = new Auth(authToken, user.username());
+        return dataAccess.authorization(auth);
+    }
+
+    public Auth login(User user) throws DoesNotExistException {
+        if (dataAccess.getUser(user.username()) == null) {
+            throw new DoesNotExistException("No user with that username");
+        }
+        else if (!Objects.equals(dataAccess.getUser(user.username()).password(), user.password())) {
+            throw new DoesNotExistException("wrong password");
+        }
         String authToken = generateToken();
         Auth auth = new Auth(authToken, user.username());
         return dataAccess.authorization(auth);

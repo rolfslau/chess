@@ -2,6 +2,7 @@ package server;
 
 import dataaccess.MemoryUserDAO;
 import exceptions.AlreadyExistsException;
+import exceptions.DoesNotExistException;
 import io.javalin.http.Context;
 import com.google.gson.Gson;
 import service.UserService;
@@ -20,6 +21,12 @@ public class UserHandler { // should this inherit from server?
         // check for errors
         User user = new Gson().fromJson(ctx.body(), User.class);
         Auth auth = service.register(user);
+        ctx.result(new Gson().toJson(auth));
+    }
+
+    public void login(Context ctx) throws DoesNotExistException {
+        User user = new Gson().fromJson(ctx.body(), User.class);
+        Auth auth = service.login(user);
         ctx.result(new Gson().toJson(auth));
     }
 }
