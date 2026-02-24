@@ -35,4 +35,9 @@ public class MemoryUserDAO implements UserDataAccess {
     public String getAuth(String auth) {
         return auths.get(auth);
     }
+
+    public void clearApp() {
+        users.clear();
+        auths.clear();
+    }
 }

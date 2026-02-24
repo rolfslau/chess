@@ -55,4 +55,9 @@ public class GameService {
         else { return !Objects.equals(game.blackUsername(), "") && Objects.equals(color, "BLACK"); }
     }
 
+    public String clearApp() {
+        uData.clearApp();
+        return dataAccess.clearApp();
+    }
+
 }

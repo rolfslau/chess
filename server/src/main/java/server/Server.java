@@ -32,7 +32,7 @@ public class Server {
                 .get("/game", gameHandler::listGames)
                 .post("/game", gameHandler::newGame)
                 .put("/game", gameHandler::joinGame)
-//                .delete("/db", this::deleteGames)
+                .delete("/db", gameHandler::clearApp)
                 .exception(RuntimeException.class, this::exceptionHandler);
 
         // Register your endpoints and exception handlers here.

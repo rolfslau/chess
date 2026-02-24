@@ -39,4 +39,9 @@ public class GameHandler {
         String result = service.joinGame(authToken, color, gameID);
         ctx.result(new Gson().toJson(result));
     }
+
+    public void clearApp(Context ctx) {
+        String result = service.clearApp();
+        ctx.result(new Gson().toJson(result));
+    }
 }

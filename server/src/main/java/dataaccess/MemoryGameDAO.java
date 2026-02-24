@@ -39,6 +39,11 @@ public class MemoryGameDAO implements GameDataAccess {
             game = new Game(game.gameID(), game.whiteUsername(), user, game.gameName(), game.game());
             games.put(gameID, game);
         }
-        return "";
+        return "game joined";
+    }
+
+    public String clearApp() {
+        games.clear();
+        return "app cleared";
     }
 }
