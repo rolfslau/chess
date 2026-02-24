@@ -642,7 +642,60 @@ CODE QUALITY
   + first char of class uppercase, first char of method lowercase
   + don't differentiate names by capitalization
   + avoid vars with similar names but dif meanings
-  + 
+
+
+UNIT TESTING
++ individual parts should be verified before being integrated
++ test smaller pieces in isolation before they are combined with other pieces
++ narrows down where to look for the bug
++ untested code is broken code -- it doesn't work
++ compare actual results vs expected results
++ should be automated
++ regression testing
+  + tells you if something broke because of new code
++ test driver program
+  + runs all the unit tests
+  + should be easy to add tests and see what passes/fails
+  + little to no manual labor (click run)
++ properties of unit tests
+  + fast
+  + cohesive - test on specific thing
+  + independent - tests shouldn't impact other tests
+  + unique - don't test the same thing twice
++ JUnit testing framework
+  + write separate test method for each test -- marked with @Test
+  + set up method(s) may be executed before each test method
+    + @BeforeEach or @BeforeAll
+  + tear down method(s) may execute after each test
+    + @AfterEach or @AfterAll
+  + use JUnit "Assertions.assert*" methods to implement test cases
++ what are the different categories of bugs that could occur?
++ @Timeout(value=, unit=) fails if the method takes too long
++ adding JUnit library to project
+  + specify dependency in Intellij
++ Unit testing database code
+  + make sure you clean up when you add something to the database so it doesn't impact other tests
+
+
+CODE COVERAGE
++ measures how much code is run by tests
++ doesn't check that the tests are good or that it actually tests the code
++ tools can be standalone or built into IDEs
++ types of code coverage
+  + line coverage - total lines executed
+  + statement coverage - same as line if every statement on its own line
+  + branch coverage - measure of how many unique code branches executed
+  + function coverage - which functions covered
++ IDE generated code doesn't need to be covered by tests
++ generally aim for 90% code coverage to account for code that shouldn't have tests
+
+
+CODE COVERAGE TOOLS
++ built-ins to IDEs
++ Cobertura - command line, open source
++ JaCoCo - command line but has plugins, open source
++ Parasoft jTest - nice but expensive
+
 
 
 
