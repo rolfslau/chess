@@ -30,8 +30,8 @@ public class Server {
                 .post("/session", userHandler::login)
                 .delete("/session", userHandler::logout)
                 .get("/game", gameHandler::listGames)
-//                .post("/game", this::newGame)
-//                .put("/game", this::joinGame)
+                .post("/game", gameHandler::newGame)
+                .put("/game", gameHandler::joinGame)
 //                .delete("/db", this::deleteGames)
                 .exception(RuntimeException.class, this::exceptionHandler);
 
