@@ -3,9 +3,12 @@ package service;
 import Things.Game;
 import dataaccess.MemoryGameDAO;
 import dataaccess.MemoryUserDAO;
+import exceptions.AlreadyExistsException;
 import exceptions.DoesNotExistException;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Objects;
 
 public class GameService {
 
@@ -17,7 +20,7 @@ public class GameService {
         this.uData = uData;
     }
 
-    public Collection<Game> listGames(String auth) throws DoesNotExistException {
+    public HashMap<Integer, Game> listGames(String auth) throws DoesNotExistException {
         if (uData.getAuth(auth) == null) {
             throw new DoesNotExistException("not authorized");
         }
@@ -31,6 +34,26 @@ public class GameService {
         return dataAccess.newGame(gameName, uData.getAuth(auth));
     }
 
+    public String joinGame(String auth, String color, int gameID) throws DoesNotExistException {
+        if (uData.getAuth(auth) == null) {
+            throw new DoesNotExistException("not authorized");
+        }
+        String user = uData.getAuth(auth);
+        Game game = dataAccess.getGame(gameID);
+        if (game == null) {
+            throw new DoesNotExistException("no game by that id");
+        }
+        if (colorTaken(game, color, gameID)) {
+            throw new AlreadyExistsException("color already taken");
+        }
+        return dataAccess.joinGame(user, color, gameID);
+    }
 
+    public Boolean colorTaken(Game game, String color, int gameID) {
+        if (!Objects.equals(game.whiteUsername(), "") && Objects.equals(color, "WHITE")) {
+            return true;
+        }
+        else { return !Objects.equals(game.blackUsername(), "") && Objects.equals(color, "BLACK"); }
+    }
 
 }

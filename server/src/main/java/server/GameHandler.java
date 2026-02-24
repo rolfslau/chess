@@ -10,6 +10,7 @@ import Things.Game;
 import Things.createGameReq;
 
 import java.util.Collection;
+import java.util.HashMap;
 
 public class GameHandler {
 
@@ -21,7 +22,7 @@ public class GameHandler {
 
     public void listGames(Context ctx) throws DoesNotExistException {
         String authToken = new Gson().fromJson(ctx.header("authorization"), String.class);
-        Collection<Game> result = service.listGames(authToken);
+        HashMap<Integer, Game> result = service.listGames(authToken);
         ctx.result(new Gson().toJson(result));
     }
 
