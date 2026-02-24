@@ -1,13 +1,13 @@
 package server;
 
-import Things.JoinGameReq;
+import Model.JoinGameReq;
 import exceptions.AlreadyExistsException;
 import service.GameService;
 import exceptions.DoesNotExistException;
 import io.javalin.http.Context;
 import com.google.gson.Gson;
-import Things.Game;
-import Things.createGameReq;
+import Model.Game;
+import Model.createGameReq;
 import java.util.HashMap;
 
 public class GameHandler {
@@ -33,7 +33,7 @@ public class GameHandler {
 
     public void joinGame(Context ctx) throws DoesNotExistException, AlreadyExistsException {
         String authToken = new Gson().fromJson(ctx.header("authorization"), String.class);
-        Things.JoinGameReq body = new Gson().fromJson(ctx.body(), JoinGameReq.class);
+        Model.JoinGameReq body = new Gson().fromJson(ctx.body(), JoinGameReq.class);
         String color = body.playerColor();
         int gameID = body.gameID();
         String result = service.joinGame(authToken, color, gameID);
@@ -41,7 +41,6 @@ public class GameHandler {
     }
 
     public void clearApp(Context ctx) {
-        String result = service.clearApp();
-        ctx.result(new Gson().toJson(result));
+        service.clearApp();
     }
 }

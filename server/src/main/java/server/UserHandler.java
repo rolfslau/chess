@@ -5,8 +5,10 @@ import exceptions.DoesNotExistException;
 import io.javalin.http.Context;
 import com.google.gson.Gson;
 import service.UserService;
-import Things.User;
-import Things.Auth;
+import Model.User;
+import Model.Auth;
+
+import java.util.Map;
 
 public class UserHandler { // should this inherit from server?
 
@@ -31,7 +33,15 @@ public class UserHandler { // should this inherit from server?
 
     public void logout(Context ctx) throws DoesNotExistException {
         String authToken = new Gson().fromJson(ctx.header("authorization"), String.class);
-        String result = service.logout(authToken);
-        ctx.result(new Gson().toJson(result));
+        try {
+            service.logout(authToken);
+            ctx.status(200);
+        }
+        catch(DoesNotExistException e) {
+            ctx.status(401);
+//            String result = "{\"message\": \"" + e.getMessage() + "\" }";
+            ctx.result(new Gson().toJson(Map.of("message", e.getMessage())));
+        }
+
     }
 }

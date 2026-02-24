@@ -1,6 +1,6 @@
 package dataaccess;
 
-import Things.Game;
+import Model.Game;
 import chess.ChessGame;
 
 import java.util.HashMap;

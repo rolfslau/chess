@@ -1,7 +1,7 @@
 package service;
 import dataaccess.MemoryUserDAO;
-import Things.User;
-import Things.Auth;
+import Model.User;
+import Model.Auth;
 import exceptions.AlreadyExistsException;
 import exceptions.DoesNotExistException;
 

@@ -40,7 +40,7 @@ public class Server {
     }
 
     private void exceptionHandler(RuntimeException e, @NotNull Context context) {
-        context.status(400);
+        context.status(500);
         String json = "{\"error\" : \"" + e.getMessage() + "\"}";
         context.result(json);
     }

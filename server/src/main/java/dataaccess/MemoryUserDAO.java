@@ -1,8 +1,8 @@
 package dataaccess;
 
 import java.util.HashMap;
-import Things.User;
-import Things.Auth;
+import Model.User;
+import Model.Auth;
 
 public class MemoryUserDAO implements UserDataAccess {
 
