@@ -1,6 +1,5 @@
 package server;
 
-import dataaccess.MemoryUserDAO;
 import exceptions.AlreadyExistsException;
 import exceptions.DoesNotExistException;
 import io.javalin.http.Context;

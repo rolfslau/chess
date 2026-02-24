@@ -9,7 +9,7 @@ import java.util.Objects;
 public class MemoryGameDAO implements GameDataAccess {
 
     int ids = 1;
-    final public HashMap<Integer, Game> games = new HashMap<Integer, Game>();
+    final public HashMap<Integer, Game> games = new HashMap<>();
 
     public MemoryGameDAO() {}
 
