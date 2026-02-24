@@ -8,8 +8,6 @@ import io.javalin.http.Context;
 import com.google.gson.Gson;
 import Things.Game;
 import Things.createGameReq;
-
-import java.util.Collection;
 import java.util.HashMap;
 
 public class GameHandler {

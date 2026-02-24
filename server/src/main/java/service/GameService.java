@@ -6,7 +6,6 @@ import dataaccess.MemoryUserDAO;
 import exceptions.AlreadyExistsException;
 import exceptions.DoesNotExistException;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -43,13 +42,13 @@ public class GameService {
         if (game == null) {
             throw new DoesNotExistException("no game by that id");
         }
-        if (colorTaken(game, color, gameID)) {
+        if (colorTaken(game, color)) {
             throw new AlreadyExistsException("color already taken");
         }
         return dataAccess.joinGame(user, color, gameID);
     }
 
-    public Boolean colorTaken(Game game, String color, int gameID) {
+    public Boolean colorTaken(Game game, String color) {
         if (!Objects.equals(game.whiteUsername(), "") && Objects.equals(color, "WHITE")) {
             return true;
         }
