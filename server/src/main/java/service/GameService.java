@@ -30,6 +30,9 @@ public class GameService {
         if (uData.getAuth(auth) == null) {
             throw new DoesNotExistException("Error: not authorized", 401);
         }
+        if (gameName == null) {
+            throw new DoesNotExistException("Error: invalid game name", 400);
+        }
         return dataAccess.newGame(gameName, uData.getAuth(auth));
     }
 
