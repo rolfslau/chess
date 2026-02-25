@@ -47,9 +47,15 @@ public class GameHandler {
     public void joinGame(Context ctx) throws DoesNotExistException, AlreadyExistsException {
         String authToken = new Gson().fromJson(ctx.header("authorization"), String.class);
         Model.JoinGameReq body = new Gson().fromJson(ctx.body(), JoinGameReq.class);
-        String color = body.playerColor();
-        int gameID = body.gameID();
-        service.joinGame(authToken, color, gameID);
+        try {
+            String color = body.playerColor();
+            int gameID = body.gameID();
+            service.joinGame(authToken, color, gameID);
+        }
+        catch(RuntimeException e) {
+            ctx.status(401);
+            ctx.result(new Gson().toJson(Map.of("message", e.getMessage())));
+        }
     }
 
     public void clearApp(Context ctx) {
