@@ -34,8 +34,14 @@ public class GameHandler {
     public void newGame(Context ctx) throws DoesNotExistException {
         String authToken = new Gson().fromJson(ctx.header("authorization"), String.class);
         String gameName = new Gson().fromJson(ctx.body(), createGameReq.class).gameName();
-        int result = service.newGame(authToken, gameName);
-        ctx.result(new Gson().toJson(Map.of("gameID", result)));
+        try {
+            int result = service.newGame(authToken, gameName);
+            ctx.result(new Gson().toJson(Map.of("gameID", result)));
+        }
+        catch(DoesNotExistException e) {
+            ctx.status(401);
+            ctx.result(new Gson().toJson(Map.of("message", e.getMessage())));
+        }
     }
 
     public void joinGame(Context ctx) throws DoesNotExistException, AlreadyExistsException {
