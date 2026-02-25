@@ -36,7 +36,7 @@ public class GameService {
         return dataAccess.newGame(gameName, uData.getAuth(auth));
     }
 
-    public void joinGame(String auth, String color, int gameID) throws DoesNotExistException {
+    public void joinGame(String auth, String color, int gameID) throws DoesNotExistException, AlreadyExistsException {
         if (uData.getAuth(auth) == null) {
             throw new DoesNotExistException("Error: not authorized", 401);
         }
@@ -47,6 +47,9 @@ public class GameService {
         }
         if (colorTaken(game, color)) {
             throw new AlreadyExistsException("Error: color already taken", 403);
+        }
+        if (!Objects.equals(color, "WHITE") && !Objects.equals(color, "BLACK")) {
+            throw new DoesNotExistException("Error: not a valid color", 400);
         }
         dataAccess.joinGame(user, color, gameID);
     }
