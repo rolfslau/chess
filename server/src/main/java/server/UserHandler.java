@@ -26,7 +26,7 @@ public class UserHandler { // should this inherit from server?
             ctx.result(new Gson().toJson(auth));
         }
         catch(AlreadyExistsException e) {
-            ctx.status(403);
+            ctx.status(e.errorCode);
             ctx.result(new Gson().toJson(Map.of("message", e.getMessage())));
         }
     }
@@ -38,7 +38,7 @@ public class UserHandler { // should this inherit from server?
             ctx.result(new Gson().toJson(auth));
         }
         catch(DoesNotExistException e) {
-            ctx.status(401); // make status part of the error?
+            ctx.status(e.errorCode); // make status part of the error?
             ctx.result(new Gson().toJson(Map.of("message", e.getMessage())));
         }
     }
@@ -50,7 +50,7 @@ public class UserHandler { // should this inherit from server?
             ctx.status(200);
         }
         catch(DoesNotExistException e) {
-            ctx.status(401);
+            ctx.status(e.errorCode);
 //            String result = "{\"message\": \"" + e.getMessage() + "\" }";
             ctx.result(new Gson().toJson(Map.of("message", e.getMessage())));
         }

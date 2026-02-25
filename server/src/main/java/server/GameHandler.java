@@ -26,7 +26,7 @@ public class GameHandler {
             ctx.result(new Gson().toJson(result));
         }
         catch(DoesNotExistException e) {
-            ctx.status(401);
+            ctx.status(e.errorCode);
             ctx.result(new Gson().toJson(Map.of("message", e.getMessage())));
         }
     }
@@ -39,7 +39,7 @@ public class GameHandler {
             ctx.result(new Gson().toJson(Map.of("gameID", result)));
         }
         catch(DoesNotExistException e) {
-            ctx.status(401);
+            ctx.status(e.errorCode);
             ctx.result(new Gson().toJson(Map.of("message", e.getMessage())));
         }
     }
@@ -52,8 +52,12 @@ public class GameHandler {
             int gameID = body.gameID();
             service.joinGame(authToken, color, gameID);
         }
-        catch(RuntimeException e) {
-            ctx.status(401);
+        catch(DoesNotExistException e) {
+            ctx.status(e.errorCode);
+            ctx.result(new Gson().toJson(Map.of("message", e.getMessage())));
+        }
+        catch(AlreadyExistsException e) {
+            ctx.status(e.errorCode);
             ctx.result(new Gson().toJson(Map.of("message", e.getMessage())));
         }
     }
