@@ -29,6 +29,10 @@ public class UserHandler { // should this inherit from server?
             ctx.status(e.errorCode);
             ctx.result(new Gson().toJson(Map.of("message", e.getMessage())));
         }
+        catch(DoesNotExistException e) {
+            ctx.status(e.errorCode);
+            ctx.result(new Gson().toJson(Map.of("message", e.getMessage())));
+        }
     }
 
     public void login(Context ctx) throws DoesNotExistException {
