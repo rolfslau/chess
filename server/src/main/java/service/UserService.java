@@ -19,7 +19,7 @@ public class UserService {
 
     public Auth register(User user) throws AlreadyExistsException {
         if (dataAccess.getUser(user.username()) != null) {
-            throw new AlreadyExistsException("User previously registered");
+            throw new AlreadyExistsException("Error: User previously registered");
         }
         dataAccess.register(user);
         String authToken = generateToken();

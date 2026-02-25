@@ -21,8 +21,14 @@ public class UserHandler { // should this inherit from server?
     public void register(Context ctx) throws AlreadyExistsException {
         // check for errors
         User user = new Gson().fromJson(ctx.body(), User.class);
-        Auth auth = service.register(user);
-        ctx.result(new Gson().toJson(auth));
+        try {
+            Auth auth = service.register(user);
+            ctx.result(new Gson().toJson(auth));
+        }
+        catch(AlreadyExistsException e) {
+            ctx.status(403);
+            ctx.result(new Gson().toJson(Map.of("message", e.getMessage())));
+        }
     }
 
     public void login(Context ctx) throws DoesNotExistException {
