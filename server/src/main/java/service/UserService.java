@@ -29,10 +29,10 @@ public class UserService {
 
     public Auth login(User user) throws DoesNotExistException {
         if (dataAccess.getUser(user.username()) == null) {
-            throw new DoesNotExistException("No user with that username");
+            throw new DoesNotExistException("Error: No user with that username");
         }
         else if (!Objects.equals(dataAccess.getUser(user.username()).password(), user.password())) {
-            throw new DoesNotExistException("wrong password");
+            throw new DoesNotExistException("Error: wrong password");
         }
         String authToken = generateToken();
         Auth auth = new Auth(authToken, user.username());
@@ -41,7 +41,7 @@ public class UserService {
 
     public String logout(String auth) throws DoesNotExistException {
         if (dataAccess.getAuth(auth) == null) {
-            throw new DoesNotExistException("no user to logout");
+            throw new DoesNotExistException("Error: no user to logout");
         }
         return dataAccess.logout(auth);
     }

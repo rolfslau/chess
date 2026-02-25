@@ -27,8 +27,14 @@ public class UserHandler { // should this inherit from server?
 
     public void login(Context ctx) throws DoesNotExistException {
         User user = new Gson().fromJson(ctx.body(), User.class);
-        Auth auth = service.login(user);
-        ctx.result(new Gson().toJson(auth));
+        try {
+            Auth auth = service.login(user);
+            ctx.result(new Gson().toJson(auth));
+        }
+        catch(DoesNotExistException e) {
+            ctx.status(401); // make status part of the error?
+            ctx.result(new Gson().toJson(Map.of("message", e.getMessage())));
+        }
     }
 
     public void logout(Context ctx) throws DoesNotExistException {
