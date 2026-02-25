@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import Model.Game;
 import Model.createGameReq;
 import java.util.HashMap;
+import java.util.Map;
 
 public class GameHandler {
 
@@ -20,15 +21,21 @@ public class GameHandler {
 
     public void listGames(Context ctx) throws DoesNotExistException {
         String authToken = new Gson().fromJson(ctx.header("authorization"), String.class);
-        HashMap<Integer, Game> result = service.listGames(authToken);
-        ctx.result(new Gson().toJson(result));
+        try {
+            HashMap<Integer, Game> result = service.listGames(authToken);
+            ctx.result(new Gson().toJson(result));
+        }
+        catch(DoesNotExistException e) {
+            ctx.status(401);
+            ctx.result(new Gson().toJson(Map.of("message", e.getMessage())));
+        }
     }
 
     public void newGame(Context ctx) throws DoesNotExistException {
         String authToken = new Gson().fromJson(ctx.header("authorization"), String.class);
         String gameName = new Gson().fromJson(ctx.body(), createGameReq.class).gameName();
         int result = service.newGame(authToken, gameName);
-        ctx.result(new Gson().toJson(result));
+        ctx.result(new Gson().toJson(Map.of("gameID", result)));
     }
 
     public void joinGame(Context ctx) throws DoesNotExistException, AlreadyExistsException {
@@ -36,8 +43,7 @@ public class GameHandler {
         Model.JoinGameReq body = new Gson().fromJson(ctx.body(), JoinGameReq.class);
         String color = body.playerColor();
         int gameID = body.gameID();
-        String result = service.joinGame(authToken, color, gameID);
-        ctx.result(new Gson().toJson(result));
+        service.joinGame(authToken, color, gameID);
     }
 
     public void clearApp(Context ctx) {

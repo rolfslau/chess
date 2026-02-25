@@ -21,31 +21,31 @@ public class GameService {
 
     public HashMap<Integer, Game> listGames(String auth) throws DoesNotExistException {
         if (uData.getAuth(auth) == null) {
-            throw new DoesNotExistException("not authorized");
+            throw new DoesNotExistException("Error: not authorized");
         }
         return dataAccess.listGames();
     }
 
     public int newGame(String auth, String gameName) throws DoesNotExistException {
         if (uData.getAuth(auth) == null) {
-            throw new DoesNotExistException("not authorized");
+            throw new DoesNotExistException("Error: not authorized");
         }
         return dataAccess.newGame(gameName, uData.getAuth(auth));
     }
 
-    public String joinGame(String auth, String color, int gameID) throws DoesNotExistException {
+    public void joinGame(String auth, String color, int gameID) throws DoesNotExistException {
         if (uData.getAuth(auth) == null) {
-            throw new DoesNotExistException("not authorized");
+            throw new DoesNotExistException("Error: not authorized");
         }
         String user = uData.getAuth(auth);
         Game game = dataAccess.getGame(gameID);
         if (game == null) {
-            throw new DoesNotExistException("no game by that id");
+            throw new DoesNotExistException("Error: no game by that id");
         }
         if (colorTaken(game, color)) {
-            throw new AlreadyExistsException("color already taken");
+            throw new AlreadyExistsException("Error: color already taken");
         }
-        return dataAccess.joinGame(user, color, gameID);
+        dataAccess.joinGame(user, color, gameID);
     }
 
     public Boolean colorTaken(Game game, String color) {

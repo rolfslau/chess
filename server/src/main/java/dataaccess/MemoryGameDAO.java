@@ -27,7 +27,7 @@ public class MemoryGameDAO implements GameDataAccess {
         return games.get(gameID);
     }
 
-    public String joinGame(String user, String color, int gameID) {
+    public void joinGame(String user, String color, int gameID) {
         Game game = games.get(gameID);
         if (Objects.equals(color, "WHITE")) {
             games.remove(gameID);
@@ -39,7 +39,6 @@ public class MemoryGameDAO implements GameDataAccess {
             game = new Game(game.gameID(), game.whiteUsername(), user, game.gameName(), game.game());
             games.put(gameID, game);
         }
-        return "game joined";
     }
 
     public String clearApp() {
