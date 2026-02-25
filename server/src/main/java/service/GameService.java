@@ -6,6 +6,7 @@ import dataaccess.MemoryUserDAO;
 import exceptions.AlreadyExistsException;
 import exceptions.DoesNotExistException;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -19,7 +20,7 @@ public class GameService {
         this.uData = uData;
     }
 
-    public HashMap<Integer, Game> listGames(String auth) throws DoesNotExistException {
+    public Collection<Game> listGames(String auth) throws DoesNotExistException {
         if (uData.getAuth(auth) == null) {
             throw new DoesNotExistException("Error: not authorized", 401);
         }
@@ -33,7 +34,7 @@ public class GameService {
         if (gameName == null) {
             throw new DoesNotExistException("Error: invalid game name", 400);
         }
-        return dataAccess.newGame(gameName, uData.getAuth(auth));
+        return dataAccess.newGame(gameName);
     }
 
     public void joinGame(String auth, String color, int gameID) throws DoesNotExistException, AlreadyExistsException {
@@ -45,11 +46,11 @@ public class GameService {
         if (game == null) {
             throw new DoesNotExistException("Error: no game by that id", 400);
         }
-        if (colorTaken(game, color)) {
-            throw new AlreadyExistsException("Error: color already taken", 403);
-        }
         if (!Objects.equals(color, "WHITE") && !Objects.equals(color, "BLACK")) {
             throw new DoesNotExistException("Error: not a valid color", 400);
+        }
+        if (colorTaken(game, color)) {
+            throw new AlreadyExistsException("Error: color already taken", 403);
         }
         dataAccess.joinGame(user, color, gameID);
     }

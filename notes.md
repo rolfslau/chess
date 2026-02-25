@@ -704,7 +704,10 @@ TO DO
 + set the statuses
 + the type of my data access should be the interface
 
-
++ bad request -- info that doesn't make sense based on the request they made
+  + ex no username, no password
++ unauthorized -- auth token invalid, username or password wrong
+  + wrong username is not bad request
 
 
 

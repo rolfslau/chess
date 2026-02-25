@@ -8,6 +8,10 @@ import io.javalin.http.Context;
 import com.google.gson.Gson;
 import Model.Game;
 import Model.createGameReq;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,8 +26,8 @@ public class GameHandler {
     public void listGames(Context ctx) throws DoesNotExistException {
         String authToken = new Gson().fromJson(ctx.header("authorization"), String.class);
         try {
-            HashMap<Integer, Game> result = service.listGames(authToken);
-            ctx.result(new Gson().toJson(result));
+            Collection<Game> result = service.listGames(authToken);
+            ctx.result(new Gson().toJson(Map.of("games",  result)));
         }
         catch(DoesNotExistException e) {
             ctx.status(e.errorCode);
