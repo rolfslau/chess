@@ -7,7 +7,6 @@ import exceptions.AlreadyExistsException;
 import exceptions.DoesNotExistException;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Objects;
 
 public class GameService {
@@ -62,9 +61,9 @@ public class GameService {
         else { return !Objects.equals(game.blackUsername(), null) && Objects.equals(color, "BLACK"); }
     }
 
-    public String clearApp() {
+    public void clearApp() {
         uData.clearApp();
-        return dataAccess.clearApp();
+        dataAccess.clearApp();
     }
 
 }

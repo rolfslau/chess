@@ -53,11 +53,11 @@ public class UserService {
         return dataAccess.authorization(auth);
     }
 
-    public String logout(String auth) throws DoesNotExistException {
+    public void logout(String auth) throws DoesNotExistException {
         if (dataAccess.getAuth(auth) == null) {
             throw new DoesNotExistException("Error: no user to logout", 401);
         }
-        return dataAccess.logout(auth);
+        dataAccess.logout(auth);
     }
 
     public static String generateToken() {
