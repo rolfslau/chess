@@ -697,13 +697,71 @@ CODE COVERAGE TOOLS
 + Parasoft jTest - nice but expensive
 
 
+RELATIONAL DATABASES - THE RELATIONAL MODEL
++ databases implemented by Database Management Systems
+  + oracle, MySQL, PostgreSQL, MS SQL server
++ you can access the database through console or through your server
++ embedded -- it is in the device you are using
++ Server -- access database over a network
++ RELATIONAL DATABASES
+  + relations = tables
+  + tuples = rows
+  + data is stored in tables (which are like classes)
+    + each row is like an object
+    + columns store an object's attributes
+  + each row has a "primary key" which is a unique identifier for that row
+    + primary key in one table matches foreign key in another
+    + can be multiple columns -- together they uniquely identify the row (composite key)
+  + many-to-many relationship
+    + have a separate third table that takes the two primary keys and pairs them
+    + could have more than just the primary keys but typically just the primaries
+  + natural keys have meaning outside the database as well
+  + don't change keys after they are made -- because you have to change it on multiple tables
+  + sometimes artificial keys make your database slower, but if you use a complicated natural key
+    it can make changing things more complicated -- so its a balance
+  + foreign keys - same val as a primary in another table (relationship)
+  + tables can have foreign keys to itself
+    + for example parent id (which links to the regular id)
+  + types of object relationships
+    + one-to-one -- one thing maps to one thing (ex: social security number → person)
+    + one-to-many -- one thing maps to multiple things (ex: user → photos)
+    + many-to-many -- multiple things map to multiple things (ex: students → classes)
++ MODEL INHERITANCE RELATIONSHIPS
+  + horizontal partitioning -- each concrete class mapped to a table; table for specific subclasses which have the attrs of the parent
+  + vertical partitioning -- each class mapped to a table, concrete or not
+  + unification -- each subclass mapped to the same table
 
 
-TO DO 
-+ update handler to catch exceptions
-+ set the statuses
+SQL
++ Data Definition Language
+  + create/delete tables
+  + alter tables
++ Data Manipulation Language
+  + insert/update/delete rows
++ Data Query Language
+  + search tables for data of interest
++ SQL DATA TYPES
+  + Character strings (CHARACTER(n) or CHAR(n) -- fixed width n-character string) 
+  (CHARACTER VARYING(n) or VARCHAR(n) -- variable-width string with max n characters)
+  + Bit strings (BIT(n) - an array of n bits) (BIT VARYING)
+  + Numbers (INTEGER and SMALLINT) (FLOAT, REAL, DOUBLE PRECISION) 
+  (NUMERIC(precision, scale) or DECIMAL(precision, scale))
+  + Large objects (BLOB - binary large object - ex: images, sound, video etc.) 
+  (CLOB - character large object - ex: text documents) [usually don't use these, just make a 
+  var char w link to these]
+  + date and time
+    + DATE
+    + TIME
+    + TIME WITH TIME ZONE or TIMETZ
+    + TIMESTAMP - date and time put together
+    + TIMESTAMP WITH TIMEZONE OR TIMESTAMPTZ
+  + creating drop tables
+    + 
+
+
+
+TO DO
 + the type of my data access should be the interface
-
 + bad request -- info that doesn't make sense based on the request they made
   + ex no username, no password
 + unauthorized -- auth token invalid, username or password wrong
