@@ -56,10 +56,10 @@ public class GameService {
     }
 
     public Boolean colorTaken(Game game, String color) {
-        if (!Objects.equals(game.whiteUsername(), "") && Objects.equals(color, "WHITE")) {
+        if (!Objects.equals(game.whiteUsername(), null) && Objects.equals(color, "WHITE")) {
             return true;
         }
-        else { return !Objects.equals(game.blackUsername(), "") && Objects.equals(color, "BLACK"); }
+        else { return !Objects.equals(game.blackUsername(), null) && Objects.equals(color, "BLACK"); }
     }
 
     public String clearApp() {

@@ -23,7 +23,7 @@ public class MemoryGameDAO implements GameDataAccess {
     }
 
     public int newGame(String gameName) {
-        Game game = new Game(ids, "", "", gameName, new ChessGame());
+        Game game = new Game(ids, null, null, gameName, new ChessGame());
         games.put(ids, game);
         return ids++;
     }
