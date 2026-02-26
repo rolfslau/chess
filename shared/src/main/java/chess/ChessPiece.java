@@ -1,7 +1,7 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -10,13 +10,10 @@ import java.util.Objects;
  * Note: You can add to this class, but you may not alter
  * signature of the existing methods.
  */
-
-// don't make a class for each kind of piece -- problems when you need to add it to the database
-
 public class ChessPiece {
 
     private final ChessGame.TeamColor pieceColor;
-    private final PieceType type;
+    private final ChessPiece.PieceType type;
 
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
         this.pieceColor = pieceColor;
@@ -56,24 +53,39 @@ public class ChessPiece {
      *
      * @return Collection of valid moves
      */
-
-    // dr robins vid tells us the better way to do this without subclasses
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        ChessPiece piece = board.getPiece(myPosition);
-        // look up a switch statement
-        // make an instance of the class first, and then use that instance for the calculations
-        return switch (piece.getPieceType()) {
-            case PAWN -> PawnMovesCalc.getMoves(board, myPosition, piece.pieceColor);
-            case ROOK -> RookMovesCalc.getMoves(board, myPosition);
-            case KNIGHT -> KnightMovesCalc.getMoves(board, myPosition);
-            case KING -> KingMovesCalc.getMoves(board, myPosition);
-            case QUEEN -> QueenMovesCalc.getMoves(board, myPosition);
-            case BISHOP -> BishopMovesCalc.getMoves(board, myPosition);
-            default -> List.of();
-        };
-//        if (piece.getPieceType() == PieceType.BISHOP) {
-//            return list.of(new ChessMove(new ChessPosition()));
-//        }
+        Collection<ChessMove> moves = new ArrayList<>();
+        switch (board.getPiece(myPosition).getPieceType()) {
+            case PAWN:
+                PawnMovesCalc pawn = new PawnMovesCalc(board, myPosition, board.getPiece(myPosition).getTeamColor());
+                moves.addAll(pawn.findMovePawn());
+                return moves;
+            case ROOK:
+                RookMovesCalc rook = new RookMovesCalc(board, myPosition, board.getPiece(myPosition).getTeamColor());
+                int[][] poses = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+                moves.addAll(rook.findMoveRB(poses));
+                return moves;
+            case BISHOP:
+                BishopMovesCalc bish = new BishopMovesCalc(board, myPosition, board.getPiece(myPosition).getTeamColor());
+                int[][] poses2 = {{1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
+                moves.addAll(bish.findMoveRB(poses2));
+                return moves;
+            case KNIGHT:
+                KnightMovesCalc knight = new KnightMovesCalc(board, myPosition, board.getPiece(myPosition).getTeamColor());
+                int[][] poses3 = {{1, 2}, {-1, 2}, {1, -2}, {-1, -2}, {2, 1}, {-2, 1}, {2, -1}, {-2, -1}};
+                moves.addAll(knight.findMoveKK(poses3));
+                return moves;
+            case KING:
+                KingMovesCalc king = new KingMovesCalc(board, myPosition, board.getPiece(myPosition).getTeamColor());
+                int[][] poses4 = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}, {1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
+                moves.addAll(king.findMoveKK(poses4));
+                return moves;
+            case QUEEN:
+                QueenMovesCalc queen = new QueenMovesCalc(board, myPosition, board.getPiece(myPosition).getTeamColor());
+                moves.addAll(queen.findMoveQ());
+                return moves;
+        }
+        return moves;
     }
 
     @Override

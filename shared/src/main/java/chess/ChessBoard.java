@@ -36,7 +36,6 @@ public class ChessBoard {
      */
     public ChessPiece getPiece(ChessPosition position) {
         return board[position.getRow()-1][position.getColumn()-1];
-//        return board[position.row][position.col]; // is this even close?
     }
 
     /**
@@ -44,35 +43,25 @@ public class ChessBoard {
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
+        board = new ChessPiece[8][8];
 
-        // order of pieces so that I don't have to hard code each and every one
         ChessPiece.PieceType[] order = {ChessPiece.PieceType.ROOK, ChessPiece.PieceType.KNIGHT,
                 ChessPiece.PieceType.BISHOP, ChessPiece.PieceType.QUEEN, ChessPiece.PieceType.KING,
                 ChessPiece.PieceType.BISHOP, ChessPiece.PieceType.KNIGHT, ChessPiece.PieceType.ROOK};
 
-        board = new ChessPiece[8][8];
-
-        // initialize black board
+        // white setup
         for (int i = 0; i < 8; i++) {
             board[1][i] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
-        }
-        for (int i = 0; i < 8; i++) {
             board[0][i] = new ChessPiece(ChessGame.TeamColor.WHITE, order[i]);
         }
 
-        //initialize white board
+        // black setup
         for (int i = 0; i < 8; i++) {
             board[6][i] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN);
-        }
-        for (int i = 0; i < 8; i++) {
             board[7][i] = new ChessPiece(ChessGame.TeamColor.BLACK, order[i]);
         }
 
-        // clear the rest of the board
-//        for (int i = 2; i < 6; i++) {
-//            for (int j = 0; j < 8; j++) {
-//                board[i][j] = null;
-            }
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -122,7 +111,5 @@ public class ChessBoard {
         this.addPiece(move.getStartPosition(), null);
     }
 }
-        // what if we create an empty board first and then add in the pieces? that way i don't have to
-        // go through and clear anything?
 
 
