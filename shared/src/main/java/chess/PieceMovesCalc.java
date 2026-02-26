@@ -71,7 +71,7 @@ public class PieceMovesCalc {
                 }
 
                 // promotion
-                else if (Promote()) {
+                else if (promote()) {
                     ChessPosition newPos = new ChessPosition(pos.getRow() +1, pos.getColumn());
                     muvs.add(new ChessMove(pos, newPos, ChessPiece.PieceType.ROOK));
                     muvs.add(new ChessMove(pos, newPos, ChessPiece.PieceType.KNIGHT));
@@ -97,7 +97,7 @@ public class PieceMovesCalc {
                 }
 
                 // promotion
-                else if (Promote()) {
+                else if (promote()) {
                     ChessPosition newPos = new ChessPosition(pos.getRow() - 1, pos.getColumn());
                     muvs.add(new ChessMove(pos, newPos, ChessPiece.PieceType.ROOK));
                     muvs.add(new ChessMove(pos, newPos, ChessPiece.PieceType.KNIGHT));
@@ -170,7 +170,7 @@ public class PieceMovesCalc {
         return muvs;
     }
 
-    public Boolean Promote() {
+    public Boolean promote() {
         switch (color) {
             case WHITE:
                 ChessPosition newPos = new ChessPosition(pos.getRow() + 1, pos.getColumn());

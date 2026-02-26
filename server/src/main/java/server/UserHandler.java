@@ -5,8 +5,8 @@ import exceptions.DoesNotExistException;
 import io.javalin.http.Context;
 import com.google.gson.Gson;
 import service.UserService;
-import Model.User;
-import Model.Auth;
+import model.User;
+import model.Auth;
 
 import java.util.Map;
 

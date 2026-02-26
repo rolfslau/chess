@@ -1,7 +1,7 @@
 package service;
 import dataaccess.MemoryUserDAO;
-import Model.User;
-import Model.Auth;
+import model.User;
+import model.Auth;
 import exceptions.AlreadyExistsException;
 import exceptions.DoesNotExistException;
 

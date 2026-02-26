@@ -1,6 +1,6 @@
 package service;
 
-import Model.Game;
+import model.Game;
 import dataaccess.MemoryGameDAO;
 import dataaccess.MemoryUserDAO;
 import exceptions.AlreadyExistsException;

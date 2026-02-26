@@ -105,23 +105,6 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-//        Collection<ChessMove> opMoves = new ArrayList<>();
-//        ChessPosition kingPos = findKing(board, teamColor);
-//        for (int i = 1; i < 9; i++) {
-//            for (int j = 1; j < 9; j++) {
-//                ChessPosition pos = new ChessPosition(i, j);
-//                if (board.getPiece(pos) != null && board.getPiece(pos).getTeamColor() != teamColor) {
-//                    opMoves.addAll(validMoves(pos));
-//                }
-//            }
-//        }
-//
-//        for (ChessMove muv : opMoves) {
-//            if (muv.getEndPosition() == kingPos) {
-//                return true;
-//            }
-//        }
-//        return false;
         return isInCheck(teamColor, board);
     }
 
@@ -161,6 +144,7 @@ public class ChessGame {
         }
         ChessBoard board = getBoard();
 
+        // this and line 173 are duplicated
         Collection<ChessMove> validMoves = new ArrayList<>();
         for (int i = 1; i < 9; i++) {
             for (int j = 1; j < 9; j++) {

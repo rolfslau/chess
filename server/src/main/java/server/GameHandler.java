@@ -1,13 +1,13 @@
 package server;
 
-import Model.JoinGameReq;
+import model.JoinGameReq;
 import exceptions.AlreadyExistsException;
 import service.GameService;
 import exceptions.DoesNotExistException;
 import io.javalin.http.Context;
 import com.google.gson.Gson;
-import Model.Game;
-import Model.createGameReq;
+import model.Game;
+import model.CreateGameReq;
 import java.util.Collection;
 import java.util.Map;
 
@@ -33,7 +33,7 @@ public class GameHandler {
 
     public void newGame(Context ctx) throws DoesNotExistException {
         String authToken = ctx.header("authorization");
-        String gameName = new Gson().fromJson(ctx.body(), createGameReq.class).gameName();
+        String gameName = new Gson().fromJson(ctx.body(), CreateGameReq.class).gameName();
         try {
             int result = service.newGame(authToken, gameName);
             ctx.result(new Gson().toJson(Map.of("gameID", result)));
@@ -47,7 +47,7 @@ public class GameHandler {
     public void joinGame(Context ctx) throws DoesNotExistException, AlreadyExistsException {
 //        String authToken = new Gson().fromJson(ctx.header("authorization"), String.class);
         String authToken = ctx.header("authorization");
-        Model.JoinGameReq body = new Gson().fromJson(ctx.body(), JoinGameReq.class);
+        model.JoinGameReq body = new Gson().fromJson(ctx.body(), JoinGameReq.class);
         try {
             String color = body.playerColor();
             int gameID = body.gameID();
