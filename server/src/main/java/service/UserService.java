@@ -34,12 +34,19 @@ public class UserService {
     }
 
     public Auth login(User user) throws DoesNotExistException {
-        if (dataAccess.getUser(user.username()) == null || dataAccess.getUser(user.username()) == null) {
-            throw new DoesNotExistException("Error: No user with that username", 401);
+        if (user.username() == null) {
+            throw new DoesNotExistException("Error: bad request", 400);
+        }
+        if (user.password() == null) {
+            throw new DoesNotExistException("Error: bad request", 400);
+        }
+        if (dataAccess.getUser(user.username()) == null) {
+            throw new DoesNotExistException("Error: unauthorized", 401);
         }
         if (!Objects.equals(dataAccess.getUser(user.username()).password(), user.password())) {
-            throw new DoesNotExistException("Error: wrong password", 400);
+            throw new DoesNotExistException("Error: unauthorized", 401);
         }
+
 
         String authToken = generateToken();
         Auth auth = new Auth(authToken, user.username());
