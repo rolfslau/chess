@@ -1,5 +1,7 @@
 package chess;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
@@ -145,17 +147,7 @@ public class ChessGame {
         ChessBoard board = getBoard();
 
         // this and line 173 are duplicated
-        Collection<ChessMove> validMoves = new ArrayList<>();
-        for (int i = 1; i < 9; i++) {
-            for (int j = 1; j < 9; j++) {
-                ChessPosition pos = new ChessPosition(i, j);
-                if (board.getPiece(pos) != null && board.getPiece(pos).getTeamColor() == teamColor) {
-                    validMoves.addAll(validMoves(pos));
-                    // how do I get the board if I can't add to
-                    // the class constructor?
-                }
-            }
-        }
+        Collection<ChessMove> validMoves = getChessMoves(teamColor, board);
         return validMoves.isEmpty();
     }
 
@@ -169,6 +161,12 @@ public class ChessGame {
     public boolean isInStalemate(TeamColor teamColor) {
         ChessBoard board = getBoard();
 
+        Collection<ChessMove> validMoves = getChessMoves(teamColor, board);
+        return validMoves.isEmpty() && !isInCheck(teamColor);
+    }
+
+    @NotNull
+    private Collection<ChessMove> getChessMoves(TeamColor teamColor, ChessBoard board) {
         Collection<ChessMove> validMoves = new ArrayList<>();
         for (int i = 1; i < 9; i++) {
             for (int j = 1; j < 9; j++) {
@@ -178,7 +176,7 @@ public class ChessGame {
                 }
             }
         }
-        return validMoves.isEmpty() && !isInCheck(teamColor);
+        return validMoves;
     }
 
     /**

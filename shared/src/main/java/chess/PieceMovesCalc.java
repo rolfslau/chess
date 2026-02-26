@@ -138,8 +138,12 @@ public class PieceMovesCalc {
                 }
                 // regular move
                 else {
-                    if (inBounds(newPos) && board.getPiece(newPos) != null && board.getPiece(newPos).getTeamColor() != color) { muvs.add(new ChessMove(pos, newPos, null)); }
-                    if (inBounds(newPos2) && board.getPiece(newPos2) != null && board.getPiece(newPos2).getTeamColor() != color) { muvs.add(new ChessMove(pos, newPos2, null)); }
+                    if (inBounds(newPos) && board.getPiece(newPos) != null && board.getPiece(newPos).getTeamColor() != color) {
+                        muvs.add(new ChessMove(pos, newPos, null));
+                    }
+                    if (inBounds(newPos2) && board.getPiece(newPos2) != null && board.getPiece(newPos2).getTeamColor() != color) {
+                        muvs.add(new ChessMove(pos, newPos2, null));
+                    }
                 }
                 return muvs;
 
@@ -163,8 +167,12 @@ public class PieceMovesCalc {
                 }
                 // regular move
                 else {
-                    if (inBounds(newPos3) && board.getPiece(newPos3) != null && board.getPiece(newPos3).getTeamColor() != color) { muvs.add(new ChessMove(pos, newPos3, null)); }
-                    if (inBounds(newPos4) && board.getPiece(newPos4) != null && board.getPiece(newPos4).getTeamColor() != color) { muvs.add(new ChessMove(pos, newPos4, null)); }
+                    if (inBounds(newPos3) && board.getPiece(newPos3) != null && board.getPiece(newPos3).getTeamColor() != color) {
+                        muvs.add(new ChessMove(pos, newPos3, null));
+                    }
+                    if (inBounds(newPos4) && board.getPiece(newPos4) != null && board.getPiece(newPos4).getTeamColor() != color) {
+                        muvs.add(new ChessMove(pos, newPos4, null));
+                    }
                 }
         }
         return muvs;
