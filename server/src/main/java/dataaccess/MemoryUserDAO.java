@@ -1,5 +1,6 @@
 package dataaccess;
 
+import java.util.Collection;
 import java.util.HashMap;
 import model.User;
 import model.Auth;

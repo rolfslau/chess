@@ -61,7 +61,7 @@ public class UserService {
         dataAccess.logout(auth);
     }
 
-    public static String generateToken() {
+    private static String generateToken() {
         return UUID.randomUUID().toString();
     }
 }
