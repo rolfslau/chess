@@ -22,7 +22,7 @@ public class UserService {
         if (dataAccess.getUser(user.username()) != null) {
             throw new AlreadyExistsException("Error: User previously registered", 403);
         }
-        if (Objects.equals(user.username(), "")) {
+        if (Objects.equals(user.username(), "") || Objects.equals(user.username(), null)) {
             throw new DoesNotExistException("Error: bad request", 400);
         }
         if (user.password() == null) {
