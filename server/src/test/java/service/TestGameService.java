@@ -40,13 +40,15 @@ public class TestGameService {
         User registered = new User("laurel", "password!", "email@gmail.com");
         userService.register(registered);
         Auth auth = userService.login(registered);
-        gameService.newGame(auth.authToken(), "game name!!");
         Collection<Game> games = gameService.listGames(auth.authToken());
-        Assertions.assertFalse(games.isEmpty());
+        Assertions.assertTrue(games.isEmpty());
+        gameService.newGame(auth.authToken(), "game name!!");
+        Collection<Game> gamesNotEmpty = gameService.listGames(auth.authToken());
+        Assertions.assertFalse(gamesNotEmpty.isEmpty());
     }
 
     @Test
-    @Order(1)
+    @Order(2)
     @DisplayName("List Games Negative")
     public void listGamesFailure() {
         User registered = new User("laurel", "password!", "email@gmail.com");
@@ -54,6 +56,29 @@ public class TestGameService {
         Auth auth = userService.login(registered);
         Assertions.assertThrows(DoesNotExistException.class,
                 () -> gameService.listGames(auth.authToken() + "blahblahblah"));
+    }
+
+    @Test
+    @Order(3)
+    @DisplayName("New Game Positive")
+    public void newGameSuccess() {
+        User registered = new User("laurel", "password!", "email@gmail.com");
+        userService.register(registered);
+        Auth auth = userService.login(registered);
+        int gameID = gameService.newGame(auth.authToken(), "game name!!");
+        Assertions.assertEquals(new Game(1, null, null, "game name!!", new ChessGame()),
+                gameDAO.getGame(gameID));
+    }
+
+    @Test
+    @Order(4)
+    @DisplayName("New Game Negative")
+    public void newGameFailure() {
+        User registered = new User("laurel", "password!", "email@gmail.com");
+        userService.register(registered);
+        Auth auth = userService.login(registered);
+        Assertions.assertThrows(DoesNotExistException.class,
+                () -> gameService.newGame(auth.authToken(), null));
     }
 
 
