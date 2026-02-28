@@ -8,10 +8,6 @@ import exceptions.DoesNotExistException;
 import model.Auth;
 import model.User;
 import org.junit.jupiter.api.*;
-import server.GameHandler;
-import server.Server;
-import chess.ChessGame;
-import server.UserHandler;
 
 public class TestUserService {
 
@@ -31,6 +27,7 @@ public class TestUserService {
     }
 
     @Test
+    @Order(1)
     @DisplayName("Registration Positive")
     public void registrationSuccess() {
         User registered = new User("laurel", "password!", "email@gmail.com");
@@ -39,6 +36,7 @@ public class TestUserService {
     }
 
     @Test
+    @Order(2)
     @DisplayName("Registration Negative")
     public void registrationFailure() {
         User registered = new User(null, "password!", "email@gmail.com");
@@ -47,6 +45,7 @@ public class TestUserService {
     }
 
     @Test
+    @Order(3)
     @DisplayName("Login Positive")
     public void loginSuccess() {
         User registered = new User("laurel", "password!", "email@gmail.com");
@@ -56,6 +55,7 @@ public class TestUserService {
     }
 
     @Test
+    @Order(4)
     @DisplayName("Login Negative")
     public void loginFailure() {
         User registered = new User("laurel", "password!", "email@gmail.com");
@@ -65,6 +65,7 @@ public class TestUserService {
     }
 
     @Test
+    @Order(5)
     @DisplayName("Logout Positive")
     public void logoutSuccess() {
         User registered = new User("laurel", "password!", "email@gmail.com");
@@ -75,6 +76,7 @@ public class TestUserService {
     }
 
     @Test
+    @Order(6)
     @DisplayName("Logout Negative")
     public void logoutFailure() {
         User registered = new User("laurel", "password!", "email@gmail.com");
