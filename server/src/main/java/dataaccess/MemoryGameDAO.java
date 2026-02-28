@@ -46,8 +46,7 @@ public class MemoryGameDAO implements GameDataAccess {
         }
     }
 
-    public String clearApp() {
+    public void clearApp() {
         games.clear();
-        return "app cleared";
     }
 }

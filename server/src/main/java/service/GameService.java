@@ -1,5 +1,7 @@
 package service;
 
+import dataaccess.GameDataAccess;
+import dataaccess.UserDataAccess;
 import model.Game;
 import dataaccess.MemoryGameDAO;
 import dataaccess.MemoryUserDAO;
@@ -11,10 +13,10 @@ import java.util.Objects;
 
 public class GameService {
 
-    public final MemoryGameDAO dataAccess;
-    public final MemoryUserDAO uData;
+    public final GameDataAccess dataAccess;
+    public final UserDataAccess uData;
 
-    public GameService(MemoryGameDAO dataAccess, MemoryUserDAO uData) {
+    public GameService(GameDataAccess dataAccess, UserDataAccess uData) {
         this.dataAccess = dataAccess;
         this.uData = uData;
     }

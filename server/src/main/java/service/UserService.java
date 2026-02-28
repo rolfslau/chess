@@ -1,5 +1,6 @@
 package service;
 import dataaccess.MemoryUserDAO;
+import dataaccess.UserDataAccess;
 import model.User;
 import model.Auth;
 import exceptions.AlreadyExistsException;
@@ -11,9 +12,9 @@ import java.util.UUID;
 
 public class UserService {
 
-    private final MemoryUserDAO dataAccess;
+    private final UserDataAccess dataAccess;
 
-    public UserService(MemoryUserDAO dataAccess) {
+    public UserService(UserDataAccess dataAccess) {
         this.dataAccess = dataAccess;
     }
 
