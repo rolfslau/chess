@@ -64,4 +64,23 @@ public class TestUserService {
         Assertions.assertThrows(DoesNotExistException.class, () -> userService.login(incorrect));
     }
 
+    @Test
+    @DisplayName("Logout Positive")
+    public void logoutSuccess() {
+        User registered = new User("laurel", "password!", "email@gmail.com");
+        userService.register(registered);
+        Auth auth = userService.login(registered);
+        userService.logout(auth.authToken());
+        Assertions.assertThrows(DoesNotExistException.class, () -> gameService.listGames(auth.authToken()));
+    }
+
+    @Test
+    @DisplayName("Logout Negative")
+    public void logoutFailure() {
+        User registered = new User("laurel", "password!", "email@gmail.com");
+        userService.register(registered);
+        Auth auth = userService.login(registered);
+        Assertions.assertThrows(DoesNotExistException.class, () -> userService.logout(auth.authToken() + "blahblahblah"));
+    }
+
 }
