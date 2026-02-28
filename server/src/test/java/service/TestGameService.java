@@ -34,7 +34,7 @@ public class TestGameService {
 
 
     @Test
-    @Order(1)
+    @Order(3)
     @DisplayName("List Games Positive")
     public void listGamesSuccess() {
         User registered = new User("laurel", "password!", "email@gmail.com");
@@ -48,7 +48,7 @@ public class TestGameService {
     }
 
     @Test
-    @Order(2)
+    @Order(4)
     @DisplayName("List Games Negative")
     public void listGamesFailure() {
         User registered = new User("laurel", "password!", "email@gmail.com");
@@ -59,7 +59,7 @@ public class TestGameService {
     }
 
     @Test
-    @Order(3)
+    @Order(1)
     @DisplayName("New Game Positive")
     public void newGameSuccess() {
         User registered = new User("laurel", "password!", "email@gmail.com");
@@ -71,7 +71,7 @@ public class TestGameService {
     }
 
     @Test
-    @Order(4)
+    @Order(2)
     @DisplayName("New Game Negative")
     public void newGameFailure() {
         User registered = new User("laurel", "password!", "email@gmail.com");
@@ -81,5 +81,30 @@ public class TestGameService {
                 () -> gameService.newGame(auth.authToken(), null));
     }
 
+
+    @Test
+    @Order(5)
+    @DisplayName("Join Game Positive")
+    public void joinGameSuccess() {
+        User registered = new User("laurel", "password!", "email@gmail.com");
+        userService.register(registered);
+        Auth auth = userService.login(registered);
+        int gameID = gameService.newGame(auth.authToken(), "game name!!");
+        gameService.joinGame(auth.authToken(), "WHITE", gameID);
+        Assertions.assertEquals("laurel", gameDAO.getGame(gameID).whiteUsername());
+    }
+
+
+    @Test
+    @Order(6)
+    @DisplayName("Join Game Negative")
+    public void joinGameFailure() {
+        User registered = new User("laurel", "password!", "email@gmail.com");
+        userService.register(registered);
+        Auth auth = userService.login(registered);
+        gameService.newGame(auth.authToken(), "game name!!");
+        Assertions.assertThrows(DoesNotExistException.class,
+                () -> gameService.joinGame(auth.authToken(), "WHITE", 2));
+    }
 
 }
