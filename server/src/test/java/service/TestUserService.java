@@ -12,15 +12,19 @@ import server.UserHandler;
 
 public class TestUserService {
 
-    UserDataAccess userDAO = new MemoryUserDAO();
-    GameDataAccess gameDAO = new MemoryGameDAO();
+    public UserDataAccess userDAO;
+    public GameDataAccess gameDAO;
 
-    UserService userService = new UserService(userDAO);
-    GameService gameService = new GameService(gameDAO, userDAO);
+    public UserService userService;
+    public GameService gameService;
 
     @BeforeEach
     public void setup() {
+        userDAO = new MemoryUserDAO();
+        gameDAO = new MemoryGameDAO();
 
+        userService = new UserService(userDAO);
+        gameService = new GameService(gameDAO, userDAO);
     }
 
 }
