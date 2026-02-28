@@ -56,7 +56,7 @@ public class GameService {
         dataAccess.joinGame(user, color, gameID);
     }
 
-    public Boolean colorTaken(Game game, String color) {
+    private Boolean colorTaken(Game game, String color) {
         if (!Objects.equals(game.whiteUsername(), null) && Objects.equals(color, "WHITE")) {
             return true;
         }

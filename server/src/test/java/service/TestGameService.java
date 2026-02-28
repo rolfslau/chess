@@ -107,4 +107,19 @@ public class TestGameService {
                 () -> gameService.joinGame(auth.authToken(), "WHITE", 2));
     }
 
+
+    @Test
+    @Order(7)
+    @DisplayName("Clear App Positive")
+    public void clearAppSuccess() {
+        User registered = new User("laurel", "password!", "email@gmail.com");
+        userService.register(registered);
+        Auth auth = userService.login(registered);
+        gameService.newGame(auth.authToken(), "game name!!");
+        gameService.clearApp();
+        Assertions.assertNull(gameDAO.getGame(1));
+        Assertions.assertNull(userDAO.getUser("laurel"));
+        Assertions.assertNull(userDAO.getAuth(auth.authToken()));
+    }
+
 }
