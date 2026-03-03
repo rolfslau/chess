@@ -755,8 +755,89 @@ SQL
     + TIME WITH TIME ZONE or TIMETZ
     + TIMESTAMP - date and time put together
     + TIMESTAMP WITH TIMEZONE OR TIMESTAMPTZ
-  + creating drop tables
-    + 
+
+
+SQL PART TWO
+  + creating tables
+    + part of DDL (data definition language)
+    + CREATE TABLE (keywords) book (name you want to give to table), 
+    then comma separated list of attrs
+    + create table if not exists book
+    + id integer not null primary key auto_increment
+    + title varchar(255) not null (so they have to give a title) [you can have a bunch of these]
+    + foreign key(genre) references genre(genre) [enforce referential integrity]
+  + foreign key constraints
+    + not required
+    + enforce that values used as foreign keys exist in parent tables
+    + disallow deletes of parent table rows when referenced as a foreign key in another table
+    + disallow updates of the parent row primary key value (if will lead to orphan)
+  + dropping tables
+    + drop table book
+    + drop table if exists book
+    + must drop tables with foreign keys first
+  + INSERTING DATA INTO TABLES
+    + INSERT INTO book
+    + comma separated list of attrs you will provide values for VALUES comma separated list of the values
+    + ex: (title, author, genre) VALUES ("Edenbrooke", "Julianne Donaldson", "Historical Fiction")
+  + UPDATE
+    + UPDATE tableName
+    + SET column = value, column = value... 
+    + WHERE condition
+  + DELETE
+    + DELETE FROM table
+    + WHERE condition
+  + retrieve data with SQL queries
+    + SELECT column, column...
+    + FROM table, table ...
+    + INNER JOIN/OUTER JOIN table ON condition (will join to the from table)
+    + WHERE condition (super necessary or its just a Cartesian product)
+  + inner vs outer join
+    + inner = if there are nulls that don't allow them to join, don't include that row
+    + outer = join whether there are nulls or not
+    + in our class we will just need inner join
+  + DATABASE TRANSACTIONS
+    + allow you to group statements together
+    + BEGIN TRANSACTION;
+    + SQL statement 1
+    + SQL statement 2...
+    + COMMIT TRANSACTION; or ROLLBACK TRANSACTION (only commit if all succeeded)
+
+
+JDBC
++ allows you to embed SQL in java
++ load database driver (provides classes that implement the interfaces)
+  + Add dependency from File/Project Structure (mysql-connector-j)
++ open database connection
+  + import java.sql.*;
+  + String connectionURL = "jdbc:mysql://url port number/name of database" + specify username and password
+  + Connection connection = null
+  + try (Connection c = DriverManager.getConnection(connectionURL)) {
+  connection = c;
+  connection.setAutoCommit(false); (begins transaction)
+  // use connection...
+  commit ...
+  } catch (SQLException ex) { rollback }
++ start a transaction (omit these steps if you only need to execute one statement)
++ execute queries and/or updates
++ commit or rollback transaction
++ close database connection (super important!!)
++ retrieving auto-increment ids
++ EXECUTE A QUERY
+  + String sql = "query"
+  + try(PreparedStatement stmt = connection.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
+  while (rs.next()) {
+  int id = rs.getInt(1); (these match to your query)
+  ...
+  books.add(new Book(id, ...)); }
+  } catch (SQLException ex) { error }
+
+
+PHASE 4
++ create tables
++ create sql versions of DAOs
++ write the code inside JDBC stuff to generate database
++ watch initializing your database and tables video
+
 
 
 
