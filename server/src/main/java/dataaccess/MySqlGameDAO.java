@@ -1,12 +1,27 @@
 package dataaccess;
 
 import exceptions.DataBaseException;
+import model.Game;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Collection;
 
-public class MySqlGameDAO implements GameDataAccess{
+public class MySqlGameDAO implements GameDataAccess {
 
+    public MySqlGameDAO() throws DataAccessException {
+        configureDatabase();
+    }
+
+    public Collection<Game> listGames() {}
+
+    public int newGame(String gameName) {}
+
+    public Game getGame(int gameID) {}
+
+    public void joinGame(String user, String color, int gameID) {}
+
+    public void clearApp() {}
 
     public static final String[] createStatements = {
             """
@@ -17,7 +32,7 @@ public class MySqlGameDAO implements GameDataAccess{
             `gameName` VARCHAR(256) NOT NULL,
             `game` TEXT NOT NULL
             )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
-            """
+            """ // game will be a json object !!!
     };
 
     public static void configureDatabase() throws DataAccessException {
