@@ -28,16 +28,16 @@ public class MySqlUserDAO implements UserDataAccess {
     public static final String[] createStatements = {
             """
             CREATE TABLE IF NOT EXISTS users (
-            `username` varchar(256) NOT NULL,
-            `password` varchar(256) NOT NULL,
-            `email` varchar(256) NOT NULL
+            `username` VARCHAR(256) NOT NULL,
+            `password` VARCHAR(256) NOT NULL,
+            `email` VARCHAR(256) NOT NULL
             PRIMARY KEY (`username`)
             )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
             """,
             """
             CREATE TABLE IF NOT EXISTS auths (
-            `authToken` varchar(256) NOT NULL,
-            `username` varchar(256) NOT NULL,
+            `authToken` VARCHAR(256) NOT NULL,
+            `username` VARCHAR(256) NOT NULL,
             PRIMARY KEY (`authToken`),
             index(username)
             )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
