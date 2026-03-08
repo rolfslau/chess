@@ -1,6 +1,5 @@
 package dataaccess;
 
-import java.util.Collection;
 import java.util.HashMap;
 import model.User;
 import model.Auth;
@@ -20,7 +19,7 @@ public class MemoryUserDAO implements UserDataAccess {
 
     }
 
-    public String logout(String auth) {
+    public void logout(String auth) {
         return auths.remove(auth);
     }
 

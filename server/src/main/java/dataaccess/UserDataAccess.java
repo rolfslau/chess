@@ -7,7 +7,7 @@ public interface UserDataAccess {
 
     User register(User user);
 
-    String logout(String auth);
+    void logout(String auth);
 
     Auth authorization(Auth auth);
 

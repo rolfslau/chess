@@ -1,6 +1,5 @@
 package dataaccess;
 
-import com.google.gson.Gson;
 import exceptions.DataBaseException;
 import model.Auth;
 import model.User;
@@ -35,7 +34,20 @@ public class MySqlUserDAO implements UserDataAccess {
         return user;
     }
 
-    public String logout(String auth) {}
+    public void logout(String auth) throws DataBaseException {
+        try (Connection conn = DatabaseManager.getConnection()) {
+            var statement = "DELETE FROM auths WHERE authToken=?";
+            try (PreparedStatement ps = conn.prepareStatement(statement)) {
+                ps.setString(1, auth);
+                int result = ps.executeUpdate();
+                if (result != 1) {
+                    throw new DataBaseException("logout unsuccessful", 400);
+                }
+            }
+        } catch (DataAccessException | SQLException ex) {
+            throw new DataBaseException(String.format("unable to logout : %s", ex.getMessage()), 400);
+        }
+    }
 
     public Auth authorization(Auth auth) {}
 
