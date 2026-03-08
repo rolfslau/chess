@@ -89,7 +89,22 @@ public class MySqlUserDAO implements UserDataAccess {
         return new User(username, password, email);
     }
 
-    public String getAuth(String auth) {}
+    public String getAuth(String auth) {
+        String username = "";
+        try (Connection conn = DatabaseManager.getConnection()) {
+            var statement = "SELECT username FROM auths WHERE authToken=?";
+            try (PreparedStatement ps = conn.prepareStatement(statement)) {
+                ps.setString(1, auth);
+                var result = ps.executeQuery();
+                if (result.next()) {
+                    username = result.getString("username");
+                }
+            }
+        } catch (DataAccessException | SQLException ex) {
+            throw new DataBaseException(String.format("unable to get auth %s", ex.getMessage()), 400);
+        }
+        return username;
+    }
 
     public void clearApp() {}
 
