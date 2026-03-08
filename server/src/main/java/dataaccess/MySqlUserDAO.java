@@ -67,9 +67,27 @@ public class MySqlUserDAO implements UserDataAccess {
         } catch (DataAccessException | SQLException ex) {
             throw new DataBaseException("unable to insert auth", 400);
         }
+        return auth;
     }
 
-    public User getUser(String username) {}
+    public User getUser(String username) {
+        String password = "";
+        String email = "";
+        try (Connection conn = DatabaseManager.getConnection()) {
+            var statement = "SELECT username, password, email FROM users WHERE username=?";
+            try (PreparedStatement ps = conn.prepareStatement(statement)) {
+                ps.setString(1, username);
+                var result = ps.executeQuery();
+                if (result.next()) {
+                    password = result.getString("password");
+                    email = result.getString("email");
+                }
+            }
+        } catch (DataAccessException | SQLException ex) {
+            throw new DataBaseException("unable to find user", 400);
+        }
+        return new User(username, password, email);
+    }
 
     public String getAuth(String auth) {}
 
