@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import exceptions.DataBaseException;
 import model.Auth;
 import model.User;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -20,7 +21,8 @@ public class MySqlUserDAO implements UserDataAccess {
             var statement = "INSERT INTO users (username, password, email) VALUES (?, ?, ?)";
             try (PreparedStatement ps = conn.prepareStatement(statement)) {
                 ps.setString(1, user.username());
-                ps.setString(2, user.password()); // don't forget to hash passwords!!!
+                String hashedPassword = BCrypt.hashpw(user.password(), BCrypt.gensalt());
+                ps.setString(2, hashedPassword);
                 ps.setString(3, user.email());
                 int result = ps.executeUpdate();
                 if (result != 1) {
