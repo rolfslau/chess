@@ -11,8 +11,12 @@ import java.sql.SQLException;
 
 public class MySqlUserDAO implements UserDataAccess {
 
-    public MySqlUserDAO() throws DataAccessException {
-        configureDatabase();
+    public MySqlUserDAO() throws DataBaseException {
+        try {
+            configureDatabase();
+        } catch (DataAccessException ex) {
+            throw new DataBaseException(String.format("Unable to configure database: %s", ex.getMessage()), 400);
+        }
     }
 
     public User register(User user) throws DataBaseException {

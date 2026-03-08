@@ -1,9 +1,6 @@
 package server;
 
-import dataaccess.GameDataAccess;
-import dataaccess.MemoryUserDAO;
-import dataaccess.MemoryGameDAO;
-import dataaccess.UserDataAccess;
+import dataaccess.*;
 import io.javalin.*;
 import io.javalin.http.Context;
 import org.jetbrains.annotations.NotNull;
@@ -16,8 +13,8 @@ public class Server {
     private final Javalin javalin;
 
     public Server() { // how do i pass in all the services
-        UserDataAccess userDAO = new MemoryUserDAO();
-        GameDataAccess gameDAO = new MemoryGameDAO();
+        UserDataAccess userDAO = new MySqlUserDAO();
+        GameDataAccess gameDAO = new MySqlGameDAO();
 
         UserService userService = new UserService(userDAO);
         GameService gameService = new GameService(gameDAO, userDAO);
