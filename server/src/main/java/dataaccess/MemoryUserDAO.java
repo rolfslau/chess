@@ -20,7 +20,7 @@ public class MemoryUserDAO implements UserDataAccess {
     }
 
     public void logout(String auth) {
-        return auths.remove(auth);
+        auths.remove(auth);
     }
 
     public Auth authorization(Auth auth) {

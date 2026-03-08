@@ -1,12 +1,10 @@
 package dataaccess;
 
-import chess.ChessGame;
 import exceptions.DataBaseException;
 import model.Game;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Collection;
 
 public class MySqlGameDAO implements GameDataAccess {
@@ -20,15 +18,12 @@ public class MySqlGameDAO implements GameDataAccess {
     }
 
     public Collection<Game> listGames() {
-        return new ArrayList<>();
     }
 
     public int newGame(String gameName) {
-        return 0;
     }
 
     public Game getGame(int gameID) {
-        return new Game(gameID, null, null, "gamename", new ChessGame());
     }
 
     public void joinGame(String user, String color, int gameID) {}

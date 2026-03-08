@@ -53,7 +53,21 @@ public class MySqlUserDAO implements UserDataAccess {
         }
     }
 
-    public Auth authorization(Auth auth) {}
+    public Auth authorization(Auth auth) throws DataBaseException {
+        try (Connection conn = DatabaseManager.getConnection()) {
+            var statement = "INSERT INTO auths (authToken, username) VALUES (?, ?)";
+            try (PreparedStatement ps = conn.prepareStatement(statement)) {
+                ps.setString(1, auth.authToken());
+                ps.setString(2, auth.username());
+                int result = ps.executeUpdate();
+                if (result != 1) {
+                    throw new DataBaseException("unable to insert auth", 400);
+                }
+            }
+        } catch (DataAccessException | SQLException ex) {
+            throw new DataBaseException("unable to insert auth", 400);
+        }
+    }
 
     public User getUser(String username) {}
 
