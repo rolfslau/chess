@@ -106,7 +106,18 @@ public class MySqlUserDAO implements UserDataAccess {
         return username;
     }
 
-    public void clearApp() {}
+    public void clearApp() {
+        try (Connection conn = DatabaseManager.getConnection()) {
+            var statement = "TRUNCATE TABLE users";
+            var statement2 = "TRUNCATE TABLE auths";
+            try (PreparedStatement ps = conn.prepareStatement(statement); PreparedStatement ps2 = conn.prepareStatement(statement2)) {
+                ps.executeUpdate();
+                ps2.executeUpdate();
+            }
+        } catch (DataAccessException | SQLException ex) {
+            throw new DataBaseException(String.format("unable to clear app : %s", ex.getMessage()), 400);
+        }
+    }
 
     public static final String[] createStatements = {
             """
