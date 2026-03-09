@@ -84,7 +84,8 @@ public class MySqlGameDAO implements GameDataAccess {
     }
 
     public void clearApp() {
-
+        var statement = "TRUNCATE TABLE games";
+        executeUpdate(statement);
     }
 
     public static final String[] createStatements = {
