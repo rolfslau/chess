@@ -1,12 +1,12 @@
 package dataaccess;
 
+import chess.ChessGame;
+import com.google.gson.Gson;
 import exceptions.DataBaseException;
 import model.Game;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
@@ -22,7 +22,26 @@ public class MySqlGameDAO implements GameDataAccess {
         }
     }
 
-    public Collection<Game> listGames() {
+    public Collection<Game> listGames() throws DataBaseException {
+        ArrayList<Game> games = new ArrayList<>();
+        try (Connection conn = DatabaseManager.getConnection()) {
+            var statement = "SELECT * FROM TABLE games";
+            try (PreparedStatement ps = conn.prepareStatement(statement)) {
+                var result = ps.executeQuery();
+                while (result.next()) {
+                    Game game = new Game(result.getInt("id"),
+                            result.getString("whiteUsername"),
+                            result.getString("blackUsername"),
+                            result.getString("gameName"),
+                            new Gson().fromJson(result.getString("game"), ChessGame.class)
+                            );
+                    games.add(game);
+                }
+            }
+        } catch (DataAccessException | SQLException ex) {
+            throw new DataBaseException(String.format("unable to listGames : %s", ex.getMessage()), 400);
+        }
+        return games;
     }
 
     public int newGame(String gameName) {
@@ -67,9 +86,13 @@ public class MySqlGameDAO implements GameDataAccess {
             try (PreparedStatement ps = conn.prepareStatement(statement, RETURN_GENERATED_KEYS)) {
                 for (int i = 0; i < params.length; i++) {
                     Object param = params[i];
-                    if (param instanceof String p) ps.setString(i + 1, p);
-                    else if (param instanceof Integer p) ps.setInt(i + 1, p);
-                    else if (param == null) ps.setNull(i + 1, NULL);
+                    switch (param) {
+                        case String p -> ps.setString(i + 1, p);
+                        case Integer p -> ps.setInt(i + 1, p);
+                        case null -> ps.setNull(i + 1, NULL);
+                        default -> {
+                        }
+                    }
                 }
                 ps.executeUpdate();
 
