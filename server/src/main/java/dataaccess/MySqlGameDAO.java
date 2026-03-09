@@ -45,6 +45,9 @@ public class MySqlGameDAO implements GameDataAccess {
     }
 
     public int newGame(String gameName) {
+        var statement = "INSERT INTO games VALUES (?, ?, ?, ?)";
+        String game = new Gson().toJson(new ChessGame());
+        return executeUpdate(statement, null, null, gameName, game);
     }
 
     public Game getGame(int gameID) {
