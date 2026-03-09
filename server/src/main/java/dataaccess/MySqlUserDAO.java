@@ -70,7 +70,7 @@ public class MySqlUserDAO implements UserDataAccess {
                 ps.setString(1, username);
                 var result = ps.executeQuery();
                 if (result.next()) {
-                    password = result.getString("password");
+                    password = BCrypt.hashpw(result.getString("password"), BCrypt.gensalt());
                     email = result.getString("email");
                 }
             }

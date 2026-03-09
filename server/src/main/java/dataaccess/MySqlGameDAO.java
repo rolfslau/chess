@@ -8,6 +8,7 @@ import model.Game;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 import static java.sql.Types.NULL;
@@ -71,7 +72,16 @@ public class MySqlGameDAO implements GameDataAccess {
         return game;
     }
 
-    public void joinGame(String user, String color, int gameID) {}
+    public void joinGame(String user, String color, int gameID) {
+        var statement = "";
+        if (Objects.equals(color, "WHITE")) {
+            statement = "UPDATE TABLE games SET whiteUsername=? WHERE gameID=?";
+        }
+        else {
+            statement = "UPDATE TABLE games SET blackUsername=? WHERE gameID=?";
+        }
+        executeUpdate(statement, user, gameID);
+    }
 
     public void clearApp() {
 
@@ -84,7 +94,8 @@ public class MySqlGameDAO implements GameDataAccess {
             `whiteUsername` VARCHAR(256),
             `blackUsername` VARCHAR(256),
             `gameName` VARCHAR(256) NOT NULL,
-            `game` TEXT NOT NULL
+            `game` TEXT NOT NULL,
+            PRIMARY KEY(`id`)
             )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
             """ // game will be a json object !!!
     };
