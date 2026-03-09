@@ -51,6 +51,24 @@ public class MySqlGameDAO implements GameDataAccess {
     }
 
     public Game getGame(int gameID) {
+        Game game = null;
+        try (Connection conn = DatabaseManager.getConnection()) {
+            var statement = "SELECT * FROM TABLE games WHERE gameID=?";
+            try (PreparedStatement ps = conn.prepareStatement(statement)) {
+                ps.setInt(1, gameID);
+                var result = ps.executeQuery();
+                if (result.next()) {
+                    game = new Game(gameID, result.getString("whiteUsername"),
+                            result.getString("blackUsername"),
+                            result.getString("gameName"),
+                            new Gson().fromJson(result.getString("game"), ChessGame.class)
+                            );
+                }
+            }
+        } catch (SQLException | DataAccessException ex) {
+            throw new DataBaseException(String.format("unable to retrieve game : %s", ex.getMessage()), 400);
+        }
+        return game;
     }
 
     public void joinGame(String user, String color, int gameID) {}
