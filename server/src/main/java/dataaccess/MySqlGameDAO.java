@@ -28,7 +28,9 @@ public class MySqlGameDAO implements GameDataAccess {
 
     public void joinGame(String user, String color, int gameID) {}
 
-    public void clearApp() {}
+    public void clearApp() {
+
+    }
 
     public static final String[] createStatements = {
             """

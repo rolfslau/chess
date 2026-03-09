@@ -27,10 +27,7 @@ public class MySqlUserDAO implements UserDataAccess {
                 String hashedPassword = BCrypt.hashpw(user.password(), BCrypt.gensalt());
                 ps.setString(2, hashedPassword);
                 ps.setString(3, user.email());
-                int result = ps.executeUpdate();
-                if (result != 1) {
-                    throw new DataBaseException("insert unsuccessful", 400);
-                }
+                ps.executeUpdate();
             }
         } catch (SQLException | DataAccessException ex) {
             throw new DataBaseException(String.format("unable to insert user : %s", ex.getMessage()), 400);
@@ -43,10 +40,7 @@ public class MySqlUserDAO implements UserDataAccess {
             var statement = "DELETE FROM auths WHERE authToken=?";
             try (PreparedStatement ps = conn.prepareStatement(statement)) {
                 ps.setString(1, auth);
-                int result = ps.executeUpdate();
-                if (result != 1) {
-                    throw new DataBaseException("logout unsuccessful", 400);
-                }
+                ps.executeUpdate();
             }
         } catch (DataAccessException | SQLException ex) {
             throw new DataBaseException(String.format("unable to logout : %s", ex.getMessage()), 400);
@@ -59,10 +53,7 @@ public class MySqlUserDAO implements UserDataAccess {
             try (PreparedStatement ps = conn.prepareStatement(statement)) {
                 ps.setString(1, auth.authToken());
                 ps.setString(2, auth.username());
-                int result = ps.executeUpdate();
-                if (result != 1) {
-                    throw new DataBaseException("unable to insert auth", 400);
-                }
+                ps.executeUpdate();
             }
         } catch (DataAccessException | SQLException ex) {
             throw new DataBaseException("unable to insert auth", 400);
