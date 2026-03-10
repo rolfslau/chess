@@ -839,6 +839,18 @@ PHASE 4
 + watch initializing your database and tables video
 
 
+DEBUGGING
++ conditional breakpoints -- right click and set condition
++ watches
+  + you add your own variables to look at
++ run menu - view breakpoints
+  + you can remove once hit (there is a box to check)
+  + pass count - will only stop when you pass it a certain number of times
+  + disable until... (for example until you've hit a different one)
++ lightning bolt -- lets you stop under certain conditions
++ 
+
+
 
 
 TO DO
