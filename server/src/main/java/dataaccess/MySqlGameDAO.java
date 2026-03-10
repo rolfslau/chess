@@ -26,7 +26,7 @@ public class MySqlGameDAO implements GameDataAccess {
     public Collection<Game> listGames() throws DataBaseException {
         ArrayList<Game> games = new ArrayList<>();
         try (Connection conn = DatabaseManager.getConnection()) {
-            var statement = "SELECT * FROM TABLE games";
+            var statement = "SELECT * FROM games";
             try (PreparedStatement ps = conn.prepareStatement(statement)) {
                 var result = ps.executeQuery();
                 while (result.next()) {
@@ -46,7 +46,7 @@ public class MySqlGameDAO implements GameDataAccess {
     }
 
     public int newGame(String gameName) {
-        var statement = "INSERT INTO games VALUES (?, ?, ?, ?)";
+        var statement = "INSERT INTO games (whiteUsername, blackUsername, gameName, game) VALUES (?, ?, ?, ?)";
         String game = new Gson().toJson(new ChessGame());
         return executeUpdate(statement, null, null, gameName, game);
     }
@@ -54,7 +54,7 @@ public class MySqlGameDAO implements GameDataAccess {
     public Game getGame(int gameID) {
         Game game = null;
         try (Connection conn = DatabaseManager.getConnection()) {
-            var statement = "SELECT * FROM TABLE games WHERE gameID=?";
+            var statement = "SELECT * FROM games WHERE gameID=?";
             try (PreparedStatement ps = conn.prepareStatement(statement)) {
                 ps.setInt(1, gameID);
                 var result = ps.executeQuery();
@@ -75,16 +75,16 @@ public class MySqlGameDAO implements GameDataAccess {
     public void joinGame(String user, String color, int gameID) {
         var statement = "";
         if (Objects.equals(color, "WHITE")) {
-            statement = "UPDATE TABLE games SET whiteUsername=? WHERE gameID=?";
+            statement = "UPDATE games SET whiteUsername=? WHERE id=?";
         }
         else {
-            statement = "UPDATE TABLE games SET blackUsername=? WHERE gameID=?";
+            statement = "UPDATE games SET blackUsername=? WHERE id=?";
         }
         executeUpdate(statement, user, gameID);
     }
 
     public void clearApp() {
-        var statement = "TRUNCATE TABLE games";
+        var statement = "TRUNCATE games";
         executeUpdate(statement);
     }
 

@@ -99,8 +99,8 @@ public class MySqlUserDAO implements UserDataAccess {
 
     public void clearApp() {
         try (Connection conn = DatabaseManager.getConnection()) {
-            var statement = "TRUNCATE TABLE users";
-            var statement2 = "TRUNCATE TABLE auths";
+            var statement = "TRUNCATE users";
+            var statement2 = "TRUNCATE auths";
             try (PreparedStatement ps = conn.prepareStatement(statement); PreparedStatement ps2 = conn.prepareStatement(statement2)) {
                 ps.executeUpdate();
                 ps2.executeUpdate();
