@@ -33,6 +33,7 @@ public class MemoryGameDAO implements GameDataAccess {
     }
 
     public void joinGame(String user, String color, int gameID) {
+        System.out.println("made it to joingame in MEMORY DAO :((");
         Game game = games.get(gameID);
         if (Objects.equals(color, "WHITE")) {
             games.remove(gameID);

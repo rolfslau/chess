@@ -46,6 +46,7 @@ public class MySqlGameDAO implements GameDataAccess {
     }
 
     public int newGame(String gameName) {
+        System.out.println("made it to newgame in sqlDAO!!");
         var statement = "INSERT INTO games (whiteUsername, blackUsername, gameName, game) VALUES (?, ?, ?, ?)";
         String game = new Gson().toJson(new ChessGame());
         return executeUpdate(statement, null, null, gameName, game);
@@ -54,7 +55,7 @@ public class MySqlGameDAO implements GameDataAccess {
     public Game getGame(int gameID) {
         Game game = null;
         try (Connection conn = DatabaseManager.getConnection()) {
-            var statement = "SELECT * FROM games WHERE gameID=?";
+            var statement = "SELECT * FROM games WHERE id=?";
             try (PreparedStatement ps = conn.prepareStatement(statement)) {
                 ps.setInt(1, gameID);
                 var result = ps.executeQuery();
@@ -73,6 +74,7 @@ public class MySqlGameDAO implements GameDataAccess {
     }
 
     public void joinGame(String user, String color, int gameID) {
+        System.out.println("made it to joingame in sqlDAO!!");
         var statement = "";
         if (Objects.equals(color, "WHITE")) {
             statement = "UPDATE games SET whiteUsername=? WHERE id=?";

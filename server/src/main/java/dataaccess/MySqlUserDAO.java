@@ -58,6 +58,7 @@ public class MySqlUserDAO implements UserDataAccess {
         } catch (DataAccessException | SQLException ex) {
             throw new DataBaseException("unable to insert auth", 400);
         }
+        System.out.println("AUTHTOKEN IN MYSQL AUTHORIZATION IS " + auth);
         return auth;
     }
 
@@ -70,31 +71,31 @@ public class MySqlUserDAO implements UserDataAccess {
                 ps.setString(1, username);
                 var result = ps.executeQuery();
                 if (result.next()) {
-                    password = BCrypt.hashpw(result.getString("password"), BCrypt.gensalt());
+                    password = result.getString("password");
                     email = result.getString("email");
+                    return new User(username, password, email);
                 }
             }
         } catch (DataAccessException | SQLException ex) {
             throw new DataBaseException("unable to find user", 400);
         }
-        return new User(username, password, email);
+        return null;
     }
 
     public String getAuth(String auth) {
-        String username = "";
         try (Connection conn = DatabaseManager.getConnection()) {
             var statement = "SELECT username FROM auths WHERE authToken=?";
             try (PreparedStatement ps = conn.prepareStatement(statement)) {
                 ps.setString(1, auth);
                 var result = ps.executeQuery();
                 if (result.next()) {
-                    username = result.getString("username");
+                    return result.getString("username");
                 }
             }
         } catch (DataAccessException | SQLException ex) {
             throw new DataBaseException(String.format("unable to get auth %s", ex.getMessage()), 400);
         }
-        return username;
+        return null;
     }
 
     public void clearApp() {

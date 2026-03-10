@@ -47,7 +47,7 @@ public class UserHandler { // should this inherit from server?
     }
 
     public void logout(Context ctx) throws DoesNotExistException {
-        String authToken = ctx.header("authorization");
+        String authToken = ctx.header("Authorization");
         try {
             service.logout(authToken);
             ctx.status(200);

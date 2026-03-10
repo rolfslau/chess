@@ -4,6 +4,7 @@ import model.User;
 import model.Auth;
 import exceptions.AlreadyExistsException;
 import exceptions.DoesNotExistException;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -40,10 +41,11 @@ public class UserService {
         if (user.password() == null) {
             throw new DoesNotExistException("Error: bad request", 400);
         }
-        if (dataAccess.getUser(user.username()) == null) {
+        User returnedUser = dataAccess.getUser(user.username());
+        if (returnedUser == null) {
             throw new DoesNotExistException("Error: unauthorized", 401);
         }
-        if (!Objects.equals(dataAccess.getUser(user.username()).password(), user.password())) {
+        if (!BCrypt.checkpw(user.password(), returnedUser.password())) {
             throw new DoesNotExistException("Error: unauthorized", 401);
         }
 
