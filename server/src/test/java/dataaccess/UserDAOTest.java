@@ -95,5 +95,39 @@ public class UserDAOTest {
         Assertions.assertNull(userDAO.getUser("laurel"));
     }
 
+    @Test
+    @DisplayName("Get User Positive")
+    public void getUserSuccess() {
+        User registered = new User("laurel", "password!", "email@gmail.com");
+        userDAO.register(registered);
+        Assertions.assertEquals(registered.email(), userDAO.getUser("laurel").email());
+    }
 
+    @Test
+    @DisplayName("Get User Negative")
+    public void getUserFailure() {
+        User registered = new User("laurel", "password!", "email@gmail.com");
+        userDAO.register(registered);
+        Assertions.assertNull(userDAO.getUser("no one"));
+    }
+
+    @Test
+    @DisplayName("Get Auth Positive")
+    public void getAuthSuccess() {
+        User registered = new User("newUser", "password!", "email@gmail.com");
+        userDAO.register(registered);
+        String authToken = UUID.randomUUID().toString();
+        Auth auth = new Auth(authToken, "newUser");
+        userDAO.authorization(auth);
+        Assertions.assertEquals("newUser", userDAO.getAuth(authToken));
+    }
+
+    @Test
+    @DisplayName("Get Auth Negative")
+    public void getAuthFailure() {
+        User registered = new User("laurel", "password!", "email@gmail.com");
+        userDAO.register(registered);
+        String authToken = UUID.randomUUID().toString();
+        Assertions.assertNull(userDAO.getAuth(authToken));
+    }
 }
