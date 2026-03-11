@@ -5,8 +5,6 @@ import model.Auth;
 import model.User;
 import org.junit.jupiter.api.*;
 import org.mindrot.jbcrypt.BCrypt;
-import service.GameService;
-import service.UserService;
 
 import java.util.UUID;
 
