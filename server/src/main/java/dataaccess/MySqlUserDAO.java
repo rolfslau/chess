@@ -83,7 +83,7 @@ public class MySqlUserDAO implements UserDataAccess {
     }
 
     public String getAuth(String auth) {
-        try (Connection conn = DatabaseManager.getConnection()) {
+        try (Connection conn = DatabaseManager.getConnection()) { // fails when it tries to get a connection -- why ??
             var statement = "SELECT username FROM auths WHERE authToken=?";
             try (PreparedStatement ps = conn.prepareStatement(statement)) {
                 ps.setString(1, auth);
