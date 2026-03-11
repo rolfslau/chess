@@ -110,7 +110,7 @@ public class MySqlUserDAO implements UserDataAccess {
         }
     }
 
-    public static final String[] createStatements = {
+    public static final String[] CREATE_STATEMENTS_USER = {
             """
             CREATE TABLE IF NOT EXISTS users (
             `username` VARCHAR(256) NOT NULL,
@@ -132,7 +132,7 @@ public class MySqlUserDAO implements UserDataAccess {
     public static void configureDatabase() throws DataBaseException, DataAccessException {
         DatabaseManager.createDatabase();
         try (Connection conn = DatabaseManager.getConnection()) {
-            for (String statement : createStatements) {
+            for (String statement : CREATE_STATEMENTS_USER) {
                 try (var preparedStatement = conn.prepareStatement(statement)) {
                     preparedStatement.executeUpdate();
                 }

@@ -90,7 +90,7 @@ public class MySqlGameDAO implements GameDataAccess {
         executeUpdate(statement);
     }
 
-    public static final String[] createStatements = {
+    public static final String[] CREATE_STATEMENTS_GAME = {
             """
             CREATE TABLE IF NOT EXISTS games (
             `id` int NOT NULL AUTO_INCREMENT,
@@ -106,7 +106,7 @@ public class MySqlGameDAO implements GameDataAccess {
     public static void configureDatabase() throws DataAccessException {
         DatabaseManager.createDatabase();
         try (Connection conn = DatabaseManager.getConnection()) {
-            for (String statement : createStatements) {
+            for (String statement : CREATE_STATEMENTS_GAME) {
                 try (var preparedStatement = conn.prepareStatement(statement)) {
                     preparedStatement.executeUpdate();
                 }
@@ -119,16 +119,7 @@ public class MySqlGameDAO implements GameDataAccess {
     private int executeUpdate(String statement, Object... params) throws DataBaseException {
         try (Connection conn = DatabaseManager.getConnection()) {
             try (PreparedStatement ps = conn.prepareStatement(statement, RETURN_GENERATED_KEYS)) {
-                for (int i = 0; i < params.length; i++) {
-                    Object param = params[i];
-                    switch (param) {
-                        case String p -> ps.setString(i + 1, p);
-                        case Integer p -> ps.setInt(i + 1, p);
-                        case null -> ps.setNull(i + 1, NULL);
-                        default -> {
-                        }
-                    }
-                }
+                inputParameters(params, ps);
                 ps.executeUpdate();
 
                 ResultSet rs = ps.getGeneratedKeys();
@@ -140,6 +131,19 @@ public class MySqlGameDAO implements GameDataAccess {
             }
         } catch (SQLException | DataAccessException e) {
             throw new DataBaseException(String.format("unable to update database: %s, %s", statement, e.getMessage()), 400);
+        }
+    }
+
+    private static void inputParameters(Object[] params, PreparedStatement ps) throws SQLException {
+        for (int i = 0; i < params.length; i++) {
+            Object param = params[i];
+            switch (param) {
+                case String p -> ps.setString(i + 1, p);
+                case Integer p -> ps.setInt(i + 1, p);
+                case null -> ps.setNull(i + 1, NULL);
+                default -> {
+                }
+            }
         }
     }
 }
