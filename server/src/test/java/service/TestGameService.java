@@ -1,9 +1,6 @@
 package service;
 
-import dataaccess.GameDataAccess;
-import dataaccess.MemoryGameDAO;
-import dataaccess.MemoryUserDAO;
-import dataaccess.UserDataAccess;
+import dataaccess.*;
 import exceptions.DoesNotExistException;
 import model.Auth;
 import model.Game;
@@ -24,11 +21,13 @@ public class TestGameService {
 
     @BeforeEach
     public void setup() {
-        userDAO = new MemoryUserDAO();
-        gameDAO = new MemoryGameDAO();
+        userDAO = new MySqlUserDAO();
+        gameDAO = new MySqlGameDAO();
 
         userService = new UserService(userDAO);
         gameService = new GameService(gameDAO, userDAO);
+
+        gameService.clearApp();
     }
 
 

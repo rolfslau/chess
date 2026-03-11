@@ -1,13 +1,11 @@
 package service;
 
-import dataaccess.GameDataAccess;
-import dataaccess.MemoryGameDAO;
-import dataaccess.MemoryUserDAO;
-import dataaccess.UserDataAccess;
+import dataaccess.*;
 import exceptions.DoesNotExistException;
 import model.Auth;
 import model.User;
 import org.junit.jupiter.api.*;
+import org.mindrot.jbcrypt.BCrypt;
 
 public class TestUserService {
 
@@ -19,11 +17,13 @@ public class TestUserService {
 
     @BeforeEach
     public void setup() {
-        userDAO = new MemoryUserDAO();
-        gameDAO = new MemoryGameDAO();
+        userDAO = new MySqlUserDAO();
+        gameDAO = new MySqlGameDAO();
 
         userService = new UserService(userDAO);
         gameService = new GameService(gameDAO, userDAO);
+
+        gameService.clearApp();
     }
 
     @Test
@@ -32,7 +32,7 @@ public class TestUserService {
     public void registrationSuccess() {
         User registered = new User("laurel", "password!", "email@gmail.com");
         userService.register(registered);
-        Assertions.assertEquals(registered, userDAO.getUser("laurel"));
+        Assertions.assertTrue(BCrypt.checkpw("password!", userDAO.getUser("laurel").password()));
     }
 
     @Test

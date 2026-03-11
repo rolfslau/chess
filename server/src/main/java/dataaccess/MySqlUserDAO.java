@@ -58,7 +58,6 @@ public class MySqlUserDAO implements UserDataAccess {
         } catch (DataAccessException | SQLException ex) {
             throw new DataBaseException("unable to insert auth", 400);
         }
-        System.out.println("AUTHTOKEN IN MYSQL AUTHORIZATION IS " + auth);
         return auth;
     }
 
