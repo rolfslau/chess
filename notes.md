@@ -848,6 +848,44 @@ DEBUGGING
   + pass count - will only stop when you pass it a certain number of times
   + disable until... (for example until you've hit a different one)
 + lightning bolt -- lets you stop under certain conditions
+
+
+PHASE 5
++ display menus/accept and process input (REPL - read execute process loop)
+  + two menus - help/quit/login/register
+  + post login menu - help/logout/create game/list games/play game/observe game
+  + variable for authToken, if null not logged in
++ draw chess board - if you're black the board will be flipped (should be able to draw both ways)
+  + used for join or observe
+  + 1-8 and a-h for the coordinates
+  + if observing should be from the point of view of the white player
++ invoke server api endpoints
++ write tests
+  + server facade -- contains methods that client calls and those access the server
+
+
+CONSOLE USER INTERFACES
++ terminal control codes (escape sequences)
+  + send character codes to the terminal
+  + basically if you print certain pieces of code it can do things
+  + if you want to change the color, look up the ansi code
+  + whenever you print a newline it colors the rest of the line using the current color (so make sure
+  you set the background color you want before printing a new line)
++ it makes sense to draw the board row by row
++ review/study tik tak toe
++ there are unicode characters for the chess pieces
+  + if you use these you need to use the em space or em quad characters
+  + \u2003 or \u2001
+  + set your terminal font in intellij to 'Monospace'
++ make a separate code to draw the chess board
+
+
+SERVER FACADE
++ to handle sending http request to your server and receive responses from it
++ client code will use your server facade methods to maker server API calls
++ client has a dependency to the drawing class and the server facade class
++ server facade has a dependency on the internet
+  + make a client communicator class that goes in between server facade and internet
 + 
 
 
