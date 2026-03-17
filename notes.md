@@ -886,7 +886,39 @@ SERVER FACADE
 + client has a dependency to the drawing class and the server facade class
 + server facade has a dependency on the internet
   + make a client communicator class that goes in between server facade and internet
-+ 
+
+
+CLIENT HTTP
++ how to access server from your client
++ client establishes a network connection with the server
+  + we are gonna use java's HTTPClient class
+  + GET = make a new httpClient, call doGet method with params (post, portName, path) needed
+  + POST = the same as get but need a body publisher
+  + give a max amount of time for server to respond before your timeout
++ uri - super set of url (includes urls but includes other things like file paths)
+
+
+STRUCTURE
++ ui.client (prompts for menu and choices) [dependency on ui.chessBoard, serverFacade]
+  + creates object here rather than in server facade
++ ui.chessBoard (prompts for logged in menu I think)
++ serverFacade (has endpoints) [dependency on client communicator]
++ client communicator class
+
+
+LOGGING
++ an alternative to debugging with print statements
++ can determine if they will print or not with some settings
++ programs send log messages to 'loggers' (there can be more than one)
++ each message has a level (severe, warning, info, config, fine, finer, finest)
++ never remove the message, but set the level on your logger 
+  + when you set it, that level and anything to the left will appear
++ setting the levels
+  + Logger.setLevel(ALl, OFF, or one of the levels)
++ handlers
+  + represent destinations to which the log messages should be sent (console, file, socket)
+  + can also have levels
+  + each handler has a formatter which defines the format used to encode its messages
 
 
 
