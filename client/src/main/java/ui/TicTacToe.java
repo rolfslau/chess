@@ -60,7 +60,7 @@ public class TicTacToe {
     }
 
     private static void printHeaderText(PrintStream out, String player) {
-        out.print(SET_BG_COLOR_BLACK);
+        out.print(SET_BG_COLOR_WHITE);
         out.print(SET_TEXT_COLOR_GREEN);
 
         out.print(player);
@@ -128,17 +128,17 @@ public class TicTacToe {
     }
 
     private static void setWhite(PrintStream out) {
-        out.print(SET_BG_COLOR_WHITE);
+        out.print(SET_BG_COLOR_PINK);
         out.print(SET_TEXT_COLOR_WHITE);
     }
 
     private static void setRed(PrintStream out) {
-        out.print(SET_BG_COLOR_RED);
-        out.print(SET_TEXT_COLOR_RED);
+        out.print(SET_BG_COLOR_ORANGE);
+        out.print(SET_TEXT_COLOR_MAGENTA);
     }
 
     private static void setBlack(PrintStream out) {
-        out.print(SET_BG_COLOR_BLACK);
+        out.print(SET_BG_COLOR_WHITE);
         out.print(SET_TEXT_COLOR_BLACK);
     }
 
