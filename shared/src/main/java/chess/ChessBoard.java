@@ -110,6 +110,10 @@ public class ChessBoard {
         }
         this.addPiece(move.getStartPosition(), null);
     }
+
+    public ChessPiece[][] getBoard() {
+        return board;
+    }
 }
 
 
