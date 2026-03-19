@@ -69,7 +69,8 @@ public class DrawingChess {
     private void drawingRows(int i, int turn) {
         drawLabel(i);
         setTextColor(i);
-        drawRow(i, turn);
+        if (Objects.equals(colorOfPlayer, "WHITE")) { drawRowWhite(i, turn); }
+        else { drawRowBlack(i, turn); }
         drawLabel(i);
         System.out.print(SET_BG_COLOR_BLACK);
         System.out.print("\n");
@@ -87,16 +88,23 @@ public class DrawingChess {
         System.out.printf(" %s ", h);
     }
 
-    public void drawRow(int row, int turn) {
+    public void drawRowWhite(int row, int turn) {
         // for loop (to go across the row)
         // 0/even = pink; 1/odd = orange (bg)
         for (int i = 1; i < 9; i++) {
             setBGColor(turn);
             turn++;
-            if (Objects.equals(colorOfPlayer, "WHITE")) {
-                printPieceWhite(row, i);
-            }
-            else { printPieceBlack(row, i); }
+            printPiece(row, i);
+        }
+    }
+
+    public void drawRowBlack(int row, int turn) {
+        // for loop (to go across the row)
+        // 0/even = pink; 1/odd = orange (bg)
+        for (int i = 8; i > 0; i--) {
+            setBGColor(turn);
+            turn++;
+            printPiece(row, i);
         }
     }
 
@@ -105,7 +113,7 @@ public class DrawingChess {
         else { setOrange(); }
     }
 
-    private void printPieceWhite(int row, int i) {
+    private void printPiece(int row, int i) {
         ChessPosition pos = new ChessPosition(row, i);
         ChessPiece piece = board.getPiece(pos);
         String p = "";
@@ -117,24 +125,6 @@ public class DrawingChess {
                 case BISHOP ->p = "B";
                 case KING -> p = "K";
                 case QUEEN -> p = "Q";
-                case PAWN -> p = "P";
-            }
-        }
-        System.out.printf(" %s ", p);
-    }
-
-    private void printPieceBlack(int row, int i) {
-        ChessPosition pos = new ChessPosition(row, i);
-        ChessPiece piece = board.getPiece(pos);
-        String p = "";
-        if (piece == null) { p = " "; }
-        else {
-            switch (piece.getPieceType()) {
-                case ROOK -> p = "R";
-                case KNIGHT -> p = "N";
-                case BISHOP ->p = "B";
-                case KING -> p = "Q";
-                case QUEEN -> p = "K";
                 case PAWN -> p = "P";
             }
         }
