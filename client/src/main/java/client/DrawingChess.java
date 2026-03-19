@@ -1,14 +1,16 @@
 package client;
 
+import chess.ChessBoard;
 import chess.ChessPiece;
+import chess.ChessPosition;
 
 import static ui.EscapeSequences.*;
 
 public class DrawingChess {
 
-    private final ChessPiece[][] board;
+    private final ChessBoard board;
 
-    public DrawingChess(ChessPiece[][] board) {
+    public DrawingChess(ChessBoard board) {
         this.board = board;
         String[] headers = {"a", "b", "c", "d", "e", "f", "g", "h"};
         System.out.print(SET_BG_COLOR_WHITE);
@@ -32,12 +34,12 @@ public class DrawingChess {
 
     public void drawRows() {
         // for loop (to go down the rows)
-        System.out.print(SET_TEXT_COLOR_WHITE);
         int turn = 0;
-        for (int i = 0; i < 8; i++) {
-            drawLabel(i+1);
-            drawRow(board[i], turn);
-            drawLabel(i+1);
+        for (int i = 1; i < 9; i++) {
+            drawLabel(i);
+            System.out.print(SET_TEXT_COLOR_WHITE);
+            drawRow(i, turn);
+            drawLabel(i);
             System.out.print(SET_BG_COLOR_BLACK);
             System.out.print("\n");
             turn++; // this might need editing
@@ -50,14 +52,28 @@ public class DrawingChess {
         System.out.printf("  %s  ", h);
     }
 
-    public void drawRow(ChessPiece[] row, int turn) {
+    public void drawRow(int row, int turn) {
         // for loop (to go across the row)
         // 0 = pink; 1 = orange (bg)
-        for (int i = 0; i < 8; i++) {
+        for (int i = 1; i < 9; i++) {
             if (turn % 2 == 0) { setPink(); }
             else { setOrange(); }
             turn++;
-            System.out.print("  x  ");
+            ChessPosition pos = new ChessPosition(row, i);
+            ChessPiece piece = board.getPiece(pos);
+            String p = "";
+            if (piece == null) { p = " "; }
+            else {
+                switch (piece.getPieceType()) {
+                    case ROOK -> p = "R";
+                    case KNIGHT -> p = "N";
+                    case BISHOP ->p = "B";
+                    case KING -> p = "K";
+                    case QUEEN -> p = "Q";
+                    case PAWN -> p = "P";
+                }
+            }
+            System.out.printf("  %s  ", p);
         }
     }
 
