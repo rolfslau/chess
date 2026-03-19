@@ -23,11 +23,11 @@ public class DrawingChess {
     }
 
     public void drawHeaders(String[] headers) {
-        System.out.print("     ");
+        System.out.print("   ");
         for (String h : headers) {
-            System.out.printf("  %s  ", h);
+            System.out.printf(" %s ", h);
         }
-        System.out.print("     ");
+        System.out.print("   ");
         System.out.print(SET_BG_COLOR_BLACK);
         System.out.print("\n");
     }
@@ -46,35 +46,50 @@ public class DrawingChess {
         }
     }
 
+
+    public void drawLabel(String h) {
+        System.out.print(SET_BG_COLOR_WHITE);
+        System.out.print(SET_TEXT_COLOR_PINK);
+        System.out.printf(" %s ", h);
+    }
+
     public void drawLabel(int h) {
         System.out.print(SET_BG_COLOR_WHITE);
         System.out.print(SET_TEXT_COLOR_PINK);
-        System.out.printf("  %s  ", h);
+        System.out.printf(" %s ", h);
     }
 
     public void drawRow(int row, int turn) {
         // for loop (to go across the row)
-        // 0 = pink; 1 = orange (bg)
+        // 0/even = pink; 1/odd = orange (bg)
         for (int i = 1; i < 9; i++) {
-            if (turn % 2 == 0) { setPink(); }
-            else { setOrange(); }
+            setBGColor(turn);
             turn++;
-            ChessPosition pos = new ChessPosition(row, i);
-            ChessPiece piece = board.getPiece(pos);
-            String p = "";
-            if (piece == null) { p = " "; }
-            else {
-                switch (piece.getPieceType()) {
-                    case ROOK -> p = "R";
-                    case KNIGHT -> p = "N";
-                    case BISHOP ->p = "B";
-                    case KING -> p = "K";
-                    case QUEEN -> p = "Q";
-                    case PAWN -> p = "P";
-                }
-            }
-            System.out.printf("  %s  ", p);
+            printPiece(row, i);
         }
+    }
+
+    private void setBGColor(int turn) {
+        if (turn % 2 == 0) { setPink(); }
+        else { setOrange(); }
+    }
+
+    private void printPiece(int row, int i) {
+        ChessPosition pos = new ChessPosition(row, i);
+        ChessPiece piece = board.getPiece(pos);
+        String p = "";
+        if (piece == null) { p = " "; }
+        else {
+            switch (piece.getPieceType()) {
+                case ROOK -> p = "R";
+                case KNIGHT -> p = "N";
+                case BISHOP ->p = "B";
+                case KING -> p = "K";
+                case QUEEN -> p = "Q";
+                case PAWN -> p = "P";
+            }
+        }
+        System.out.printf(" %s ", p);
     }
 
     public void setOrange() {
