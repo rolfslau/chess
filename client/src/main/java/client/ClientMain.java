@@ -8,6 +8,6 @@ public class ClientMain {
         System.out.println("♕ 240 Chess Client: " + piece);
         ChessBoard board = new ChessBoard();
         board.resetBoard();
-        DrawingChess drawing = new DrawingChess(board);
+        DrawingChess drawing = new DrawingChess(board, "BLACK");
     }
 }
