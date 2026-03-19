@@ -921,7 +921,16 @@ LOGGING
   + each handler has a formatter which defines the format used to encode its messages
 
 
-
+DEFENSIVE PROGRAMMING
++ good practices that protect you from your own mistakes
++ assertions
+  + make sure that your assumptions are true at a certain point
+  + disabled by default -- turn on with flag -ea
++ parameter checking
+  + ensure params are valid
+  + can do with assertions (if have control over calling code) or if statements 
+  (if you don't - throw exceptions)
+  + 
 
 
 TO DO
