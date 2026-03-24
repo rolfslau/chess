@@ -11,6 +11,10 @@ import java.net.http.HttpResponse;
 import java.util.Collection;
 
 public class ServerFacade {
+    // how do I clear the app to start
+    // how should I be handling when they do something wrong, it shouldn't end the whole thing right?
+    // make sure that I am printing out what the user did wrong and what they should do -- don't break
+    // why is creating a new game giving me that error ??
 
     private final String serverUrl;
     private final HttpClient client = HttpClient.newHttpClient();
@@ -33,7 +37,9 @@ public class ServerFacade {
     public Integer createGame(CreateGameReq game, String auth) {
         var request = buildRequest("POST", "/game", game, true, auth);
         var response = sendRequest(request);
-        return handleResponse(response, Integer.class);
+        model.GameID gameID = new Gson().fromJson(response.body(), GameID.class);
+        // make another record class for this that is just the gameID so I can pass it to handle response
+        return handleResponse(response, GameID.class).gameID();
     }
 
     public void joinGame(JoinGameReq game, String auth) {
@@ -45,12 +51,10 @@ public class ServerFacade {
     public void listGames(String auth) {
         var request = buildRequest("GET", "/game", null, true, auth);
         var response = sendRequest(request);
-        System.out.print(response);
-    }
-
-    public Game observeGame(Integer ID) {
-        // what ?? do I need to build the whole pipeline for this??
-
+        GamesList games = new Gson().fromJson(response.body(), GamesList.class);
+        for (Game game : games.games()) {
+            System.out.printf("%d : %s - white: %s, black - %s\n", game.gameID(), game.gameName(), game.whiteUsername(), game.blackUsername());
+        }
     }
 
     public void logout(String auth) {
@@ -93,9 +97,11 @@ public class ServerFacade {
         if (!isSuccessful(status)) {
             var body = response.body();
             if (body != null) {
+                System.out.println("ERROR BODY: " + body);
+                System.out.print("breaking in handle response 1 for some reason");
                 throw ResponseException.fromJson(body);
             }
-
+            System.out.print("breaking in handle response 2 for some reason");
             throw new ResponseException(ResponseException.fromHttpStatusCode(status), "other failure: " + status);
         }
 

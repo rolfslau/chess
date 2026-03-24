@@ -36,7 +36,8 @@ public class DrawingChess {
             drawHeaders(headersBlack);
         }
         else { System.out.print("invalid color option provided"); }
-
+        System.out.print(SET_TEXT_COLOR_WHITE);
+        System.out.print(RESET_BG_COLOR);
     }
 
     public void drawHeaders(String[] headers) {
@@ -45,7 +46,7 @@ public class DrawingChess {
             System.out.printf(" %s ", h);
         }
         System.out.print("   ");
-        System.out.print(SET_BG_COLOR_BLACK);
+        System.out.print(RESET_BG_COLOR);
         System.out.print("\n");
     }
 
@@ -72,7 +73,7 @@ public class DrawingChess {
         if (Objects.equals(colorOfPlayer, "WHITE")) { drawRowWhite(i, turn); }
         else { drawRowBlack(i, turn); }
         drawLabel(i);
-        System.out.print(SET_BG_COLOR_BLACK);
+        System.out.print(RESET_BG_COLOR);
         System.out.print("\n");
     }
 

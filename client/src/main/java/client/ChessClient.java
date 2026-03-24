@@ -10,6 +10,8 @@ import model.JoinGameReq;
 import model.User;
 import server.ServerFacade;
 
+import static ui.EscapeSequences.*;
+
 // how do I keep the auth token?
 // can two people log in from the same terminal? -- open two terminals
 // if not how do they play each other?
@@ -27,11 +29,12 @@ public class ChessClient {
 
     public ChessClient(String serverUrl) {
         server = new ServerFacade(serverUrl);
+
     }
 
     public void run() {
-        System.out.print("✨welcome to chess!!✨");
-        System.out.print("type \"help\" to start :)");
+        System.out.print(RESET_BG_COLOR);
+        System.out.print("✨welcome to chess!!✨\n");
         System.out.print(help());
 
 
@@ -108,19 +111,21 @@ public class ChessClient {
         JoinGameReq game = new JoinGameReq(color.toUpperCase(), gameID);
         server.joinGame(game, currAuth);
         ChessBoard board = new ChessBoard();
+        board.resetBoard();
         new DrawingChess(board, color.toUpperCase());
         return String.format("game %d joined as %s", gameID, color);
     }
 
     public String listGames() {
         server.listGames(currAuth);
-        return "all games listed!";
+        return "\nall games listed!";
     }
 
     public String observeGame() {
         System.out.print("game id >>> ");
         int gameID = Integer.parseInt(scanner.nextLine());
         ChessBoard board = new ChessBoard();
+        board.resetBoard();
         new DrawingChess(board, "WHITE");
         return String.format("watching game %d", gameID);
     }
