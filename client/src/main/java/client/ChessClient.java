@@ -2,6 +2,8 @@ package client;
 
 import java.util.Scanner;
 
+import chess.ChessBoard;
+import chess.ChessPiece;
 import model.Auth;
 import model.CreateGameReq;
 import model.JoinGameReq;
@@ -50,6 +52,7 @@ public class ChessClient {
             case "login" -> login();
             case "create" -> createGame();
             case "join" -> joinGame();
+            case "list" -> listGames();
             case "observe" -> observeGame();
             case "logout" -> logout();
             case "quit" -> "quit";
@@ -88,7 +91,7 @@ public class ChessClient {
         return String.format("successfully logged in user %s !!", username);
     }
 
-    String createGame() {
+    public String createGame() {
         System.out.print("game name >>> ");
         String gameName = scanner.nextLine();
         CreateGameReq game = new CreateGameReq(gameName);
@@ -96,7 +99,7 @@ public class ChessClient {
         return String.format("game %s created with id: %d", gameName, id);
     }
 
-    String joinGame() {
+    public String joinGame() {
         System.out.print("game id >>> ");
         int gameID = Integer.parseInt(scanner.nextLine());
 
@@ -107,15 +110,20 @@ public class ChessClient {
         return String.format("game %d joined as %s", gameID, color);
     }
 
-    String observeGame() {
+    public String listGames() {
+        server.listGames(currAuth);
+        return "all games listed!";
+    }
+
+    public String observeGame() {
         System.out.print("game id >>> ");
         int gameID = Integer.parseInt(scanner.nextLine());
 
-        server.observeGame(gameID);
+        ChessBoard game = server.observeGame(gameID).game().getBoard();
         return String.format("watching game %d", gameID);
     }
 
-    String logout() {
+    public String logout() {
         // what goes here? should I be saving the username of whoever is logged in?
         server.logout(currAuth);
         state = State.SIGNEDOUT;
