@@ -2,6 +2,7 @@ package client;
 
 import java.util.Scanner;
 
+import model.CreateGameReq;
 import model.User;
 import server.ServerFacade;
 
@@ -36,9 +37,9 @@ public class ChessClient {
         return switch (line) {
             case "register" -> register();
             case "login" -> login();
-            case "createGame" -> createGame();
-            case "joinGame" -> joinGame();
-            case "observeGame" -> observeGame();
+            case "create" -> createGame();
+            case "join" -> joinGame();
+            case "observe" -> observeGame();
             case "logout" -> logout();
             case "quit" -> "quit";
             default -> help();
@@ -73,6 +74,13 @@ public class ChessClient {
         return String.format("successfully logged in user %s !!", username);
     }
 
+    String createGame() {
+        System.out.print("game name >>> ");
+        String gameName = scanner.nextLine();
+        CreateGameReq game = new CreateGameReq(gameName);
+        return String.format("game created: %s", gameName);
+    }
+
 
 
     public String help() {
@@ -86,10 +94,10 @@ public class ChessClient {
         }
         else {
             return """
-                    createGame
-                    joinGame
-                    listGames
-                    observeGame
+                    create (a game)
+                    join (a game)
+                    list (all games)
+                    observe (a game)
                     help
                     logout
                     """;
