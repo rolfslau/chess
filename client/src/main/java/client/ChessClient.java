@@ -92,8 +92,8 @@ public class ChessClient {
         System.out.print("game name >>> ");
         String gameName = scanner.nextLine();
         CreateGameReq game = new CreateGameReq(gameName);
-        server.createGame(game);
-        return String.format("game created: %s", gameName);
+        Integer id = server.createGame(game, currAuth);
+        return String.format("game %s created with id: %d", gameName, id);
     }
 
     String joinGame() {

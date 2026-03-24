@@ -3,6 +3,7 @@ package server;
 import com.google.gson.Gson;
 import exceptions.ResponseException;
 import model.Auth;
+import model.CreateGameReq;
 import model.User;
 
 import java.net.URI;
@@ -19,15 +20,21 @@ public class ServerFacade {
     }
 
     public void register(User user) {
-        var request = buildRequest("POST", "/user", user);
+        var request = buildRequest("POST", "/user", user, false, "");
         var response = sendRequest(request);
         handleResponse(response, User.class);
     }
 
     public Auth login(User user) {
-        var request = buildRequest("POST", "/session", user);
+        var request = buildRequest("POST", "/session", user, false, "");
         var response = sendRequest(request);
         return handleResponse(response, Auth.class);
+    }
+
+    public Integer createGame(CreateGameReq game, String auth) {
+        var request = buildRequest("POST", "/game", game, true, auth);
+        var response = sendRequest(request);
+        return handleResponse(response, Integer.class);
     }
 
     private HttpResponse<String> sendRequest(HttpRequest request) throws ResponseException {
@@ -38,12 +45,15 @@ public class ServerFacade {
         }
     }
 
-    private HttpRequest buildRequest(String method, String path, Object body) {
+    private HttpRequest buildRequest(String method, String path, Object body, boolean header, String auth) {
         var request = HttpRequest.newBuilder()
                 .uri(URI.create(serverUrl + path))
                 .method(method, makeRequestBody(body));
         if (body != null) {
             request.setHeader("Content-Type", "application/json");
+        }
+        if (header) {
+            request.setHeader("Authorization", auth);
         }
         return request.build();
     }
