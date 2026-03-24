@@ -46,7 +46,6 @@ public class GameHandler {
 
     public void joinGame(Context ctx) throws DoesNotExistException, AlreadyExistsException {
 //        String authToken = new Gson().fromJson(ctx.header("authorization"), String.class);
-        System.out.println("made it to joingame in game handler!!");
         String authToken = ctx.header("Authorization");
         model.JoinGameReq body = new Gson().fromJson(ctx.body(), JoinGameReq.class);
         try {

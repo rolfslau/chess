@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import exceptions.ResponseException;
 import model.Auth;
 import model.CreateGameReq;
+import model.JoinGameReq;
 import model.User;
 
 import java.net.URI;
@@ -22,7 +23,7 @@ public class ServerFacade {
     public void register(User user) {
         var request = buildRequest("POST", "/user", user, false, "");
         var response = sendRequest(request);
-        handleResponse(response, User.class);
+        handleResponse(response, Auth.class);
     }
 
     public Auth login(User user) {
@@ -35,6 +36,12 @@ public class ServerFacade {
         var request = buildRequest("POST", "/game", game, true, auth);
         var response = sendRequest(request);
         return handleResponse(response, Integer.class);
+    }
+
+    public void joinGame(JoinGameReq game, String auth) {
+        var request = buildRequest("PUT", "/game", game, true, auth);
+        var response = sendRequest(request);
+        handleResponse(response, null);
     }
 
     private HttpResponse<String> sendRequest(HttpRequest request) throws ResponseException {

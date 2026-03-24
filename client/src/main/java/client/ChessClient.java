@@ -103,7 +103,7 @@ public class ChessClient {
         System.out.print("color >>> ");
         String color = scanner.nextLine();
         JoinGameReq game = new JoinGameReq(color.toUpperCase(), gameID);
-        server.joinGame(game);
+        server.joinGame(game, currAuth);
         return String.format("game %d joined as %s", gameID, color);
     }
 
