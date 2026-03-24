@@ -7,6 +7,12 @@ import model.JoinGameReq;
 import model.User;
 import server.ServerFacade;
 
+// how do I keep the auth token?
+// can two people log in from the same terminal?
+// if not how do they play each other?
+// can you explain the server facade from pet shop -- make request body
+// why in pet shop do they create a pet object instead of just passing the values they need
+
 public class ChessClient {
 
     private final ServerFacade server;
@@ -94,6 +100,19 @@ public class ChessClient {
         return String.format("game %d joined as %s", gameID, color);
     }
 
+    String observeGame() {
+        System.out.print("game id >>> ");
+        int gameID = Integer.parseInt(scanner.nextLine());
+
+        server.observeGame(gameID);
+        return String.format("watching game %d", gameID);
+    }
+
+    String logout() {
+        // what goes here? should I be saving the username of whoever is logged in?
+        server.logout();
+        return "successfully logged out";
+    }
 
 
 
