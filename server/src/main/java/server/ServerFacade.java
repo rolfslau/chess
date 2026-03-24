@@ -50,6 +50,7 @@ public class ServerFacade {
 
     public Game observeGame(Integer ID) {
         // what ?? do I need to build the whole pipeline for this??
+
     }
 
     public void logout(String auth) {

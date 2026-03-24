@@ -107,6 +107,8 @@ public class ChessClient {
         String color = scanner.nextLine();
         JoinGameReq game = new JoinGameReq(color.toUpperCase(), gameID);
         server.joinGame(game, currAuth);
+        ChessBoard board = new ChessBoard();
+        new DrawingChess(board, color.toUpperCase());
         return String.format("game %d joined as %s", gameID, color);
     }
 
@@ -118,8 +120,8 @@ public class ChessClient {
     public String observeGame() {
         System.out.print("game id >>> ");
         int gameID = Integer.parseInt(scanner.nextLine());
-
-        ChessBoard game = server.observeGame(gameID).game().getBoard();
+        ChessBoard board = new ChessBoard();
+        new DrawingChess(board, "WHITE");
         return String.format("watching game %d", gameID);
     }
 
