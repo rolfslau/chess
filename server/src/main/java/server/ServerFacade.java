@@ -44,6 +44,12 @@ public class ServerFacade {
         handleResponse(response, null);
     }
 
+    public void logout(String auth) {
+        var request = buildRequest("DELETE", "/session", true, auth);
+        var response = sendRequest(request);
+        handleResponse(response, null);
+    }
+
     private HttpResponse<String> sendRequest(HttpRequest request) throws ResponseException {
         try {
             return client.send(request, HttpResponse.BodyHandlers.ofString());
