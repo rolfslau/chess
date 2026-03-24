@@ -60,6 +60,19 @@ public class ChessClient {
         return String.format("successfully registered user %s !!", username);
     }
 
+    public String login() {
+        System.out.print("username >>> ");
+        String username = scanner.nextLine();
+
+        System.out.print("password >>> ");
+        String password = scanner.nextLine();
+
+        User user = new User(username, password, null);
+        server.login(user);
+        state = State.SIGNEDIN;
+        return String.format("successfully logged in user %s !!", username);
+    }
+
 
 
     public String help() {
