@@ -2,6 +2,7 @@ package server;
 
 import com.google.gson.Gson;
 import exceptions.ResponseException;
+import model.Auth;
 import model.User;
 
 import java.net.URI;
@@ -21,6 +22,12 @@ public class ServerFacade {
         var request = buildRequest("POST", "/user", user);
         var response = sendRequest(request);
         handleResponse(response, User.class);
+    }
+
+    public Auth login(User user) {
+        var request = buildRequest("POST", "/session", user);
+        var response = sendRequest(request);
+        return handleResponse(response, Auth.class);
     }
 
     private HttpResponse<String> sendRequest(HttpRequest request) throws ResponseException {

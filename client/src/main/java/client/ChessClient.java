@@ -2,6 +2,7 @@ package client;
 
 import java.util.Scanner;
 
+import model.Auth;
 import model.CreateGameReq;
 import model.JoinGameReq;
 import model.User;
@@ -20,6 +21,7 @@ public class ChessClient {
     private State state = State.SIGNEDOUT;
     Scanner scanner = new Scanner(System.in);
     private String currAuth;
+    private String currUser;
 
     public ChessClient(String serverUrl) {
         server = new ServerFacade(serverUrl);
@@ -79,7 +81,9 @@ public class ChessClient {
         String password = scanner.nextLine();
 
         User user = new User(username, password, null);
-        currAuth = server.login(user);
+        Auth auth = server.login(user);
+        currAuth = auth.authToken();
+        currUser = auth.username();
         state = State.SIGNEDIN;
         return String.format("successfully logged in user %s !!", username);
     }
