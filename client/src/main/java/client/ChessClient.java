@@ -3,6 +3,7 @@ package client;
 import java.util.Scanner;
 
 import model.CreateGameReq;
+import model.JoinGameReq;
 import model.User;
 import server.ServerFacade;
 
@@ -78,8 +79,21 @@ public class ChessClient {
         System.out.print("game name >>> ");
         String gameName = scanner.nextLine();
         CreateGameReq game = new CreateGameReq(gameName);
+        server.createGame(game);
         return String.format("game created: %s", gameName);
     }
+
+    String joinGame() {
+        System.out.print("game id >>> ");
+        int gameID = Integer.parseInt(scanner.nextLine());
+
+        System.out.print("color >>> ");
+        String color = scanner.nextLine();
+        JoinGameReq game = new JoinGameReq(color.toUpperCase(), gameID);
+        server.joinGame(game);
+        return String.format("game %d joined as %s", gameID, color);
+    }
+
 
 
 
