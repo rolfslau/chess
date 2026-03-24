@@ -8,16 +8,18 @@ import model.User;
 import server.ServerFacade;
 
 // how do I keep the auth token?
-// can two people log in from the same terminal?
+// can two people log in from the same terminal? -- open two terminals
 // if not how do they play each other?
 // can you explain the server facade from pet shop -- make request body
 // why in pet shop do they create a pet object instead of just passing the values they need
+// --- check how I did it in my server, if I deserialized from an object then it needs to be an object on this end
 
 public class ChessClient {
 
     private final ServerFacade server;
     private State state = State.SIGNEDOUT;
     Scanner scanner = new Scanner(System.in);
+    private String currAuth;
 
     public ChessClient(String serverUrl) {
         server = new ServerFacade(serverUrl);
@@ -69,6 +71,7 @@ public class ChessClient {
     }
 
     public String login() {
+        // make sure to get the auth token back
         System.out.print("username >>> ");
         String username = scanner.nextLine();
 
@@ -76,7 +79,7 @@ public class ChessClient {
         String password = scanner.nextLine();
 
         User user = new User(username, password, null);
-        server.login(user);
+        currAuth = server.login(user);
         state = State.SIGNEDIN;
         return String.format("successfully logged in user %s !!", username);
     }
@@ -110,7 +113,8 @@ public class ChessClient {
 
     String logout() {
         // what goes here? should I be saving the username of whoever is logged in?
-        server.logout();
+        server.logout(currAuth);
+        state = State.SIGNEDOUT;
         return "successfully logged out";
     }
 
