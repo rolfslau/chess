@@ -3,8 +3,6 @@ package service;
 import dataaccess.GameDataAccess;
 import dataaccess.UserDataAccess;
 import model.Game;
-import dataaccess.MemoryGameDAO;
-import dataaccess.MemoryUserDAO;
 import exceptions.AlreadyExistsException;
 import exceptions.DoesNotExistException;
 

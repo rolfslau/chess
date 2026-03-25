@@ -4,7 +4,6 @@ import java.util.Objects;
 import java.util.Scanner;
 
 import chess.ChessBoard;
-import chess.ChessPiece;
 import model.Auth;
 import model.CreateGameReq;
 import model.JoinGameReq;
