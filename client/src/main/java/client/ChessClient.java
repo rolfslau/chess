@@ -66,30 +66,32 @@ public class ChessClient {
     }
 
     public String register() {
-        boolean keep_going = true;
+        boolean gogo = true;
         String username = "";
         String password = "";
         String email = "";
-        while (keep_going) {
-            System.out.print("username >>> ");
-            username = scanner.nextLine();
-            if (Objects.equals(username, "")) {
-                System.out.print("invalid username\n");
-                continue;
+        while (gogo) {
+            boolean keep_going = true;
+            while (keep_going) {
+                System.out.print("username >>> ");
+                username = scanner.nextLine();
+                if (Objects.equals(username, "")) {
+                    System.out.print("invalid username\n");
+                    continue;
+                }
+                keep_going = false;
             }
-            keep_going = false;
-        }
-        keep_going = true;
-        while (keep_going) {
-            System.out.print("password >>> ");
-            password = scanner.nextLine();
-            if (Objects.equals(password, "")) {
-                System.out.print("invalid password\n");
-                continue;
+            keep_going = true;
+            while (keep_going) {
+                System.out.print("password >>> ");
+                password = scanner.nextLine();
+                if (Objects.equals(password, "")) {
+                    System.out.print("invalid password\n");
+                    continue;
+                }
+                keep_going = false;
             }
-            keep_going = false;
-        }
-        keep_going = true;
+            keep_going = true;
             while (keep_going) {
                 System.out.print("email >>> ");
                 email = scanner.nextLine();
@@ -99,8 +101,15 @@ public class ChessClient {
                 }
                 keep_going = false;
             }
-        User user = new User(username, password, email);
-        server.register(user);
+            try {
+                User user = new User(username, password, email);
+                server.register(user);
+            } catch (RuntimeException e) {
+                System.out.print("username already taken\n");
+                continue;
+            }
+            gogo = false;
+        }
         return String.format("successfully registered user \"%s\" !!\n\n", username);
     }
 
@@ -127,6 +136,7 @@ public class ChessClient {
             }
             keep_going = false;
         }
+        System.out.print(currAuth);
         return returner;
     }
 

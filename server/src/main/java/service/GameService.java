@@ -39,27 +39,22 @@ public class GameService {
     }
 
     public void joinGame(String auth, String color, int gameID) throws DoesNotExistException, AlreadyExistsException {
-        System.out.println("made it to joingame in game service!!");
         if (uData.getAuth(auth) == null) {
             throw new DoesNotExistException("Error: not authorized", 401);
         }
-        System.out.println("made it past auth == null");
         String user = uData.getAuth(auth);
-        System.out.println("made it past getAuth");
         Game game = dataAccess.getGame(gameID);
-        System.out.println("made it past getGame");
         if (game == null) {
             throw new DoesNotExistException("Error: no game by that id", 400);
         }
-        System.out.println("made it past game = null");
         if (!Objects.equals(color, "WHITE") && !Objects.equals(color, "BLACK")) {
             throw new DoesNotExistException("Error: not a valid color", 400);
         }
-        System.out.println("made it past wrong colors");
+
         if (colorTaken(game, color)) {
             throw new AlreadyExistsException("Error: color already taken", 403);
         }
-        System.out.println("made it past color taken");
+
         dataAccess.joinGame(user, color, gameID);
     }
 
