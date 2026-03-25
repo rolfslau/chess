@@ -136,7 +136,6 @@ public class ChessClient {
             }
             keep_going = false;
         }
-        System.out.print(currAuth);
         return returner;
     }
 
