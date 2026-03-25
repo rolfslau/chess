@@ -30,9 +30,6 @@ public class ResponseException extends RuntimeException {
         return new ResponseException(status, message);
     }
 
-    public Code code() {
-        return code;
-    }
 
     public static Code fromHttpStatusCode(int httpStatusCode) {
         return switch (httpStatusCode) {
@@ -42,10 +39,4 @@ public class ResponseException extends RuntimeException {
         };
     }
 
-    public int toHttpStatusCode() {
-        return switch (code) {
-            case ServerError -> 500;
-            case ClientError -> 400;
-        };
-    }
 }
