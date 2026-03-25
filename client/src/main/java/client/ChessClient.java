@@ -8,7 +8,6 @@ import model.Auth;
 import model.CreateGameReq;
 import model.JoinGameReq;
 import model.User;
-import server.ServerFacade;
 
 import static ui.EscapeSequences.*;
 
