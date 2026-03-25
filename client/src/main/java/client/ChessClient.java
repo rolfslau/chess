@@ -1,5 +1,6 @@
 package client;
 
+import java.util.Objects;
 import java.util.Scanner;
 
 import chess.ChessBoard;
@@ -64,15 +65,39 @@ public class ChessClient {
     }
 
     public String register() {
-        System.out.print("username >>> ");
-        String username = scanner.nextLine();
-
-        System.out.print("password >>> ");
-        String password = scanner.nextLine();
-
-        System.out.print("email >>> ");
-        String email = scanner.nextLine();
-
+        boolean keep_going = true;
+        String username = "";
+        String password = "";
+        String email = "";
+        while (keep_going) {
+            System.out.print("username >>> ");
+            username = scanner.nextLine();
+            if (Objects.equals(username, "")) {
+                System.out.print("invalid username\n");
+                continue;
+            }
+            keep_going = false;
+        }
+        keep_going = true;
+        while (keep_going) {
+            System.out.print("password >>> ");
+            password = scanner.nextLine();
+            if (Objects.equals(password, "")) {
+                System.out.print("invalid password\n");
+                continue;
+            }
+            keep_going = false;
+        }
+        keep_going = true;
+            while (keep_going) {
+                System.out.print("email >>> ");
+                email = scanner.nextLine();
+                if (Objects.equals(email, "")) {
+                    System.out.print("invalid email\n");
+                    continue;
+                }
+                keep_going = false;
+            }
         User user = new User(username, password, email);
         server.register(user);
         return String.format("successfully registered user %s !!", username);
