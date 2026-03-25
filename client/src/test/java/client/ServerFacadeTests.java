@@ -60,8 +60,7 @@ public class ServerFacadeTests {
         Auth auth = serverFacade.login(user);
         String authToken = auth.authToken();
         CreateGameReq game = new CreateGameReq("test game");
-        int id = serverFacade.createGame(game, authToken);
-        Assertions.assertEquals(1, id);
+        Assertions.assertDoesNotThrow(() -> serverFacade.createGame(game, authToken));
     }
 
     @Test

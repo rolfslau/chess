@@ -42,23 +42,31 @@ public class ChessClient {
             System.out.print(help());
             System.out.print("\n >>> ");
             String line = scanner.nextLine();
-
-            result = eval(line);
+            if (state == State.SIGNEDIN) {
+                result = evalIn(line);
+            }
+            else {result = evalOut(line); }
             System.out.print(result);
 
         }
         System.out.println();
     }
 
-    public String eval(String line) {
+    public String evalIn(String line) {
         return switch (line) {
-            case "register" -> register();
-            case "login" -> login();
             case "create" -> createGame();
             case "join" -> joinGame();
             case "list" -> listGames();
             case "observe" -> observeGame();
             case "logout" -> logout();
+            default -> "";
+        };
+    }
+
+    public String evalOut(String line) {
+        return switch (line) {
+            case "register" -> register();
+            case "login" -> login();
             case "quit" -> "quit";
             default -> "";
         };
