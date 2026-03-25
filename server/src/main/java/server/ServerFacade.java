@@ -97,8 +97,6 @@ public class ServerFacade {
         if (!isSuccessful(status)) {
             var body = response.body();
             if (body != null) {
-                System.out.println("ERROR BODY: " + body);
-                System.out.print("breaking in handle response 1 for some reason");
                 throw ResponseException.fromJson(body);
             }
             System.out.print("breaking in handle response 2 for some reason");

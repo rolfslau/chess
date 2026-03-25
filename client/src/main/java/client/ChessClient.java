@@ -105,18 +105,28 @@ public class ChessClient {
 
     public String login() {
         // make sure to get the auth token back
-        System.out.print("username >>> ");
-        String username = scanner.nextLine();
+        String returner = "";
+        boolean keep_going = true;
+        while (keep_going) {
+            System.out.print("username >>> ");
+            String username = scanner.nextLine();
 
-        System.out.print("password >>> ");
-        String password = scanner.nextLine();
-
-        User user = new User(username, password, null);
-        Auth auth = server.login(user);
-        currAuth = auth.authToken();
-        currUser = auth.username();
-        state = State.SIGNEDIN;
-        return String.format("successfully logged in user %s !!", username);
+            System.out.print("password >>> ");
+            String password = scanner.nextLine();
+            try {
+                User user = new User(username, password, null);
+                Auth auth = server.login(user);
+                currAuth = auth.authToken();
+                currUser = auth.username();
+                state = State.SIGNEDIN;
+                returner = String.format("successfully logged in user %s !!", username);
+            } catch (RuntimeException e) {
+                System.out.print("username or password incorrect\n");
+                continue;
+            }
+            keep_going = false;
+        }
+        return returner;
     }
 
     public String createGame() {
