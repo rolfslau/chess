@@ -101,7 +101,7 @@ public class ChessClient {
             }
         User user = new User(username, password, email);
         server.register(user);
-        return String.format("successfully registered user %s !!\n\n", username);
+        return String.format("successfully registered user \"%s\" !!\n\n", username);
     }
 
     public String login() {
@@ -120,7 +120,7 @@ public class ChessClient {
                 currAuth = auth.authToken();
                 currUser = auth.username();
                 state = State.SIGNEDIN;
-                returner = String.format("successfully logged in user %s !!\n\n", username);
+                returner = String.format("successfully logged in user \"%s\" !!\n\n", username);
             } catch (RuntimeException e) {
                 System.out.print("username or password incorrect\n");
                 continue;
@@ -136,7 +136,7 @@ public class ChessClient {
         while (keep_going) {
             System.out.print("game name >>> ");
             gameName = scanner.nextLine();
-            if (gameName == "") {
+            if (Objects.equals(gameName, "")) {
                 System.out.print("invalid game name\n");
                 continue;
             }
@@ -144,20 +144,32 @@ public class ChessClient {
         }
         CreateGameReq game = new CreateGameReq(gameName);
         Integer id = server.createGame(game, currAuth);
-        return String.format("game %s created with id: %d\n\n", gameName, id);
+        return String.format("game \"%s\" created with id: %d\n\n", gameName, id);
     }
 
     public String joinGame() {
-        System.out.print("game id >>> ");
-        int gameID = Integer.parseInt(scanner.nextLine());
+        int gameID = 0;
+        String color = "";
+        boolean keep_going = true;
+        while (keep_going) {
+                System.out.print("game id >>> ");
+                String gameNum = scanner.nextLine();
 
-        System.out.print("color >>> ");
-        String color = scanner.nextLine();
-        JoinGameReq game = new JoinGameReq(color.toUpperCase(), gameID);
-        server.joinGame(game, currAuth);
-        ChessBoard board = new ChessBoard();
-        board.resetBoard();
-        new DrawingChess(board, color.toUpperCase());
+                System.out.print("color >>> ");
+                color = scanner.nextLine();
+            try {
+                gameID = Integer.parseInt(gameNum);
+                JoinGameReq game = new JoinGameReq(color.toUpperCase(), gameID);
+                server.joinGame(game, currAuth);
+                ChessBoard board = new ChessBoard();
+                board.resetBoard();
+                new DrawingChess(board, color.toUpperCase());
+            } catch (RuntimeException e) {
+                System.out.print("invalid game id or color\n");
+                continue;
+            }
+            keep_going = false;
+        }
         return String.format("game %d joined as %s\n\n", gameID, color);
     }
 
