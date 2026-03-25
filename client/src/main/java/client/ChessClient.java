@@ -70,35 +70,35 @@ public class ChessClient {
         String password = "";
         String email = "";
         while (gogo) {
-            boolean keep_going = true;
-            while (keep_going) {
+            boolean keepGoing = true;
+            while (keepGoing) {
                 System.out.print("username >>> ");
                 username = scanner.nextLine();
                 if (Objects.equals(username, "")) {
                     System.out.print("invalid username\n");
                     continue;
                 }
-                keep_going = false;
+                keepGoing = false;
             }
-            keep_going = true;
-            while (keep_going) {
+            keepGoing = true;
+            while (keepGoing) {
                 System.out.print("password >>> ");
                 password = scanner.nextLine();
                 if (Objects.equals(password, "")) {
                     System.out.print("invalid password\n");
                     continue;
                 }
-                keep_going = false;
+                keepGoing = false;
             }
-            keep_going = true;
-            while (keep_going) {
+            keepGoing = true;
+            while (keepGoing) {
                 System.out.print("email >>> ");
                 email = scanner.nextLine();
                 if (Objects.equals(email, "")) {
                     System.out.print("invalid email\n");
                     continue;
                 }
-                keep_going = false;
+                keepGoing = false;
             }
             try {
                 User user = new User(username, password, email);
@@ -115,8 +115,8 @@ public class ChessClient {
     public String login() {
         // make sure to get the auth token back
         String returner = "";
-        boolean keep_going = true;
-        while (keep_going) {
+        boolean keepGoing = true;
+        while (keepGoing) {
             System.out.print("username >>> ");
             String username = scanner.nextLine();
 
@@ -133,22 +133,22 @@ public class ChessClient {
                 System.out.print("username or password incorrect\n");
                 continue;
             }
-            keep_going = false;
+            keepGoing = false;
         }
         return returner;
     }
 
     public String createGame() {
-        boolean keep_going = true;
+        boolean keepGoing = true;
         String gameName = "";
-        while (keep_going) {
+        while (keepGoing) {
             System.out.print("game name >>> ");
             gameName = scanner.nextLine();
             if (Objects.equals(gameName, "")) {
                 System.out.print("invalid game name\n");
                 continue;
             }
-            keep_going = false;
+            keepGoing = false;
         }
         CreateGameReq game = new CreateGameReq(gameName);
         Integer id = server.createGame(game, currAuth);
@@ -158,8 +158,8 @@ public class ChessClient {
     public String joinGame() {
         int gameID = 0;
         String color = "";
-        boolean keep_going = true;
-        while (keep_going) {
+        boolean keepGoing = true;
+        while (keepGoing) {
                 System.out.print("game id >>> ");
                 String gameNum = scanner.nextLine();
 
@@ -176,7 +176,7 @@ public class ChessClient {
                 System.out.print("invalid game id or color\n");
                 continue;
             }
-            keep_going = false;
+            keepGoing = false;
         }
         return String.format("game %d joined as %s\n\n", gameID, color);
     }
@@ -187,9 +187,9 @@ public class ChessClient {
     }
 
     public String observeGame() {
-        boolean keep_going = true;
+        boolean keepGoing = true;
         int gameID = 0;
-        while (keep_going) {
+        while (keepGoing) {
             try {
                 System.out.print("game id >>> ");
                 gameID = Integer.parseInt(scanner.nextLine());
@@ -197,7 +197,7 @@ public class ChessClient {
                 System.out.print("invalid gameID\n");
                 continue;
             }
-            keep_going = false;
+            keepGoing = false;
         }
         ChessBoard board = new ChessBoard();
         board.resetBoard();

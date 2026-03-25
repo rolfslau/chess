@@ -19,6 +19,7 @@ public class ServerFacadeTests {
     }
 
     @Test
+    @Order(1)
     @DisplayName("register positive")
     public void registerSuccess() {
         User user = new User("test", "password", "email@gmail.com");
@@ -26,6 +27,7 @@ public class ServerFacadeTests {
     }
 
     @Test
+    @Order(2)
     @DisplayName("register negative")
     public void registerFailure() {
         User user = new User("", "password", "email@gmail.com");
@@ -33,6 +35,7 @@ public class ServerFacadeTests {
     }
 
     @Test
+    @Order(3)
     @DisplayName("login positive")
     public void loginSuccess() {
         User user = new User("test", "password", "email@gmail.com");
@@ -41,6 +44,7 @@ public class ServerFacadeTests {
     }
 
     @Test
+    @Order(4)
     @DisplayName("login negative")
     public void loginFailure() {
         User user = new User("NotAUser", "password", "email@gmail.com");
@@ -49,6 +53,7 @@ public class ServerFacadeTests {
 
     //create
     @Test
+    @Order(5)
     @DisplayName("create game positive")
     public void createSuccess() {
         User user = new User("test", "password", "email@gmail.com");
@@ -60,6 +65,7 @@ public class ServerFacadeTests {
     }
 
     @Test
+    @Order(6)
     @DisplayName("create game negative")
     public void createFailure() {
         User user = new User("test", "password", "email@gmail.com");
@@ -72,17 +78,21 @@ public class ServerFacadeTests {
     //join
 
     @Test
+    @Order(7)
     @DisplayName("join game positive")
     public void joinSuccess() {
         User user = new User("test", "password", "email@gmail.com");
         Auth auth = serverFacade.login(user);
         String authToken = auth.authToken();
-        JoinGameReq game = new JoinGameReq("WHITE", 1);
+        CreateGameReq newGame = new CreateGameReq("new_game");
+        int id = serverFacade.createGame(newGame, authToken);
+        JoinGameReq game = new JoinGameReq("WHITE", id);
         serverFacade.joinGame(game, authToken);
         Assertions.assertThrows(RuntimeException.class, () -> serverFacade.joinGame(game, authToken));
     }
 
     @Test
+    @Order(8)
     @DisplayName("join game negative")
     public void joinFailure() {
         User user = new User("test", "password", "email@gmail.com");
@@ -95,6 +105,7 @@ public class ServerFacadeTests {
     //list
 
     @Test
+    @Order(9)
     @DisplayName("list game positive")
     public void listSuccess() {
         User user = new User("test", "password", "email@gmail.com");
@@ -104,6 +115,7 @@ public class ServerFacadeTests {
     }
 
     @Test
+    @Order(10)
     @DisplayName("list game negative")
     public void listFailure() {
         User user = new User("test", "password", "email@gmail.com");
@@ -114,6 +126,7 @@ public class ServerFacadeTests {
     //logout
 
     @Test
+    @Order(11)
     @DisplayName("logout positive")
     public void logoutSuccess() {
         User user = new User("test", "password", "email@gmail.com");
@@ -124,12 +137,15 @@ public class ServerFacadeTests {
     }
 
     @Test
+    @Order(12)
     @DisplayName("logout negative")
     public void logoutFailure() {
         User user = new User("test", "password", "email@gmail.com");
         Auth auth = serverFacade.login(user);
         String authToken = auth.authToken();
-        Assertions.assertDoesNotThrow(() -> serverFacade.listGames(authToken));
+        CreateGameReq game = new CreateGameReq("new game");
+        serverFacade.logout(authToken);
+        Assertions.assertThrows(RuntimeException.class, () -> serverFacade.createGame(game, authToken));
     }
 
 
