@@ -13,8 +13,8 @@ public class ServerFacadeTests {
     @BeforeAll
     public static void init() {
         server = new Server();
-        var port = server.run(8080);
-        serverFacade = new ServerFacade("http://localhost:8080");
+        var port = server.run(0);
+        serverFacade = new ServerFacade(String.format("http://localhost:%d", port));
         System.out.println("Started test HTTP server on " + port);
     }
 
