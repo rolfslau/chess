@@ -73,90 +73,65 @@ public class ChessClient {
     }
 
     public String register() {
-        boolean gogo = true;
         String username = "";
         String password = "";
         String email = "";
-        while (gogo) {
-            boolean keepGoing = true;
-            while (keepGoing) {
-                System.out.print("username >>> ");
-                username = scanner.nextLine();
-                if (Objects.equals(username, "")) {
-                    System.out.print("invalid username\n");
-                    continue;
-                }
-                keepGoing = false;
-            }
-            keepGoing = true;
-            while (keepGoing) {
-                System.out.print("password >>> ");
-                password = scanner.nextLine();
-                if (Objects.equals(password, "")) {
-                    System.out.print("invalid password\n");
-                    continue;
-                }
-                keepGoing = false;
-            }
-            keepGoing = true;
-            while (keepGoing) {
-                System.out.print("email >>> ");
-                email = scanner.nextLine();
-                if (Objects.equals(email, "")) {
-                    System.out.print("invalid email\n");
-                    continue;
-                }
-                keepGoing = false;
-            }
-            try {
-                User user = new User(username, password, email);
-                server.register(user);
-            } catch (RuntimeException e) {
-                System.out.print("username already taken\n");
-                continue;
-            }
-            gogo = false;
+        System.out.print("username >>> ");
+        username = scanner.nextLine();
+        if (Objects.equals(username, "")) {
+            System.out.print("\ninvalid username\n\n");
+            return "";
         }
-        return String.format("successfully registered user \"%s\" !!\n\n", username);
+        System.out.print("password >>> ");
+        password = scanner.nextLine();
+        if (Objects.equals(password, "")) {
+            System.out.print("\ninvalid password\n\n");
+            return "";
+        }
+        System.out.print("email >>> ");
+        email = scanner.nextLine();
+        if (Objects.equals(email, "")) {
+            System.out.print("\ninvalid email\n\n");
+            return "";
+        }
+        try {
+            User user = new User(username, password, email);
+            server.register(user);
+        } catch (RuntimeException e) {
+            System.out.print("\nusername already taken\n\n");
+            return "";
+        }
+        return String.format("\nsuccessfully registered user \"%s\" !!\n\n", username);
     }
 
     public String login() {
         // make sure to get the auth token back
         String returner = "";
-        boolean keepGoing = true;
-        while (keepGoing) {
-            System.out.print("username >>> ");
-            String username = scanner.nextLine();
+        System.out.print("username >>> ");
+        String username = scanner.nextLine();
 
-            System.out.print("password >>> ");
-            String password = scanner.nextLine();
-            try {
-                User user = new User(username, password, null);
-                Auth auth = server.login(user);
-                currAuth = auth.authToken();
-                currUser = auth.username();
-                state = State.SIGNEDIN;
-                returner = String.format("successfully logged in user \"%s\" !!\n\n", username);
-            } catch (RuntimeException e) {
-                System.out.print("username or password incorrect\n");
-                continue;
-            }
-            keepGoing = false;
+        System.out.print("password >>> ");
+        String password = scanner.nextLine();
+        try {
+            User user = new User(username, password, null);
+            Auth auth = server.login(user);
+            currAuth = auth.authToken();
+            currUser = auth.username();
+            state = State.SIGNEDIN;
+            returner = String.format("successfully logged in user \"%s\" !!\n\n", username);
+        } catch (RuntimeException e) {
+            System.out.print("\nusername or password incorrect\n\n");
         }
         return returner;
     }
 
     public String createGame() {
-        boolean keepGoing = true;
-        String gameName = "";
-        while (keepGoing) {
-            System.out.print("game name >>> ");
-            gameName = scanner.nextLine();
-            if (Objects.equals(gameName, "")) {
-                System.out.print("invalid game name\n");
-                continue;
-            }
-            keepGoing = false;
+
+        System.out.print("game name >>> ");
+        String gameName = scanner.nextLine();
+        if (Objects.equals(gameName, "")) {
+            System.out.print("\ninvalid game name\n\n");
+            return "";
         }
         CreateGameReq game = new CreateGameReq(gameName);
         Integer id = server.createGame(game, currAuth);
@@ -164,30 +139,25 @@ public class ChessClient {
     }
 
     public String joinGame() {
-        int gameID = 0;
-        String color = "";
-        boolean keepGoing = true;
-        while (keepGoing) {
-                System.out.print("game id >>> ");
-                String gameNum = scanner.nextLine();
+        System.out.print("game id >>> ");
+        String gameNum = scanner.nextLine();
 
-                System.out.print("color >>> ");
-                color = scanner.nextLine();
-            try {
-                gameID = Integer.parseInt(gameNum);
-                JoinGameReq game = new JoinGameReq(color.toUpperCase(), gameID);
-                server.joinGame(game, currAuth);
-                ChessBoard board = new ChessBoard();
-                board.resetBoard();
-                new DrawingChess(board, color.toUpperCase());
-            } catch (RuntimeException e) {
-                System.out.print("invalid game id or color (already taken or not black/white)\n");
-                continue;
-            }
-            keepGoing = false;
+        System.out.print("color >>> ");
+        String color = scanner.nextLine();
+        try {
+            int gameID = Integer.parseInt(gameNum);
+            JoinGameReq game = new JoinGameReq(color.toUpperCase(), gameID);
+            server.joinGame(game, currAuth);
+            ChessBoard board = new ChessBoard();
+            board.resetBoard();
+            new DrawingChess(board, color.toUpperCase());
+            return String.format("game %d joined as %s\n\n", gameID, color);
+        } catch (RuntimeException e) {
+            System.out.print("\ninvalid game id or color (already taken or not black/white)\n\n");
         }
-        return String.format("game %d joined as %s\n\n", gameID, color);
-    }
+            return "";
+        }
+
 
     public String listGames() {
         server.listGames(currAuth);
@@ -195,17 +165,13 @@ public class ChessClient {
     }
 
     public String observeGame() {
-        boolean keepGoing = true;
         int gameID = 0;
-        while (keepGoing) {
-            try {
-                System.out.print("game id >>> ");
-                gameID = Integer.parseInt(scanner.nextLine());
-            } catch (RuntimeException e) {
-                System.out.print("invalid gameID\n");
-                continue;
-            }
-            keepGoing = false;
+        try {
+            System.out.print("game id >>> ");
+            gameID = Integer.parseInt(scanner.nextLine());
+        } catch (RuntimeException e) {
+            System.out.print("\ninvalid gameID\n\n");
+            return "";
         }
         ChessBoard board = new ChessBoard();
         board.resetBoard();
