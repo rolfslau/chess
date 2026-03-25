@@ -179,8 +179,18 @@ public class ChessClient {
     }
 
     public String observeGame() {
-        System.out.print("game id >>> ");
-        int gameID = Integer.parseInt(scanner.nextLine());
+        boolean keep_going = true;
+        int gameID = 0;
+        while (keep_going) {
+            try {
+                System.out.print("game id >>> ");
+                gameID = Integer.parseInt(scanner.nextLine());
+            } catch (RuntimeException e) {
+                System.out.print("invalid gameID\n");
+                continue;
+            }
+            keep_going = false;
+        }
         ChessBoard board = new ChessBoard();
         board.resetBoard();
         new DrawingChess(board, "WHITE");
