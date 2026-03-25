@@ -1,8 +1,6 @@
 package client;
 
-import model.Auth;
-import model.CreateGameReq;
-import model.User;
+import model.*;
 import org.junit.jupiter.api.*;
 import server.Server;
 import server.ServerFacade;
@@ -74,11 +72,66 @@ public class ServerFacadeTests {
 
     //join
 
+    @Test
+    @DisplayName("join game positive")
+    public void joinSuccess() {
+        User user = new User("test", "password", "email@gmail.com");
+        Auth auth = serverFacade.login(user);
+        String authToken = auth.authToken();
+        JoinGameReq game = new JoinGameReq("WHITE", 1);
+        serverFacade.joinGame(game, authToken);
+        Assertions.assertThrows(RuntimeException.class, () -> serverFacade.joinGame(game, authToken));
+    }
 
+    @Test
+    @DisplayName("join game negative")
+    public void joinFailure() {
+        User user = new User("test", "password", "email@gmail.com");
+        Auth auth = serverFacade.login(user);
+        String authToken = auth.authToken();
+        JoinGameReq game = new JoinGameReq("BLACK", 1);
+        Assertions.assertThrows(RuntimeException.class, () -> serverFacade.joinGame(game, ""));
+    }
 
     //list
 
+    @Test
+    @DisplayName("list game positive")
+    public void listSuccess() {
+        User user = new User("test", "password", "email@gmail.com");
+        Auth auth = serverFacade.login(user);
+        String authToken = auth.authToken();
+        Assertions.assertDoesNotThrow(() -> serverFacade.listGames(authToken));
+    }
+
+    @Test
+    @DisplayName("list game negative")
+    public void listFailure() {
+        User user = new User("test", "password", "email@gmail.com");
+        Auth auth = serverFacade.login(user);
+        Assertions.assertThrows(RuntimeException.class, () -> serverFacade.listGames(""));
+    }
+
     //logout
+
+    @Test
+    @DisplayName("logout positive")
+    public void logoutSuccess() {
+        User user = new User("test", "password", "email@gmail.com");
+        Auth auth = serverFacade.login(user);
+        String authToken = auth.authToken();
+        serverFacade.logout(authToken);
+        Assertions.assertThrows(RuntimeException.class, () -> serverFacade.listGames(authToken));
+    }
+
+    @Test
+    @DisplayName("logout negative")
+    public void logoutFailure() {
+        User user = new User("test", "password", "email@gmail.com");
+        Auth auth = serverFacade.login(user);
+        String authToken = auth.authToken();
+        Assertions.assertDoesNotThrow(() -> serverFacade.listGames(authToken));
+    }
 
 
     @AfterAll
