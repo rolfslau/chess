@@ -21,10 +21,10 @@ public class ServerFacade {
         this.serverUrl = serverURL;
     }
 
-    public void register(User user) {
+    public String register(User user) {
         var request = buildRequest("POST", "/user", user, false, "");
         var response = sendRequest(request);
-        handleResponse(response, Auth.class);
+        return handleResponse(response, Auth.class).authToken();
     }
 
     public Auth login(User user) {

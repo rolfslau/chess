@@ -79,26 +79,28 @@ public class ChessClient {
         System.out.print("username >>> ");
         username = scanner.nextLine();
         if (Objects.equals(username, "")) {
-            System.out.print("\ninvalid username\n\n");
+            System.out.print("\n\uD83D\uDEA8invalid username\uD83D\uDEA8\n\n");
             return "";
         }
         System.out.print("password >>> ");
         password = scanner.nextLine();
         if (Objects.equals(password, "")) {
-            System.out.print("\ninvalid password\n\n");
+            System.out.print("\n\uD83D\uDEA8invalid password\uD83D\uDEA8\n\n");
             return "";
         }
         System.out.print("email >>> ");
         email = scanner.nextLine();
         if (Objects.equals(email, "")) {
-            System.out.print("\ninvalid email\n\n");
+            System.out.print("\n\uD83D\uDEA8invalid email\uD83D\uDEA8\n\n");
             return "";
         }
         try {
             User user = new User(username, password, email);
-            server.register(user);
+            String authToken = server.register(user);
+            currAuth = authToken;
+            state = State.SIGNEDIN;
         } catch (RuntimeException e) {
-            System.out.print("\nusername already taken\n\n");
+            System.out.print("\n\uD83D\uDEA8username already taken\uD83D\uDEA8\n\n");
             return "";
         }
         return String.format("\nsuccessfully registered user \"%s\" !!\n\n", username);
@@ -120,7 +122,7 @@ public class ChessClient {
             state = State.SIGNEDIN;
             returner = String.format("successfully logged in user \"%s\" !!\n\n", username);
         } catch (RuntimeException e) {
-            System.out.print("\nusername or password incorrect\n\n");
+            System.out.print("\n\uD83D\uDEA8username or password incorrect\uD83D\uDEA8\n\n");
         }
         return returner;
     }
@@ -130,7 +132,7 @@ public class ChessClient {
         System.out.print("game name >>> ");
         String gameName = scanner.nextLine();
         if (Objects.equals(gameName, "")) {
-            System.out.print("\ninvalid game name\n\n");
+            System.out.print("\n\uD83D\uDEA8invalid game name\uD83D\uDEA8\n\n");
             return "";
         }
         CreateGameReq game = new CreateGameReq(gameName);
@@ -153,7 +155,7 @@ public class ChessClient {
             new DrawingChess(board, color.toUpperCase());
             return String.format("game %d joined as %s\n\n", gameID, color);
         } catch (RuntimeException e) {
-            System.out.print("\ninvalid game id or color (already taken or not black/white)\n\n");
+            System.out.print("\n\uD83D\uDEA8invalid game id or color (already taken or not black/white)\uD83D\uDEA8\n\n");
         }
             return "";
         }
@@ -170,7 +172,7 @@ public class ChessClient {
             System.out.print("game id >>> ");
             gameID = Integer.parseInt(scanner.nextLine());
         } catch (RuntimeException e) {
-            System.out.print("\ninvalid gameID\n\n");
+            System.out.print("\n\uD83D\uDEA8invalid gameID\uD83D\uDEA8\n\n");
             return "";
         }
         ChessBoard board = new ChessBoard();
