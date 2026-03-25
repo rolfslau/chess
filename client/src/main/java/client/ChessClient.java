@@ -20,6 +20,7 @@ import static ui.EscapeSequences.*;
 
 public class ChessClient {
 
+
     private final ServerFacade server;
     private State state = State.SIGNEDOUT;
     Scanner scanner = new Scanner(System.in);
