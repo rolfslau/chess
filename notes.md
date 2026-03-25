@@ -930,7 +930,69 @@ DEFENSIVE PROGRAMMING
   + ensure params are valid
   + can do with assertions (if have control over calling code) or if statements 
   (if you don't - throw exceptions)
-  + 
+
+
+WEBSOCKET
++ http review
+  + client initiates, server responds (no way for server to initiate communication)
+  + methods, paths, headers
+  + extensive caching
+  + great for getting resources, but not for peer to peer messaging
++ websocket fixes the problems with http (not able to speak peer to peer)
++ asynchronous 
++ websocket protocol
+  + ping/pong for detecting dropped connections -- closes connections if doesn't receive a pong for a certain amount of time
+  + starts out as a regular http connection but is converted so that it is an open pipeline where either side can send
++ add a websocket endpoint to the server
+  + needs a url path ("\ws")
+  + functions to call when things occur
+    + onConnect
+    + onMessage
+    + onClose
+  + create ws client
+  + create websocket connection
+    + create container and then connect to it
+  + session object = open websocket connection
+  + structure code with good structure
+    + make a class for websocket handler
+    + make classes for each kind of websocket thing (handleConnect/Message/Close from tairus library)
+  + take json string and deserialize into a notification and then we can process
+  + notification handler = pointer to user interface class (client)
+    + so message can be processed in the appropriate way and not in the web socket facade (so its a pointer to chess client)
+  + handleConnect
+    + enableAutomaticPings
+  + handleMessage
+    + broadcast - send message to everyone specified
+    + make sure connection is open with a client before sending
+  + handleClose
+  + ConnectionManager to keep track of all the sessions
+    + add and remove sessions
+
+
+WEBSOCKET IN CHESS
++ send a connect message to server after joined so you can create a web socket connection
++ load game websocket message contains current state of the joined game
++ client deserializes the game and then that is the current state of the game on the client
++ send notification to player 1/observers when player 2 join
++ UserGameCommand (from client)
+  + CONNECT - connect as player or observer
+  + MAKE_MOVE - player move
+  + LEAVE - abandon game
+  + RESIGN - admit defeat
++ Chess client dependency on Notification handler 
+  + websocket calls this when a message comes in to broadcast
++ connection manager will be different than pet shop
+  + organize sessions by game id
+  + which sessions belong to each game (store a map - key=gameID, value=set of sessions belonging to that game)
+  + broadcast should be similar
++ handling message - four messages instead of two like in petshop (can check last video or maybe slides)
++ for make move you might need to deserialize twice
++ ServerMessage (from server)
+  + LOAD_GAME - the current game
+  + NOTIFICATION - opaque textual message
+  + ERROR - opaque error message
++ webSocketFacade
+  + deserialize and pass along to notification handler
 
 
 TO DO
