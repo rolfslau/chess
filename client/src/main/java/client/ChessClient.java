@@ -160,7 +160,7 @@ public class ChessClient {
         }
         CreateGameReq game = new CreateGameReq(gameName);
         Integer id = server.createGame(game, currAuth);
-        return String.format("game \"%s\" created with id: %d\n\n", gameName, id);
+        return String.format("game \"%s\" created\n\n", gameName);
     }
 
     public String joinGame() {
@@ -181,7 +181,7 @@ public class ChessClient {
                 board.resetBoard();
                 new DrawingChess(board, color.toUpperCase());
             } catch (RuntimeException e) {
-                System.out.print("invalid game id or color\n");
+                System.out.print("invalid game id or color (already taken or not black/white)\n");
                 continue;
             }
             keepGoing = false;
