@@ -36,16 +36,17 @@ public class ChessClient {
     public void run() {
         System.out.print(RESET_BG_COLOR);
         System.out.print("✨welcome to chess!!✨\n");
-        System.out.print(help());
 
 
         var result = "";
         while (!result.equals("quit")) {
+            System.out.print(help());
             System.out.print("\n >>> ");
             String line = scanner.nextLine();
 
             result = eval(line);
             System.out.print(result);
+
         }
         System.out.println();
     }
@@ -60,7 +61,7 @@ public class ChessClient {
             case "observe" -> observeGame();
             case "logout" -> logout();
             case "quit" -> "quit";
-            default -> help();
+            default -> "";
         };
     }
 
@@ -100,7 +101,7 @@ public class ChessClient {
             }
         User user = new User(username, password, email);
         server.register(user);
-        return String.format("successfully registered user %s !!", username);
+        return String.format("successfully registered user %s !!\n\n", username);
     }
 
     public String login() {
@@ -119,7 +120,7 @@ public class ChessClient {
                 currAuth = auth.authToken();
                 currUser = auth.username();
                 state = State.SIGNEDIN;
-                returner = String.format("successfully logged in user %s !!", username);
+                returner = String.format("successfully logged in user %s !!\n\n", username);
             } catch (RuntimeException e) {
                 System.out.print("username or password incorrect\n");
                 continue;
@@ -130,11 +131,20 @@ public class ChessClient {
     }
 
     public String createGame() {
-        System.out.print("game name >>> ");
-        String gameName = scanner.nextLine();
+        boolean keep_going = true;
+        String gameName = "";
+        while (keep_going) {
+            System.out.print("game name >>> ");
+            gameName = scanner.nextLine();
+            if (gameName == "") {
+                System.out.print("invalid game name\n");
+                continue;
+            }
+            keep_going = false;
+        }
         CreateGameReq game = new CreateGameReq(gameName);
         Integer id = server.createGame(game, currAuth);
-        return String.format("game %s created with id: %d", gameName, id);
+        return String.format("game %s created with id: %d\n\n", gameName, id);
     }
 
     public String joinGame() {
@@ -148,12 +158,12 @@ public class ChessClient {
         ChessBoard board = new ChessBoard();
         board.resetBoard();
         new DrawingChess(board, color.toUpperCase());
-        return String.format("game %d joined as %s", gameID, color);
+        return String.format("game %d joined as %s\n\n", gameID, color);
     }
 
     public String listGames() {
         server.listGames(currAuth);
-        return "\nall games listed!";
+        return "\nall games listed!\n\n";
     }
 
     public String observeGame() {
@@ -162,14 +172,14 @@ public class ChessClient {
         ChessBoard board = new ChessBoard();
         board.resetBoard();
         new DrawingChess(board, "WHITE");
-        return String.format("watching game %d", gameID);
+        return String.format("watching game %d\n\n", gameID);
     }
 
     public String logout() {
         // what goes here? should I be saving the username of whoever is logged in?
         server.logout(currAuth);
         state = State.SIGNEDOUT;
-        return "successfully logged out";
+        return "\nsuccessfully logged out\n\n";
     }
 
 
