@@ -995,6 +995,62 @@ WEBSOCKET IN CHESS
   + deserialize and pass along to notification handler
 
 
+PHASE 6
++ menu inside a game
++ highlighting legal moves can be done by anybody
+  + a white player can do it for black pieces and vice versa
+  + observers can also highlight
++ making a move
+  + you might put other player in check/checkmate/stalemate
+  + if any of those things happen, everyone has to be notified
+  + if checkmate or stalemate happen, game is over so nobody should be able to make moves after that
++ to make a move
+  + read game from database
+  + deserialize the game
+  + make the move
+  + reserialize
+  + store it back out
+  + send notifications
++ highlighting
+  + similar to drawing the board
+  + make three colors - piece i'm checking, highlight on 'black' and highlight on 'white'
+  + you can pass in another parameter - list of the squares that should be highlighted
++ leave is the easiest
+  + update game from database using websocket
++ add flag somewhere to say game is over -- DON'T LET MOVES AFTER THAT
++ i should probably fix my list games - it is using the real id
++ you need to know who is in each game
+  + a map probably -- key=gameID, value=list of people in game (observers, white, black)
++ this phase takes the longest so START EARLY
+
+
+COMPUTER SECURITY
++ data confidentiality
+  + only authorized people and systems can access data
++ authentication
+  + verify a person or system's identity
++ data integrity
+  + verify that data has not been modified from its original form
++ non-repudiation
+  + verifying origin or authorship of data
++ cryptographic hash functions
+  + one way hash functions (you cannot recover the input)
+  + deterministic (you get the same output for the same input)
+  + fixed-size (output is the same size regardless of input size)
+  + pseudo-random (output seems statistically random even tho its not)
+  + historical = MD-5 SHA-1 (don't use these because cracked)
+  + modern = SHA-2 SHA-3
+  + SHA-1 is still used sometimes (ex: creating git commit ids; verify integrity of files downloaded from the web)
++ you should never save plain text passwords because bad actors could gain unauthorized access
++ salting a password
+  + adding a random string to a person's password and hashing all that 
++ encryption/decryption
+  + encode data, gives you cipher, if you have the key you can decrypt
+  + key size = number of bits, bigger size = harder to crack
+  + symmetric key -- use same key to encrypt and decrypt
+  + asymmetric key -- two keys (key pair)
+
+
 TO DO
 + the type of my data access should be the interface
 + bad request -- info that doesn't make sense based on the request they made
