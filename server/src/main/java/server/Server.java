@@ -33,6 +33,11 @@ public class Server {
                 .put("/game", gameHandler::joinGame)
                 .delete("/db", gameHandler::clearApp)
                 .exception(RuntimeException.class, this::exceptionHandler);
+//                .ws("/ws", ws -> {
+//                    ws.onConnect(webSocketHandler);
+//                    ws.onMessage(webSocketHandler);
+//                    ws.onClose(webSocketHandler);
+//                });
 
         // Register your endpoints and exception handlers here.
 
