@@ -12,12 +12,15 @@ public class Server {
 
     private final Javalin javalin;
 
+    private final WebsocketHandler webSocketHandler;
+
     public Server() { // how do i pass in all the services
         UserDataAccess userDAO = new MySqlUserDAO();
         GameDataAccess gameDAO = new MySqlGameDAO();
 
         UserService userService = new UserService(userDAO);
         GameService gameService = new GameService(gameDAO, userDAO);
+        webSocketHandler = new WebsocketHandler();
 
         UserHandler userHandler = new UserHandler(userService);
         GameHandler gameHandler = new GameHandler(gameService);
