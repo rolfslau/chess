@@ -1048,7 +1048,42 @@ COMPUTER SECURITY
   + encode data, gives you cipher, if you have the key you can decrypt
   + key size = number of bits, bigger size = harder to crack
   + symmetric key -- use same key to encrypt and decrypt
-  + asymmetric key -- two keys (key pair)
+  + asymmetric key -- two keys (key pair) (encrypt with one, decrypt with other)
++ password managers
+  + stores passwords in an encrypted file
+  + master password/passphrase 
++ certificate files created by trusted organizations
+
+
+DIGITAL SIGNATURES
++ can tell who signed it and has it changed since they signed it
++ run document through cryptographic hash function - encrypt 
+signer's digest with private key - send data and digital signature to receiver
++ receiver runs document through same hash algorithm - decrypts 
+digital signature with signer's public key to get signer's digest
+
+
+CONCURRENCY
++ by default, programs do one thing at a time
++ threads - allows multiple things to happen at the same time
++ program starts with one thread, but others can be created as needed
++ each thread runs independently
++ not always faster bc you add more processing
++ can create a subclass of thread class
++ have to call start on a thread to make it run
++ get time but its kind of random and you don't know how much time that's gonna be
++ create threads when you have blocking operations (slow operations like reading/writing files)
++ you can make a thread pause and wait for another
+  + you can join the threads
+  + if you join in main then it is joining that thread TO main
++ thread pools
+  + keeps track of threads and when a thread is done it goes back to the pool
+  + make multiple at initialization and store as a list, when you need one pull from pool
+  + java's executors class -- methods for creating preconfigured thread pool instances
+
+
+RACE CONDITIONS
++ 
 
 
 TO DO
