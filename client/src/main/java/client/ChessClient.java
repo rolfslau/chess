@@ -8,6 +8,7 @@ import model.Auth;
 import model.CreateGameReq;
 import model.JoinGameReq;
 import model.User;
+import websocket.commands.Notification;
 
 import static ui.EscapeSequences.*;
 
@@ -18,7 +19,7 @@ import static ui.EscapeSequences.*;
 // why in pet shop do they create a pet object instead of just passing the values they need
 // --- check how I did it in my server, if I deserialized from an object then it needs to be an object on this end
 
-public class ChessClient {
+public class ChessClient implements NotificationHandler {
 
 
     private final ServerFacade server;
@@ -186,6 +187,10 @@ public class ChessClient {
         server.logout(currAuth);
         state = State.SIGNEDOUT;
         return "\nsuccessfully logged out\n\n";
+    }
+
+    public void notify(Notification notification) {
+        System.out.println(notification.message());
     }
 
 
