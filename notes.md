@@ -1083,7 +1083,22 @@ CONCURRENCY
 
 
 RACE CONDITIONS
-+ 
++ database transactions -- group sql queries so they all pass or fail together
++ synchronized methods ensure single-threaded access to a method on a single object
++ make a static object and make a  synchronized code block so only one at a time can access 
+it bc trying to use the same static object
+
+
+COMMAND-LINE BUILDS
++ solves problems of ide builds
++ processes for building clearly defined and repeatable
++ maven and gradle are two tools for java
+  + javascript-- npm
+  + shell scripts
++ maven mainly used for dependencies
++ maven plugins
+  + clean, compiler, unit tests, jar/assembly, install, 
+  jacoco (test coverage), exec (execute java programs)
 
 
 TO DO
