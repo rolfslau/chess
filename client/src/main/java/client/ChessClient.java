@@ -23,14 +23,19 @@ public class ChessClient implements NotificationHandler {
 
 
     private final ServerFacade server;
+    private final WebSocketFacade ws;
+
     private State state = State.SIGNEDOUT;
+    private State gameState = State.SIGNEDOUT;
+
     Scanner scanner = new Scanner(System.in);
+
     private String currAuth;
     private String currUser;
 
     public ChessClient(String serverUrl) {
         server = new ServerFacade(serverUrl);
-
+        ws = new WebSocketFacade(serverUrl, this);
     }
 
     public void run() {
@@ -205,14 +210,26 @@ public class ChessClient implements NotificationHandler {
                     """;
         }
         else {
-            return """
-                    create (a game)
-                    join (a game)
-                    list (all games)
-                    observe (a game)
-                    help
-                    logout
-                    """;
+            if (gameState == State.SIGNEDIN) {
+                return """
+                        help
+                        reload (board)
+                        leave
+                        move
+                        resign
+                        highlight (legal moves)
+                        """;
+            }
+            else {
+                return """
+                        create (a game)
+                        join (a game)
+                        list (all games)
+                        observe (a game)
+                        help
+                        logout
+                        """;
+            }
         }
     }
 }
