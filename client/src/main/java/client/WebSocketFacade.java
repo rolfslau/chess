@@ -3,7 +3,9 @@ package client;
 import com.google.gson.Gson;
 import exceptions.ResponseException;
 import jakarta.websocket.*;
+import model.JoinGameReq;
 import websocket.commands.Notification;
+import websocket.commands.UserGameCommand;
 
 import java.io.IOException;
 import java.net.URI;
@@ -31,6 +33,16 @@ public class WebSocketFacade extends Endpoint {
                 }
             });
         } catch (DeploymentException | IOException | URISyntaxException ex) {
+            throw new ResponseException(ResponseException.Code.ServerError, ex.getMessage());
+        }
+    }
+
+    // how can I get the color they should join ??
+    public void joinGame(String authToken, JoinGameReq game) {
+        try {
+            var action = new UserGameCommand(UserGameCommand.CommandType.CONNECT, authToken, game.gameID());
+            this.session.getBasicRemote().sendText(new Gson().toJson(action));
+        } catch (IOException ex) {
             throw new ResponseException(ResponseException.Code.ServerError, ex.getMessage());
         }
     }

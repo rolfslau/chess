@@ -1,8 +1,11 @@
 package server;
 
 import com.google.gson.Gson;
+import dataaccess.UserDataAccess;
 import io.javalin.websocket.*;
 import org.eclipse.jetty.websocket.api.Session;
+import service.GameService;
+import service.UserService;
 import websocket.commands.Notification;
 import websocket.commands.UserGameCommand;
 import websocket.messages.ServerMessage;
@@ -10,6 +13,11 @@ import websocket.messages.ServerMessage;
 import java.io.IOException;
 
 public class WebsocketHandler implements WsConnectHandler, WsMessageHandler, WsCloseHandler {
+
+    private final GameService service;
+    public WebsocketHandler(GameService service) {
+        this.service = service;
+    }
 
     // so on connect, do i tell other people that they've joined - is that when they join the game?
     private final ConnectionManager connections = new ConnectionManager();
@@ -25,9 +33,10 @@ public class WebsocketHandler implements WsConnectHandler, WsMessageHandler, WsC
         try {
             UserGameCommand action = new Gson().fromJson(ctx.message(), UserGameCommand.class);
             switch (action.getCommandType()) {
-                case CONNECT -> connect(action.getAuthToken(), ctx.session, String username, String color); // when other people connect to the game i receive a message
-                case MAKE_MOVE -> makeMove(action.getAuthToken(), ctx.session); // update service/dataaccess so that I can update the game and not just the players
-                case LEAVE -> leave(action.getAuthToken(), ctx.session);
+                // how do I get the color ?? user game command doesn't seem set up right
+                case CONNECT -> connect(action.getAuthToken(), ctx.session, action.getGameID(), String color); // when other people connect to the game i receive a message
+                case MAKE_MOVE -> makeMove(action, ctx.session); // update service/dataaccess so that I can update the game and not just the players
+                case LEAVE -> leave(action, ctx.session);
                 case RESIGN -> resign(action.getAuthToken(), ctx.session);
             }
         } catch (IOException ex) {
@@ -41,16 +50,29 @@ public class WebsocketHandler implements WsConnectHandler, WsMessageHandler, WsC
     }
 
 
-    private void connect(String authToken, Session session, String username, String color, int gameID) {
+    private void connect(String authToken, Session session, int gameID, String color) {
         connections.add(session, gameID);
-        var message = String.format("%s joined game %d as %s", username, gameID, color);
+        // how do I get the username here if I only have the auth token ?
+        var message = String.format("%s joined game %d as %s", user, gameID, color);
         var notification = new Notification(Notification.Type.NOTIFICATION, message);
         connections.broadcast(session, gameID, notification);
     }
 
-    private void makeMove(String authToken, Session session) {}
+    private void makeMove(UserGameCommand action, Session session) {
+        service.updateGame(action);
+        var message = String.format("%s moved from %s to %s", user, pos1, pos2);
+        var notification = new Notification(Notification.Type.NOTIFICATION, message);
+        connections.broadcast(session, action.getGameID(), notification);
+    }
 
-    private void leave(String authToken, Session session) {}
+    private void leave(UserGameCommand action, Session session) {
+        connections.remove(action, session);
+        service.updateGame(action);
+        // update the game somehow
+        var message = String.format("%s left the game", user);
+        var notification = new Notification(Notification.Type.NOTIFICATION, message);
+        connections.broadcast(session, action.getGameID(), notification);
+    }
 
     private void resign(String authToken, Session session) {}
 }

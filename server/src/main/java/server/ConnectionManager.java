@@ -2,6 +2,7 @@ package server;
 
 import org.eclipse.jetty.websocket.api.Session;
 import websocket.commands.Notification;
+import websocket.commands.UserGameCommand;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,10 +18,10 @@ public class ConnectionManager {
         connections.get(gameID).add(session);
     }
 
-    public
+//    public
 
-    public void remove(Session session) {
-        connections.remove(session);
+    public void remove(UserGameCommand action, Session session) {
+        connections.get(action.getGameID()).remove(session);
     }
 
     public void broadcast(Session excludeSession, int gameID, Notification notification) throws IOException {
