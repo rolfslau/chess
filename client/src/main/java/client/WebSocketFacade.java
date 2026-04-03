@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import exceptions.ResponseException;
 import jakarta.websocket.*;
 import model.JoinGameReq;
+import websocket.commands.ConnectCommand;
 import websocket.commands.Notification;
 import websocket.commands.UserGameCommand;
 
@@ -38,9 +39,9 @@ public class WebSocketFacade extends Endpoint {
     }
 
     // how can I get the color they should join ??
-    public void joinGame(String authToken, JoinGameReq game) {
+    public void joinGame(String authToken, JoinGameReq game, String username) {
         try {
-            var action = new UserGameCommand(UserGameCommand.CommandType.CONNECT, authToken, game.gameID());
+            var action = new ConnectCommand(ConnectCommand.CommandType.CONNECT, authToken, game.gameID(), username, game.playerColor());
             this.session.getBasicRemote().sendText(new Gson().toJson(action));
         } catch (IOException ex) {
             throw new ResponseException(ResponseException.Code.ServerError, ex.getMessage());

@@ -156,6 +156,11 @@ public class ChessClient implements NotificationHandler {
             int gameID = Integer.parseInt(gameNum);
             JoinGameReq game = new JoinGameReq(color.toUpperCase(), gameID);
             server.joinGame(game, currAuth);
+            ws.joinGame(currAuth, game, currUser);
+            // don't replace this, do both (ws as well)
+            // client doesn't have to say that they are connecting as white because the server can derive
+            // for websocket ^^
+            // server uses the gameid and auth token to look up the player's role they joined as
             ChessBoard board = new ChessBoard();
             board.resetBoard();
             new DrawingChess(board, color.toUpperCase());
