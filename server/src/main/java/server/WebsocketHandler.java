@@ -42,7 +42,7 @@ public class WebsocketHandler implements WsConnectHandler, WsMessageHandler, WsC
                 } // update service/dataaccess so that I can update the game and not just the players
                 case LEAVE -> {
                     LeaveCommand leave = new Gson().fromJson(ctx.message(), LeaveCommand.class);
-                    leave(action, ctx.session);
+                    leave(leave, ctx.session);
                 }
                 case RESIGN -> resign(action.getAuthToken(), ctx.session);
             }
@@ -79,7 +79,7 @@ public class WebsocketHandler implements WsConnectHandler, WsMessageHandler, WsC
         connections.remove(action, session);
         service.updateGame(action);
         // update the game somehow
-        var message = String.format("%s left the game", user);
+        var message = String.format("%s left the game", action.getUsername());
         var notification = new Notification(Notification.Type.NOTIFICATION, message);
         connections.broadcast(session, action.getGameID(), notification);
     }
