@@ -5,6 +5,7 @@ import exceptions.ResponseException;
 import jakarta.websocket.*;
 import model.JoinGameReq;
 import websocket.commands.ConnectCommand;
+import websocket.commands.MakeMoveCommand;
 import websocket.commands.Notification;
 import websocket.commands.UserGameCommand;
 
@@ -44,6 +45,14 @@ public class WebSocketFacade extends Endpoint {
             var action = new ConnectCommand(ConnectCommand.CommandType.CONNECT, authToken, game.gameID(), username, game.playerColor());
             this.session.getBasicRemote().sendText(new Gson().toJson(action));
         } catch (IOException ex) {
+            throw new ResponseException(ResponseException.Code.ServerError, ex.getMessage());
+        }
+    }
+
+    public void makeMove(MakeMoveCommand move) {
+        try {
+            this.session.getBasicRemote().sendText(new Gson().toJson(move));
+        } catch(IOException ex) {
             throw new ResponseException(ResponseException.Code.ServerError, ex.getMessage());
         }
     }

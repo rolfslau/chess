@@ -7,6 +7,7 @@ import org.eclipse.jetty.websocket.api.Session;
 import service.GameService;
 import service.UserService;
 import websocket.commands.ConnectCommand;
+import websocket.commands.MakeMoveCommand;
 import websocket.commands.Notification;
 import websocket.commands.UserGameCommand;
 import websocket.messages.ServerMessage;
@@ -38,12 +39,15 @@ public class WebsocketHandler implements WsConnectHandler, WsMessageHandler, WsC
                     ConnectCommand connecting = new Gson().fromJson(ctx.message(), ConnectCommand.class);
                     connect(connecting.getAuthToken(), ctx.session, connecting.getGameID(), connecting.getUsername(), connecting.getColor()); // when other people connect to the game i receive a message
                 }
-                case MAKE_MOVE -> makeMove(action, ctx.session); // update service/dataaccess so that I can update the game and not just the players
+                case MAKE_MOVE -> {
+                    MakeMoveCommand move = new Gson().fromJson(ctx.message(), MakeMoveCommand.class);
+                    makeMove(move, ctx.session);
+                } // update service/dataaccess so that I can update the game and not just the players
                 case LEAVE -> leave(action, ctx.session);
                 case RESIGN -> resign(action.getAuthToken(), ctx.session);
             }
         } catch (IOException ex) {
-            ex.printStackTrace();
+            throw new RuntimeException(ex.getMessage());
         }
     }
 
@@ -56,7 +60,7 @@ public class WebsocketHandler implements WsConnectHandler, WsMessageHandler, WsC
     // I don't understand how any information gets passed and is able to be used
     // make sub classes of user game command
     // should I make another record class where one of the parts is the user game command ???
-    private void connect(String authToken, Session session, int gameID, String username, String color) {
+    private void connect(String authToken, Session session, int gameID, String username, String color) throws IOException {
         connections.add(session, gameID);
         // how do I get the username here if I only have the auth token ?
         var message = String.format("%s joined game %d as %s", username, gameID, color);
@@ -64,9 +68,9 @@ public class WebsocketHandler implements WsConnectHandler, WsMessageHandler, WsC
         connections.broadcast(session, gameID, notification);
     }
 
-    private void makeMove(UserGameCommand action, Session session) {
+    private void makeMove(MakeMoveCommand action, Session session) {
         service.updateGame(action);
-        var message = String.format("%s moved from %s to %s", user, pos1, pos2);
+        var message = String.format("%s moved from %s to %s", action.getUsername(), action.getMove().getStartPosition(), action.getMove().getEndPosition());
         var notification = new Notification(Notification.Type.NOTIFICATION, message);
         connections.broadcast(session, action.getGameID(), notification);
     }

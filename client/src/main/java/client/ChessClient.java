@@ -1,14 +1,19 @@
 package client;
 
+import java.util.Map;
 import java.util.Objects;
 import java.util.Scanner;
 
 import chess.ChessBoard;
+import chess.ChessMove;
+import chess.ChessPosition;
 import model.Auth;
 import model.CreateGameReq;
 import model.JoinGameReq;
 import model.User;
+import websocket.commands.MakeMoveCommand;
 import websocket.commands.Notification;
+import websocket.commands.UserGameCommand;
 
 import static ui.EscapeSequences.*;
 
@@ -32,6 +37,17 @@ public class ChessClient implements NotificationHandler {
 
     private String currAuth;
     private String currUser;
+
+    private final Map<String, Integer> coords = Map.of(
+            "A", 1,
+            "B", 2,
+            "C", 3,
+            "D", 4,
+            "E", 5,
+            "F", 6,
+            "G", 7,
+            "H", 8
+    );
 
     public ChessClient(String serverUrl) {
         server = new ServerFacade(serverUrl);
@@ -74,6 +90,28 @@ public class ChessClient implements NotificationHandler {
             case "register" -> register();
             case "login" -> login();
             case "quit" -> "quit";
+            default -> "";
+        };
+    }
+
+    public String evalGamePlay(String line) {
+        return switch (line) {
+            case "reload" -> reload();
+            case "leave" -> leave();
+            case "move" -> makeMove();
+            case "resign" -> resign();
+            case "highlight" -> highlight();
+            default -> "";
+        };
+    }
+
+    public String evalGameObserve(String line) {
+        return switch (line) {
+            case "reload" -> reload();
+            case "leave" -> leave();
+            case "move" -> "you are an observer!!";
+            case "resign" -> "you are an observer!!";
+            case "highlight" -> highlight();
             default -> "";
         };
     }
@@ -188,6 +226,8 @@ public class ChessClient implements NotificationHandler {
         }
         ChessBoard board = new ChessBoard();
         board.resetBoard();
+        JoinGameReq game = new JoinGameReq("AN OBSERVER", gameID);
+        ws.joinGame(currAuth, game, currUser);
         new DrawingChess(board, "WHITE");
         return String.format("watching game %d\n\n", gameID);
     }
@@ -197,6 +237,27 @@ public class ChessClient implements NotificationHandler {
         server.logout(currAuth);
         state = State.SIGNEDOUT;
         return "\nsuccessfully logged out\n\n";
+    }
+
+    public String makeMove() {
+        String start = "";
+        String end = "";
+        try {
+            System.out.print("starting position >>> ");
+            start = scanner.nextLine().toUpperCase();
+            int col1 = coords.get(String.valueOf(start.charAt(1)));
+            ChessPosition pos1 = new ChessPosition(Integer.parseInt(String.valueOf(start.charAt(1))), col1);
+            System.out.print("ending position >>> ");
+            end = scanner.nextLine().toUpperCase();
+            int col2 = coords.get(String.valueOf(end.charAt(1)));
+            ChessPosition pos2 = new ChessPosition(Integer.parseInt(String.valueOf(end.charAt(0))), col2);
+            ChessMove move = new ChessMove(pos1, pos2, null);
+            MakeMoveCommand makeMove = new MakeMoveCommand(UserGameCommand.CommandType.MAKE_MOVE, currAuth, currUser, gameID, move);
+            ws.makeMove(makeMove);
+        } catch(RuntimeException ex) {
+            throw new RuntimeException(ex.getMessage());
+        }
+        return String.format("you moved from %s to %s", start, end);
     }
 
     public void notify(Notification notification) {
