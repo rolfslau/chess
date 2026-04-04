@@ -6,10 +6,7 @@ import io.javalin.websocket.*;
 import org.eclipse.jetty.websocket.api.Session;
 import service.GameService;
 import service.UserService;
-import websocket.commands.ConnectCommand;
-import websocket.commands.MakeMoveCommand;
-import websocket.commands.Notification;
-import websocket.commands.UserGameCommand;
+import websocket.commands.*;
 import websocket.messages.ServerMessage;
 
 import java.io.IOException;
@@ -43,7 +40,10 @@ public class WebsocketHandler implements WsConnectHandler, WsMessageHandler, WsC
                     MakeMoveCommand move = new Gson().fromJson(ctx.message(), MakeMoveCommand.class);
                     makeMove(move, ctx.session);
                 } // update service/dataaccess so that I can update the game and not just the players
-                case LEAVE -> leave(action, ctx.session);
+                case LEAVE -> {
+                    LeaveCommand leave = new Gson().fromJson(ctx.message(), LeaveCommand.class);
+                    leave(action, ctx.session);
+                }
                 case RESIGN -> resign(action.getAuthToken(), ctx.session);
             }
         } catch (IOException ex) {
@@ -75,7 +75,7 @@ public class WebsocketHandler implements WsConnectHandler, WsMessageHandler, WsC
         connections.broadcast(session, action.getGameID(), notification);
     }
 
-    private void leave(UserGameCommand action, Session session) {
+    private void leave(LeaveCommand action, Session session) {
         connections.remove(action, session);
         service.updateGame(action);
         // update the game somehow

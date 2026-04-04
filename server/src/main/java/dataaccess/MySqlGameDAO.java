@@ -1,9 +1,13 @@
 package dataaccess;
 
 import chess.ChessGame;
+import chess.InvalidMoveException;
 import com.google.gson.Gson;
 import exceptions.DataBaseException;
 import model.Game;
+import websocket.commands.LeaveCommand;
+import websocket.commands.MakeMoveCommand;
+import websocket.commands.UserGameCommand;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -81,6 +85,29 @@ public class MySqlGameDAO implements GameDataAccess {
             statement = "UPDATE games SET blackUsername=? WHERE id=?";
         }
         executeUpdate(statement, user, gameID);
+    }
+    public void updateGame(LeaveCommand command) {
+        var statement = "";
+        if (Objects.equals(command.getColor(), "WHITE")) {
+            statement = "UPDATE games SET whiteUsername=? WHERE id=?";
+            executeUpdate(statement, null, command.getGameID());
+        }
+        else {
+            statement = "UPDATE games SET blackUsername=? WHERE id=?";
+            executeUpdate(statement, null, command.getGameID());
+        }
+    }
+
+    public void updateGame(MakeMoveCommand command) {
+        var statement = "";
+            statement = "UPDATE games SET game=? WHERE id=?";
+            ChessGame game = getGame(command.getGameID()).game();
+            try {
+                game.makeMove(command.getMove());
+                executeUpdate(statement, game, command.getGameID());
+            } catch(InvalidMoveException ex) {
+                throw new RuntimeException("invalid move!!!");
+            }
     }
 
     public void clearApp() {

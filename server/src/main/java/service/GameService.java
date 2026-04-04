@@ -5,6 +5,9 @@ import dataaccess.UserDataAccess;
 import model.Game;
 import exceptions.AlreadyExistsException;
 import exceptions.DoesNotExistException;
+import websocket.commands.LeaveCommand;
+import websocket.commands.MakeMoveCommand;
+import websocket.commands.UserGameCommand;
 
 import java.util.Collection;
 import java.util.Objects;
@@ -54,6 +57,30 @@ public class GameService {
         }
 
         dataAccess.joinGame(user, color, gameID);
+    }
+
+    public void updateGame(MakeMoveCommand command) {
+        if (uData.getAuth(command.getAuthToken()) == null) {
+            throw new DoesNotExistException("Error: not authorized", 401);
+        }
+        String user = uData.getAuth(command.getAuthToken());
+        Game game = dataAccess.getGame(command.getGameID());
+        if (game == null) {
+            throw new DoesNotExistException("Error: no game by that id", 400);
+        }
+        dataAccess.updateGame(command);
+    }
+
+    public void updateGame(LeaveCommand command) {
+        if (uData.getAuth(command.getAuthToken()) == null) {
+            throw new DoesNotExistException("Error: not authorized", 401);
+        }
+        String user = uData.getAuth(command.getAuthToken());
+        Game game = dataAccess.getGame(command.getGameID());
+        if (game == null) {
+            throw new DoesNotExistException("Error: no game by that id", 400);
+        }
+        dataAccess.updateGame(command);
     }
 
     private Boolean colorTaken(Game game, String color) {
