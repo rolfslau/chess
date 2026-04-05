@@ -1,5 +1,6 @@
 package server;
 
+import model.GameID;
 import model.JoinGameReq;
 import exceptions.AlreadyExistsException;
 import service.GameService;
@@ -28,6 +29,18 @@ public class GameHandler {
         catch(DoesNotExistException e) {
             ctx.status(e.errorCode);
             ctx.result(new Gson().toJson(Map.of("message", e.getMessage())));
+        }
+    }
+
+    public void getGame(Context ctx) {
+        String authtoken = ctx.header("Authorization");
+        GameID body = new Gson().fromJson(ctx.body(), GameID.class);
+        try {
+            Game result = service.getGame(authtoken, body.gameID());
+            ctx.result(new Gson().toJson(Map.of("game", result)));
+        } catch(DoesNotExistException ex) {
+            ctx.status(ex.errorCode);
+            ctx.result(new Gson().toJson(Map.of("message", ex.getMessage())));
         }
     }
 

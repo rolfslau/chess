@@ -20,7 +20,7 @@ public class Server {
 
         UserService userService = new UserService(userDAO);
         GameService gameService = new GameService(gameDAO, userDAO);
-        webSocketHandler = new WebsocketHandler();
+        webSocketHandler = new WebsocketHandler(gameService);
 
         UserHandler userHandler = new UserHandler(userService);
         GameHandler gameHandler = new GameHandler(gameService);
@@ -32,6 +32,7 @@ public class Server {
                 .post("/session", userHandler::login)
                 .delete("/session", userHandler::logout)
                 .get("/game", gameHandler::listGames)
+                .get("/oneGame", gameHandler::getGame)
                 .post("/game", gameHandler::newGame)
                 .put("/game", gameHandler::joinGame)
                 .delete("/db", gameHandler::clearApp)

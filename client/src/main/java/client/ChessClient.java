@@ -8,10 +8,7 @@ import chess.ChessBoard;
 import chess.ChessMove;
 import chess.ChessPosition;
 import exceptions.ResponseException;
-import model.Auth;
-import model.CreateGameReq;
-import model.JoinGameReq;
-import model.User;
+import model.*;
 import websocket.commands.LeaveCommand;
 import websocket.commands.MakeMoveCommand;
 import websocket.commands.Notification;
@@ -230,9 +227,9 @@ public class ChessClient implements NotificationHandler {
             ws.leave(command);
             currGameID = 0;
             currColor = "";
-            return "you have left the game";
+            return "\nyou have left the game\n\n";
         } catch (RuntimeException e) {
-            System.out.print("you were not able to leave the game");
+            System.out.print("\nyou were not able to leave the game\n\n");
         }
         return "";
     }
@@ -267,6 +264,16 @@ public class ChessClient implements NotificationHandler {
         return "\nsuccessfully logged out\n\n";
     }
 
+    public void reload() {
+        try {
+            GameID gameId = new GameID(currGameID);
+            ChessBoard board = server.getGame(currAuth, gameId).game().getBoard();
+            new DrawingChess(board, currColor);
+        } catch(RuntimeException ex) {
+            System.out.println("\ncannot reload game\n\n");
+        }
+    }
+
     public String makeMove() {
         String start = "";
         String end = "";
@@ -285,7 +292,7 @@ public class ChessClient implements NotificationHandler {
         } catch(RuntimeException ex) {
             throw new RuntimeException(ex.getMessage());
         }
-        return String.format("you moved from %s to %s", start, end);
+        return String.format("\nyou moved from %s to %s\n\n", start, end);
     }
 
     public void notify(Notification notification) {

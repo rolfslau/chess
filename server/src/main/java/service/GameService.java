@@ -29,6 +29,16 @@ public class GameService {
         return dataAccess.listGames();
     }
 
+    public Game getGame(String auth, int gameID) {
+        if (uData.getAuth(auth) == null) {
+            throw new DoesNotExistException("Error: not authorized", 401);
+        }
+        if (dataAccess.getGame(gameID) == null) {
+            throw new DoesNotExistException("Error: no game by that id", 400);
+        }
+        return dataAccess.getGame(gameID);
+    }
+
     public int newGame(String auth, String gameName) throws DoesNotExistException {
         if (uData.getAuth(auth) == null) {
             throw new DoesNotExistException("Error: not authorized", 401);

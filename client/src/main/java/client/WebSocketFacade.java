@@ -3,6 +3,7 @@ package client;
 import com.google.gson.Gson;
 import exceptions.ResponseException;
 import jakarta.websocket.*;
+import model.Game;
 import model.JoinGameReq;
 import websocket.commands.*;
 

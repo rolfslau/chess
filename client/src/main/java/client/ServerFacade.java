@@ -62,6 +62,12 @@ public class ServerFacade {
         handleResponse(response, null);
     }
 
+    public Game getGame(String auth, GameID gameID) {
+        var request = buildRequest("GET", "/oneGame", gameID, true, auth);
+        var response = sendRequest(request);
+        return handleResponse(response, Game.class);
+    }
+
     private HttpResponse<String> sendRequest(HttpRequest request) throws ResponseException {
         try {
             return client.send(request, HttpResponse.BodyHandlers.ofString());
