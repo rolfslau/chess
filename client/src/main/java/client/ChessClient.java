@@ -1,10 +1,9 @@
 package client;
 
-import java.util.Map;
-import java.util.Objects;
-import java.util.Scanner;
+import java.util.*;
 
 import chess.ChessBoard;
+import chess.ChessGame;
 import chess.ChessMove;
 import chess.ChessPosition;
 import exceptions.ResponseException;
@@ -211,9 +210,9 @@ public class ChessClient implements NotificationHandler {
             // client doesn't have to say that they are connecting as white because the server can derive
             // for websocket ^^
             // server uses the gameid and auth token to look up the player's role they joined as
-            ChessBoard board = new ChessBoard();
-            board.resetBoard();
-            new DrawingChess(board, color.toUpperCase());
+            GameID id = new GameID(currGameID);
+            ChessBoard board = server.getGame(currAuth, id).game().getBoard();
+            new DrawingChess(board, color.toUpperCase(), new ArrayList<>());
             return String.format("game %d joined as %s\n\n", gameID, color);
         } catch (RuntimeException e) {
             System.out.print("\n\uD83D\uDEA8invalid game id or color (already taken or not black/white)\uD83D\uDEA8\n\n");
@@ -227,6 +226,7 @@ public class ChessClient implements NotificationHandler {
             ws.leave(command);
             currGameID = 0;
             currColor = "";
+            gameState = State.SIGNEDOUT;
             return "\nyou have left the game\n\n";
         } catch (RuntimeException e) {
             System.out.print("\nyou were not able to leave the game\n\n");
@@ -245,16 +245,37 @@ public class ChessClient implements NotificationHandler {
         try {
             System.out.print("game id >>> ");
             gameID = Integer.parseInt(scanner.nextLine());
+            currGameID = gameID;
+            currColor = "WHITE";
         } catch (RuntimeException e) {
             System.out.print("\n\uD83D\uDEA8invalid gameID\uD83D\uDEA8\n\n");
             return "";
         }
-        ChessBoard board = new ChessBoard();
-        board.resetBoard();
+        GameID gameNum = new GameID(currGameID);
+        ChessBoard board = server.getGame(currAuth, gameNum).game().getBoard();
         JoinGameReq game = new JoinGameReq("AN OBSERVER", gameID);
         ws.joinGame(currAuth, game, currUser);
-        new DrawingChess(board, "WHITE");
+        new DrawingChess(board, "WHITE", new ArrayList<>());
         return String.format("watching game %d\n\n", gameID);
+    }
+
+    public String highlight() {
+        String pos = "";
+        try {
+           System.out.print("piece position >>> ");
+           pos = scanner.nextLine().toUpperCase();
+           int col = coords.get(String.valueOf(pos.charAt(1)));
+           ChessPosition piecePos = new ChessPosition(Integer.parseInt(String.valueOf(pos.charAt(1))), col);
+           GameID gameID = new GameID(currGameID);
+           ChessGame game = server.getGame(currAuth, gameID).game();
+           Collection<ChessMove> moves = game.validMoves(piecePos);
+           Collection<ChessPosition> endMoves = moves.stream().map(ChessMove::getEndPosition).toList();
+           new DrawingChess(game.getBoard(), currColor, endMoves);
+           return String.format("\npotential moves for piece at %s\n\n", pos);
+        } catch(RuntimeException ex) {
+            System.out.printf("\nunable to highlight moves for piece at %s\n\n", pos);
+        }
+        return "";
     }
 
     public String logout() {
@@ -268,7 +289,7 @@ public class ChessClient implements NotificationHandler {
         try {
             GameID gameId = new GameID(currGameID);
             ChessBoard board = server.getGame(currAuth, gameId).game().getBoard();
-            new DrawingChess(board, currColor);
+            new DrawingChess(board, currColor, new ArrayList<>());
         } catch(RuntimeException ex) {
             System.out.println("\ncannot reload game\n\n");
         }

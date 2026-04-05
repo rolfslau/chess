@@ -11,10 +11,12 @@ public class DrawingChess {
 
     private final ChessBoard board;
     private final String colorOfPlayer;
+    private final Collection<ChessPosition> moves;
 
-    public DrawingChess(ChessBoard board, String colorOfPlayer) {
+    public DrawingChess(ChessBoard board, String colorOfPlayer, Collection<ChessPosition> moves) {
         this.board = board;
         this.colorOfPlayer = colorOfPlayer;
+        this.moves = moves;
         String[] headersWhite = {"a", "b", "c", "d", "e", "f", "g", "h"};
         String[] headersBlack = {"h", "g", "f", "e", "d", "c", "b", "a"};
         System.out.print(SET_BG_COLOR_WHITE);
@@ -92,7 +94,14 @@ public class DrawingChess {
         // for loop (to go across the row)
         // 0/even = pink; 1/odd = orange (bg)
         for (int i = 1; i < 9; i++) {
-            setBGColor(turn);
+            String color = setBGColor(turn);
+            ChessPosition currPos = new ChessPosition(row, i);
+            if (moves.contains(currPos)) {
+                switch (color) {
+                case ("PINK") -> System.out.print(SET_BG_COLOR_MUSTARD);
+                case ("ORANGE") -> System.out.print(SET_BG_COLOR_MUSTARD2);
+                }
+            }
             turn++;
             printPiece(row, i);
         }
@@ -102,15 +111,22 @@ public class DrawingChess {
         // for loop (to go across the row)
         // 0/even = pink; 1/odd = orange (bg)
         for (int i = 8; i > 0; i--) {
-            setBGColor(turn);
+            String color = setBGColor(turn);
+            ChessPosition currPos = new ChessPosition(row, i);
+            if (moves.contains(currPos)) {
+                switch (color) {
+                    case ("PINK") -> System.out.print(SET_BG_COLOR_MUSTARD);
+                    case ("ORANGE") -> System.out.print(SET_BG_COLOR_MUSTARD2);
+                }
+            }
             turn++;
             printPiece(row, i);
         }
     }
 
-    private void setBGColor(int turn) {
-        if (turn % 2 == 1) { setPink(); }
-        else { setOrange(); }
+    private String setBGColor(int turn) {
+        if (turn % 2 == 1) { setPink(); return "PINK"; }
+        else { setOrange(); return "ORANGE"; }
     }
 
     private void printPiece(int row, int i) {
