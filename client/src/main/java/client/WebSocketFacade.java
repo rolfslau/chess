@@ -4,10 +4,7 @@ import com.google.gson.Gson;
 import exceptions.ResponseException;
 import jakarta.websocket.*;
 import model.JoinGameReq;
-import websocket.commands.ConnectCommand;
-import websocket.commands.MakeMoveCommand;
-import websocket.commands.Notification;
-import websocket.commands.UserGameCommand;
+import websocket.commands.*;
 
 import java.io.IOException;
 import java.net.URI;
@@ -52,6 +49,14 @@ public class WebSocketFacade extends Endpoint {
     public void makeMove(MakeMoveCommand move) {
         try {
             this.session.getBasicRemote().sendText(new Gson().toJson(move));
+        } catch(IOException ex) {
+            throw new ResponseException(ResponseException.Code.ServerError, ex.getMessage());
+        }
+    }
+
+    public void leave(LeaveCommand leave) {
+        try {
+            this.session.getBasicRemote().sendText(new Gson().toJson(leave));
         } catch(IOException ex) {
             throw new ResponseException(ResponseException.Code.ServerError, ex.getMessage());
         }

@@ -7,10 +7,12 @@ import java.util.Scanner;
 import chess.ChessBoard;
 import chess.ChessMove;
 import chess.ChessPosition;
+import exceptions.ResponseException;
 import model.Auth;
 import model.CreateGameReq;
 import model.JoinGameReq;
 import model.User;
+import websocket.commands.LeaveCommand;
 import websocket.commands.MakeMoveCommand;
 import websocket.commands.Notification;
 import websocket.commands.UserGameCommand;
@@ -37,6 +39,9 @@ public class ChessClient implements NotificationHandler {
 
     private String currAuth;
     private String currUser;
+    private boolean player = false;
+    int currGameID = 0;
+    String currColor = "";
 
     private final Map<String, Integer> coords = Map.of(
             "A", 1,
@@ -65,7 +70,15 @@ public class ChessClient implements NotificationHandler {
             System.out.print("\n >>> ");
             String line = scanner.nextLine();
             if (state == State.SIGNEDIN) {
-                result = evalIn(line);
+                if (gameState == State.SIGNEDIN && player) {
+                    result = evalGamePlay(line);
+                }
+                else if (gameState == State.SIGNEDIN) {
+                    result = evalGameObserve(line);
+                }
+                else {
+                    result = evalIn(line);
+                }
             }
             else {result = evalOut(line); }
             System.out.print(result);
@@ -109,8 +122,7 @@ public class ChessClient implements NotificationHandler {
         return switch (line) {
             case "reload" -> reload();
             case "leave" -> leave();
-            case "move" -> "you are an observer!!";
-            case "resign" -> "you are an observer!!";
+            case "move", "resign" -> "you are an observer!!";
             case "highlight" -> highlight();
             default -> "";
         };
@@ -195,6 +207,9 @@ public class ChessClient implements NotificationHandler {
             JoinGameReq game = new JoinGameReq(color.toUpperCase(), gameID);
             server.joinGame(game, currAuth);
             ws.joinGame(currAuth, game, currUser);
+            player = true;
+            this.currGameID = gameID;
+            this.currColor = color.toUpperCase();
             // don't replace this, do both (ws as well)
             // client doesn't have to say that they are connecting as white because the server can derive
             // for websocket ^^
@@ -207,7 +222,20 @@ public class ChessClient implements NotificationHandler {
             System.out.print("\n\uD83D\uDEA8invalid game id or color (already taken or not black/white)\uD83D\uDEA8\n\n");
         }
             return "";
+    }
+
+    public String leave() {
+        try {
+            LeaveCommand command = new LeaveCommand(UserGameCommand.CommandType.LEAVE, currAuth, currUser, currGameID, currColor);
+            ws.leave(command);
+            currGameID = 0;
+            currColor = "";
+            return "you have left the game";
+        } catch (RuntimeException e) {
+            System.out.print("you were not able to leave the game");
         }
+        return "";
+    }
 
 
     public String listGames() {

@@ -68,14 +68,14 @@ public class WebsocketHandler implements WsConnectHandler, WsMessageHandler, WsC
         connections.broadcast(session, gameID, notification);
     }
 
-    private void makeMove(MakeMoveCommand action, Session session) {
+    private void makeMove(MakeMoveCommand action, Session session) throws IOException {
         service.updateGame(action);
         var message = String.format("%s moved from %s to %s", action.getUsername(), action.getMove().getStartPosition(), action.getMove().getEndPosition());
         var notification = new Notification(Notification.Type.NOTIFICATION, message);
         connections.broadcast(session, action.getGameID(), notification);
     }
 
-    private void leave(LeaveCommand action, Session session) {
+    private void leave(LeaveCommand action, Session session) throws IOException {
         connections.remove(action, session);
         service.updateGame(action);
         // update the game somehow
