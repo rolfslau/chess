@@ -63,6 +63,14 @@ public class WebSocketFacade extends Endpoint {
         }
     }
 
+    public void resign(ResignCommand resign) {
+        try {
+            this.session.getBasicRemote().sendText(new Gson().toJson(resign));
+        } catch (IOException ex) {
+            throw new ResponseException(ResponseException.Code.ServerError, ex.getMessage());
+        }
+    }
+
     @Override
     public void onOpen(Session session, EndpointConfig endpointConfig) {
     }

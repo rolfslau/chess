@@ -8,10 +8,7 @@ import chess.ChessMove;
 import chess.ChessPosition;
 import exceptions.ResponseException;
 import model.*;
-import websocket.commands.LeaveCommand;
-import websocket.commands.MakeMoveCommand;
-import websocket.commands.Notification;
-import websocket.commands.UserGameCommand;
+import websocket.commands.*;
 
 import static ui.EscapeSequences.*;
 
@@ -220,6 +217,20 @@ public class ChessClient implements NotificationHandler {
             return "";
     }
 
+    public String resign() {
+        System.out.print("are you sure you want to resign? [y/n] >>> ");
+        String confirm = scanner.nextLine();
+
+        if (confirm.equalsIgnoreCase("y")) {
+            ResignCommand resign = new ResignCommand(UserGameCommand.CommandType.RESIGN, currAuth, currGameID, currUser);
+            ws.resign(resign);
+        }
+        else if (confirm.equalsIgnoreCase("n")) {
+            return "ok!";
+        }
+        return "non valid response";
+    }
+
     public String leave() {
         try {
             LeaveCommand command = new LeaveCommand(UserGameCommand.CommandType.LEAVE, currAuth, currUser, currGameID, currColor);
@@ -315,8 +326,6 @@ public class ChessClient implements NotificationHandler {
             ChessMove move = new ChessMove(pos1, pos2, null);
             MakeMoveCommand makeMove = new MakeMoveCommand(UserGameCommand.CommandType.MAKE_MOVE, currAuth, currUser, currGameID, move);
             ws.makeMove(makeMove);
-            GameID gameid = new GameID(currGameID);
-            Game game = server.getGame(currAuth, gameid);
         } catch(RuntimeException ex) {
             throw new RuntimeException(ex.getMessage());
         }

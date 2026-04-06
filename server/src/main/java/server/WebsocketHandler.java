@@ -48,7 +48,10 @@ public class WebsocketHandler implements WsConnectHandler, WsMessageHandler, WsC
                     LeaveCommand leave = new Gson().fromJson(ctx.message(), LeaveCommand.class);
                     leave(leave, ctx.session);
                 }
-                case RESIGN -> resign(action.getAuthToken(), ctx.session);
+                case RESIGN -> {
+                    ResignCommand resign = new Gson().fromJson(ctx.message(), ResignCommand.class);
+                    resign(resign, ctx.session);
+                }
             }
         } catch (IOException ex) {
             throw new RuntimeException(ex.getMessage());
@@ -83,7 +86,7 @@ public class WebsocketHandler implements WsConnectHandler, WsMessageHandler, WsC
         if (Objects.equals(game.whiteUsername(), action.getUsername())) {
                 if (game.game().isInCheckmate(ChessGame.TeamColor.BLACK) || game.game().isInStalemate(ChessGame.TeamColor.BLACK)) {
                     message2 = String.format("%s is in checkmate or stalemate - game over", game.blackUsername());
-                    GameOnCommand command = new GameOnCommand(UserGameCommand.CommandType.MAKE_MOVE, action.getAuthToken(), action.getGameID(), false);
+                    GameOnCommand command = new GameOnCommand(UserGameCommand.CommandType.MAKE_MOVE, action.getAuthToken(), action.getUsername(), action.getGameID(), false);
                     service.updateGame(command);
                 }
                 else if (game.game().isInCheck(ChessGame.TeamColor.BLACK)) {
@@ -92,7 +95,7 @@ public class WebsocketHandler implements WsConnectHandler, WsMessageHandler, WsC
         else {
                 if (game.game().isInCheckmate(ChessGame.TeamColor.WHITE) || game.game().isInStalemate(ChessGame.TeamColor.WHITE)) {
                     message2 = String.format("%s is in checkmate or stalemate - game over", game.whiteUsername());
-                    GameOnCommand command = new GameOnCommand(UserGameCommand.CommandType.MAKE_MOVE, action.getAuthToken(), action.getGameID(), false);
+                    GameOnCommand command = new GameOnCommand(UserGameCommand.CommandType.MAKE_MOVE, action.getAuthToken(), action.getUsername(), action.getGameID(), false);
                     service.updateGame(command);
                 }
                 else if (game.game().isInCheck(ChessGame.TeamColor.WHITE)) {
@@ -116,6 +119,14 @@ public class WebsocketHandler implements WsConnectHandler, WsMessageHandler, WsC
         connections.broadcast(session, action.getGameID(), notification);
     }
 
+
+    private void resign(ResignCommand action, Session session) throws IOException {
+        GameOnCommand gameOnCommand = new GameOnCommand(UserGameCommand.CommandType.RESIGN, action.getAuthToken(), action.getUsername(), action.getGameID(), false);
+        service.updateGame(gameOnCommand);
+        var message = String.format("%s resigned", action.getUsername());
+        var notification = new Notification(Notification.Type.NOTIFICATION, message);
+        connections.broadcast(session, action.getGameID(), notification);
+    }
 
 
     private void resign(String authToken, Session session) {}
