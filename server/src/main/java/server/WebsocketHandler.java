@@ -1,8 +1,11 @@
 package server;
 
+import chess.ChessGame;
 import com.google.gson.Gson;
 import dataaccess.UserDataAccess;
+import exceptions.DoesNotExistException;
 import io.javalin.websocket.*;
+import model.Game;
 import org.eclipse.jetty.websocket.api.Session;
 import service.GameService;
 import service.UserService;
@@ -10,6 +13,7 @@ import websocket.commands.*;
 import websocket.messages.ServerMessage;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class WebsocketHandler implements WsConnectHandler, WsMessageHandler, WsCloseHandler {
 
@@ -68,11 +72,39 @@ public class WebsocketHandler implements WsConnectHandler, WsMessageHandler, WsC
         connections.broadcast(session, gameID, notification);
     }
 
-    private void makeMove(MakeMoveCommand action, Session session) throws IOException {
+    private void makeMove(MakeMoveCommand action, Session session) throws IOException, DoesNotExistException {
+        Game game = service.getGame(action.getAuthToken(), action.getGameID());
+        if (!game.playing()) {
+            throw new DoesNotExistException("game already over!!", 400);
+        }
         service.updateGame(action);
+        var message2 = "";
+        game = service.getGame(action.getAuthToken(), action.getGameID());
+        if (Objects.equals(game.whiteUsername(), action.getUsername())) {
+                if (game.game().isInCheckmate(ChessGame.TeamColor.BLACK) || game.game().isInStalemate(ChessGame.TeamColor.BLACK)) {
+                    message2 = String.format("%s is in checkmate or stalemate - game over", game.blackUsername());
+                    GameOnCommand command = new GameOnCommand(UserGameCommand.CommandType.MAKE_MOVE, action.getAuthToken(), action.getGameID(), false);
+                    service.updateGame(command);
+                }
+                else if (game.game().isInCheck(ChessGame.TeamColor.BLACK)) {
+                    message2 = String.format("%s is in check!", game.blackUsername());
+                }
+        else {
+                if (game.game().isInCheckmate(ChessGame.TeamColor.WHITE) || game.game().isInStalemate(ChessGame.TeamColor.WHITE)) {
+                    message2 = String.format("%s is in checkmate or stalemate - game over", game.whiteUsername());
+                    GameOnCommand command = new GameOnCommand(UserGameCommand.CommandType.MAKE_MOVE, action.getAuthToken(), action.getGameID(), false);
+                    service.updateGame(command);
+                }
+                else if (game.game().isInCheck(ChessGame.TeamColor.WHITE)) {
+                    message2 = String.format("%s is in check!", game.whiteUsername());
+                }
+            }
+        }
         var message = String.format("%s moved from %s to %s", action.getUsername(), action.getMove().getStartPosition(), action.getMove().getEndPosition());
         var notification = new Notification(Notification.Type.NOTIFICATION, message);
+        var notification2 = new Notification(Notification.Type.NOTIFICATION, message2);
         connections.broadcast(session, action.getGameID(), notification);
+        connections.broadcast(null, action.getGameID(), notification2);
     }
 
     private void leave(LeaveCommand action, Session session) throws IOException {
@@ -83,6 +115,8 @@ public class WebsocketHandler implements WsConnectHandler, WsMessageHandler, WsC
         var notification = new Notification(Notification.Type.NOTIFICATION, message);
         connections.broadcast(session, action.getGameID(), notification);
     }
+
+
 
     private void resign(String authToken, Session session) {}
 }

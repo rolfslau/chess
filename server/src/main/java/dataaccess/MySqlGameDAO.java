@@ -5,6 +5,7 @@ import chess.InvalidMoveException;
 import com.google.gson.Gson;
 import exceptions.DataBaseException;
 import model.Game;
+import websocket.commands.GameOnCommand;
 import websocket.commands.LeaveCommand;
 import websocket.commands.MakeMoveCommand;
 import websocket.commands.UserGameCommand;
@@ -38,6 +39,7 @@ public class MySqlGameDAO implements GameDataAccess {
                             result.getString("whiteUsername"),
                             result.getString("blackUsername"),
                             result.getString("gameName"),
+                            result.getBoolean("playing"),
                             new Gson().fromJson(result.getString("game"), ChessGame.class)
                             );
                     games.add(game);
@@ -50,9 +52,9 @@ public class MySqlGameDAO implements GameDataAccess {
     }
 
     public int newGame(String gameName) {
-        var statement = "INSERT INTO games (whiteUsername, blackUsername, gameName, game) VALUES (?, ?, ?, ?)";
+        var statement = "INSERT INTO games (whiteUsername, blackUsername, gameName, playing, game) VALUES (?, ?, ?, ?)";
         String game = new Gson().toJson(new ChessGame());
-        return executeUpdate(statement, null, null, gameName, game);
+        return executeUpdate(statement, null, null, gameName, true, game);
     }
 
     public Game getGame(int gameID) {
@@ -66,6 +68,7 @@ public class MySqlGameDAO implements GameDataAccess {
                     game = new Game(gameID, result.getString("whiteUsername"),
                             result.getString("blackUsername"),
                             result.getString("gameName"),
+                            result.getBoolean("playing"),
                             new Gson().fromJson(result.getString("game"), ChessGame.class)
                             );
                 }
@@ -86,6 +89,7 @@ public class MySqlGameDAO implements GameDataAccess {
         }
         executeUpdate(statement, user, gameID);
     }
+
     public void updateGame(LeaveCommand command) {
         var statement = "";
         if (Objects.equals(command.getColor(), "WHITE")) {
@@ -110,6 +114,12 @@ public class MySqlGameDAO implements GameDataAccess {
             }
     }
 
+    public void updateGame(GameOnCommand command) {
+        var statement = "";
+        statement = "UPDATE games SET playing=? WHERE id=?";
+        executeUpdate(statement, command.getPlaying(), command.getGameID());
+    }
+
     public void clearApp() {
         var statement = "TRUNCATE games";
         executeUpdate(statement);
@@ -122,6 +132,7 @@ public class MySqlGameDAO implements GameDataAccess {
             `whiteUsername` VARCHAR(256),
             `blackUsername` VARCHAR(256),
             `gameName` VARCHAR(256) NOT NULL,
+            `playing` VARCHAR(50) NOT NULL,
             `game` TEXT NOT NULL,
             PRIMARY KEY(`id`)
             )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci

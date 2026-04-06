@@ -298,6 +298,11 @@ public class ChessClient implements NotificationHandler {
     public String makeMove() {
         String start = "";
         String end = "";
+        GameID gameid = new GameID(currGameID);
+        Game game = server.getGame(currAuth, gameid);
+        if (!game.playing()) {
+            return "this game already ended!";
+        }
         try {
             System.out.print("starting position >>> ");
             start = scanner.nextLine().toUpperCase();
@@ -308,8 +313,10 @@ public class ChessClient implements NotificationHandler {
             int col2 = coords.get(String.valueOf(end.charAt(1)));
             ChessPosition pos2 = new ChessPosition(Integer.parseInt(String.valueOf(end.charAt(0))), col2);
             ChessMove move = new ChessMove(pos1, pos2, null);
-            MakeMoveCommand makeMove = new MakeMoveCommand(UserGameCommand.CommandType.MAKE_MOVE, currAuth, currUser, gameID, move);
+            MakeMoveCommand makeMove = new MakeMoveCommand(UserGameCommand.CommandType.MAKE_MOVE, currAuth, currUser, currGameID, move);
             ws.makeMove(makeMove);
+            GameID gameid = new GameID(currGameID);
+            Game game = server.getGame(currAuth, gameid);
         } catch(RuntimeException ex) {
             throw new RuntimeException(ex.getMessage());
         }

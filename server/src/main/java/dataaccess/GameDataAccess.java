@@ -1,6 +1,7 @@
 package dataaccess;
 
 import model.Game;
+import websocket.commands.GameOnCommand;
 import websocket.commands.LeaveCommand;
 import websocket.commands.MakeMoveCommand;
 import websocket.commands.UserGameCommand;
@@ -16,4 +17,5 @@ public interface GameDataAccess {
     void clearApp();
     void updateGame(MakeMoveCommand command);
     void updateGame(LeaveCommand command);
+    void updateGame(GameOnCommand command);
 }

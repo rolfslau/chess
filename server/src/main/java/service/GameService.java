@@ -5,6 +5,7 @@ import dataaccess.UserDataAccess;
 import model.Game;
 import exceptions.AlreadyExistsException;
 import exceptions.DoesNotExistException;
+import websocket.commands.GameOnCommand;
 import websocket.commands.LeaveCommand;
 import websocket.commands.MakeMoveCommand;
 import websocket.commands.UserGameCommand;
@@ -90,6 +91,11 @@ public class GameService {
         if (game == null) {
             throw new DoesNotExistException("Error: no game by that id", 400);
         }
+        dataAccess.updateGame(command);
+    }
+
+    public void updateGame(GameOnCommand command) {
+//        Game game = dataAccess.getGame(command.getGameID());
         dataAccess.updateGame(command);
     }
 
