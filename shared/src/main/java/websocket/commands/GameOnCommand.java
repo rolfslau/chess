@@ -2,16 +2,16 @@ package websocket.commands;
 
 public class GameOnCommand extends UserGameCommand {
 
-    private final boolean playing;
+    private final String playing;
     private final String username;
 
-    public GameOnCommand(UserGameCommand.CommandType commandType, String authToken, String username, int gameID, boolean playing) {
+    public GameOnCommand(UserGameCommand.CommandType commandType, String authToken, String username, int gameID, String playing) {
         super(commandType, authToken, gameID);
         this.playing = playing;
         this.username = username;
     }
 
-    public boolean getPlaying() {
+    public String getPlaying() {
         return playing;
     }
 

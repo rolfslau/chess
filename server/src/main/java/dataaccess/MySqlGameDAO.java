@@ -39,7 +39,7 @@ public class MySqlGameDAO implements GameDataAccess {
                             result.getString("whiteUsername"),
                             result.getString("blackUsername"),
                             result.getString("gameName"),
-                            result.getBoolean("playing"),
+                            result.getString("playing"),
                             new Gson().fromJson(result.getString("game"), ChessGame.class)
                             );
                     games.add(game);
@@ -52,9 +52,9 @@ public class MySqlGameDAO implements GameDataAccess {
     }
 
     public int newGame(String gameName) {
-        var statement = "INSERT INTO games (whiteUsername, blackUsername, gameName, playing, game) VALUES (?, ?, ?, ?)";
+        var statement = "INSERT INTO games (whiteUsername, blackUsername, gameName, playing, game) VALUES (?, ?, ?, ?, ?)";
         String game = new Gson().toJson(new ChessGame());
-        return executeUpdate(statement, null, null, gameName, true, game);
+        return executeUpdate(statement, null, null, gameName, "true", game);
     }
 
     public Game getGame(int gameID) {
@@ -68,7 +68,7 @@ public class MySqlGameDAO implements GameDataAccess {
                     game = new Game(gameID, result.getString("whiteUsername"),
                             result.getString("blackUsername"),
                             result.getString("gameName"),
-                            result.getBoolean("playing"),
+                            result.getString("playing"),
                             new Gson().fromJson(result.getString("game"), ChessGame.class)
                             );
                 }

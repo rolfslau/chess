@@ -12,11 +12,13 @@ public class DrawingChess {
     private final ChessBoard board;
     private final String colorOfPlayer;
     private final Collection<ChessPosition> moves;
+    private final ChessPosition specialPos;
 
-    public DrawingChess(ChessBoard board, String colorOfPlayer, Collection<ChessPosition> moves) {
+    public DrawingChess(ChessBoard board, String colorOfPlayer, Collection<ChessPosition> moves, ChessPosition specialPos) {
         this.board = board;
         this.colorOfPlayer = colorOfPlayer;
         this.moves = moves;
+        this.specialPos = specialPos;
         String[] headersWhite = {"a", "b", "c", "d", "e", "f", "g", "h"};
         String[] headersBlack = {"h", "g", "f", "e", "d", "c", "b", "a"};
         System.out.print(SET_BG_COLOR_WHITE);
@@ -98,9 +100,12 @@ public class DrawingChess {
             ChessPosition currPos = new ChessPosition(row, i);
             if (moves.contains(currPos)) {
                 switch (color) {
-                case ("PINK") -> System.out.print(SET_BG_COLOR_MUSTARD);
-                case ("ORANGE") -> System.out.print(SET_BG_COLOR_MUSTARD2);
+                case ("PINK") -> System.out.print(SET_BG_COLOR_LIGHT_BLUE_1);
+                case ("ORANGE") -> System.out.print(SET_BG_COLOR_LIGHT_BLUE_2);
                 }
+            }
+            if (currPos.equals(specialPos)) {
+                System.out.print(SET_BG_COLOR_PURPLE_4);
             }
             turn++;
             printPiece(row, i);
@@ -115,9 +120,12 @@ public class DrawingChess {
             ChessPosition currPos = new ChessPosition(row, i);
             if (moves.contains(currPos)) {
                 switch (color) {
-                    case ("PINK") -> System.out.print(SET_BG_COLOR_MUSTARD);
-                    case ("ORANGE") -> System.out.print(SET_BG_COLOR_MUSTARD2);
+                    case ("PINK") -> System.out.print(SET_BG_COLOR_LIGHT_BLUE_1);
+                    case ("ORANGE") -> System.out.print(SET_BG_COLOR_LIGHT_BLUE_2);
                 }
+            }
+            if (currPos.equals(specialPos)) {
+                System.out.print(SET_BG_COLOR_PURPLE_4);
             }
             turn++;
             printPiece(row, i);

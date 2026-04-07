@@ -26,7 +26,7 @@ public class MemoryGameDAO implements GameDataAccess {
     }
 
     public int newGame(String gameName) {
-        Game game = new Game(ids, null, null, gameName, true, new ChessGame());
+        Game game = new Game(ids, null, null, gameName, "true", new ChessGame());
         games.put(ids, game);
         return ids++;
     }
@@ -40,12 +40,12 @@ public class MemoryGameDAO implements GameDataAccess {
         Game game = games.get(gameID);
         if (Objects.equals(color, "WHITE")) {
             games.remove(gameID);
-            game = new Game(game.gameID(), user, game.blackUsername(), game.gameName(), true, game.game());
+            game = new Game(game.gameID(), user, game.blackUsername(), game.gameName(), "true", game.game());
             games.put(gameID, game);
         }
         else {
             games.remove(gameID);
-            game = new Game(game.gameID(), game.whiteUsername(), user, game.gameName(), true, game.game());
+            game = new Game(game.gameID(), game.whiteUsername(), user, game.gameName(), "true", game.game());
             games.put(gameID, game);
         }
     }

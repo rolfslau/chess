@@ -64,7 +64,7 @@ public class TestGameService {
         userService.register(registered);
         Auth auth = userService.login(registered);
         int gameID = gameService.newGame(auth.authToken(), "game name!!");
-        Assertions.assertEquals(new Game(1, null, null, "game name!!", new ChessGame()),
+        Assertions.assertEquals(new Game(1, null, null, "game name!!", "true", new ChessGame()),
                 gameDAO.getGame(gameID));
     }
 

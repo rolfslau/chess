@@ -52,6 +52,18 @@ public class EscapeSequences {
     public static final String SET_BG_COLOR_LIGHT_LAVENDER = SET_BG_COLOR + "141m";
     public static final String SET_BG_COLOR_MUSTARD = SET_BG_COLOR + "178m"; // mustard yellow (very solid choice)
     public static final String SET_BG_COLOR_MUSTARD2 = SET_BG_COLOR + "179m";
+    public static final String SET_BG_COLOR_PURPLE_1 = SET_BG_COLOR + "93m";   // soft violet
+    public static final String SET_BG_COLOR_PURPLE_2 = SET_BG_COLOR + "99m";   // balanced purple
+    public static final String SET_BG_COLOR_PURPLE_3 = SET_BG_COLOR + "135m";  // muted lavender
+    public static final String SET_BG_COLOR_PURPLE_4 = SET_BG_COLOR + "141m";
+    public static final String SET_BG_COLOR_LIGHT_BLUE_1 = SET_BG_COLOR + "117m"; // sky blue
+    public static final String SET_BG_COLOR_LIGHT_BLUE_2 = SET_BG_COLOR + "123m"; // bright cyan-blue
+    public static final String SET_BG_COLOR_LIGHT_BLUE_3 = SET_BG_COLOR + "153m"; // pale blue
+    public static final String SET_BG_COLOR_LIGHT_BLUE_4 = SET_BG_COLOR + "159m"; // very soft blue
+    public static final String SET_BG_COLOR_DARK_BLUE_1 = SET_BG_COLOR + "18m";  // deep navy
+    public static final String SET_BG_COLOR_DARK_BLUE_2 = SET_BG_COLOR + "19m";  // slightly brighter navy
+    public static final String SET_BG_COLOR_DARK_BLUE_3 = SET_BG_COLOR + "25m";  // strong blue
+    public static final String SET_BG_COLOR_DARK_BLUE_4 = SET_BG_COLOR + "31m";  // rich blue
     public static final String RESET_BG_COLOR = UNICODE_ESCAPE + "[49m";
 
     public static final String WHITE_KING = " ♔ ";

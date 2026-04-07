@@ -209,7 +209,8 @@ public class ChessClient implements NotificationHandler {
             // server uses the gameid and auth token to look up the player's role they joined as
             GameID id = new GameID(currGameID);
             ChessBoard board = server.getGame(currAuth, id).game().getBoard();
-            new DrawingChess(board, color.toUpperCase(), new ArrayList<>());
+            new DrawingChess(board, color.toUpperCase(), new ArrayList<>(), null);
+            gameState = State.SIGNEDIN;
             return String.format("game %d joined as %s\n\n", gameID, color);
         } catch (RuntimeException e) {
             System.out.print("\n\uD83D\uDEA8invalid game id or color (already taken or not black/white)\uD83D\uDEA8\n\n");
@@ -266,7 +267,8 @@ public class ChessClient implements NotificationHandler {
         ChessBoard board = server.getGame(currAuth, gameNum).game().getBoard();
         JoinGameReq game = new JoinGameReq("AN OBSERVER", gameID);
         ws.joinGame(currAuth, game, currUser);
-        new DrawingChess(board, "WHITE", new ArrayList<>());
+        new DrawingChess(board, "WHITE", new ArrayList<>(), null);
+        gameState = State.SIGNEDIN;
         return String.format("watching game %d\n\n", gameID);
     }
 
@@ -275,16 +277,16 @@ public class ChessClient implements NotificationHandler {
         try {
            System.out.print("piece position >>> ");
            pos = scanner.nextLine().toUpperCase();
-           int col = coords.get(String.valueOf(pos.charAt(1)));
+           int col = coords.get(String.valueOf(pos.charAt(0)));
            ChessPosition piecePos = new ChessPosition(Integer.parseInt(String.valueOf(pos.charAt(1))), col);
            GameID gameID = new GameID(currGameID);
            ChessGame game = server.getGame(currAuth, gameID).game();
            Collection<ChessMove> moves = game.validMoves(piecePos);
            Collection<ChessPosition> endMoves = moves.stream().map(ChessMove::getEndPosition).toList();
-           new DrawingChess(game.getBoard(), currColor, endMoves);
+           new DrawingChess(game.getBoard(), currColor, endMoves, piecePos);
            return String.format("\npotential moves for piece at %s\n\n", pos);
         } catch(RuntimeException ex) {
-            System.out.printf("\nunable to highlight moves for piece at %s\n\n", pos);
+            System.out.printf("\nunable to highlight moves for piece at %s\n\n%s\n\n", pos, ex.getMessage());
         }
         return "";
     }
@@ -296,13 +298,14 @@ public class ChessClient implements NotificationHandler {
         return "\nsuccessfully logged out\n\n";
     }
 
-    public void reload() {
+    public String reload() {
         try {
             GameID gameId = new GameID(currGameID);
             ChessBoard board = server.getGame(currAuth, gameId).game().getBoard();
-            new DrawingChess(board, currColor, new ArrayList<>());
+            new DrawingChess(board, currColor, new ArrayList<>(), null);
+            return "";
         } catch(RuntimeException ex) {
-            System.out.println("\ncannot reload game\n\n");
+            return"\ncannot reload game\n\n";
         }
     }
 
@@ -311,18 +314,18 @@ public class ChessClient implements NotificationHandler {
         String end = "";
         GameID gameid = new GameID(currGameID);
         Game game = server.getGame(currAuth, gameid);
-        if (!game.playing()) {
+        if (Objects.equals(game.playing(), "false")) {
             return "this game already ended!";
         }
         try {
             System.out.print("starting position >>> ");
             start = scanner.nextLine().toUpperCase();
-            int col1 = coords.get(String.valueOf(start.charAt(1)));
+            int col1 = coords.get(String.valueOf(start.charAt(0)));
             ChessPosition pos1 = new ChessPosition(Integer.parseInt(String.valueOf(start.charAt(1))), col1);
             System.out.print("ending position >>> ");
             end = scanner.nextLine().toUpperCase();
-            int col2 = coords.get(String.valueOf(end.charAt(1)));
-            ChessPosition pos2 = new ChessPosition(Integer.parseInt(String.valueOf(end.charAt(0))), col2);
+            int col2 = coords.get(String.valueOf(end.charAt(0)));
+            ChessPosition pos2 = new ChessPosition(Integer.parseInt(String.valueOf(end.charAt(1))), col2);
             ChessMove move = new ChessMove(pos1, pos2, null);
             MakeMoveCommand makeMove = new MakeMoveCommand(UserGameCommand.CommandType.MAKE_MOVE, currAuth, currUser, currGameID, move);
             ws.makeMove(makeMove);
