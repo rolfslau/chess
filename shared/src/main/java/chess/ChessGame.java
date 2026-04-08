@@ -54,7 +54,7 @@ public class ChessGame {
      * @return Set of valid moves for requested piece, or null if no piece at
      * startPosition
      */
-    public Collection<ChessMove> validMoves(ChessPosition startPosition) {
+    public Collection<ChessMove> validMoves(ChessPosition startPosition, ChessBoard board) {
         Collection<ChessMove> muvs = new ArrayList<>();
         if (board.getPiece(startPosition) == null) {
             return null;
@@ -73,6 +73,10 @@ public class ChessGame {
         return muvs;
     }
 
+    public Collection<ChessMove> validMoves(ChessPosition startPosition) {
+        return validMoves(startPosition, board);
+    }
+
     /**
      * Makes a move in a chess game
      *
@@ -84,7 +88,7 @@ public class ChessGame {
         // do I check that here or in validMoves?
         if (board.getPiece(move.getStartPosition()) == null) { throw new InvalidMoveException("no piece"); }
         if (board.getPiece(move.getStartPosition()).getTeamColor() != team) { throw new InvalidMoveException("not your turn"); }
-        Collection<ChessMove> validMoves = validMoves(move.getStartPosition());
+        Collection<ChessMove> validMoves = validMoves(move.getStartPosition(), board);
         if (!validMoves.contains(move)) {
             throw new InvalidMoveException("not a valid move: " + move);
         } else {
@@ -169,7 +173,7 @@ public class ChessGame {
             for (int j = 1; j < 9; j++) {
                 ChessPosition pos = new ChessPosition(i, j);
                 if (board.getPiece(pos) != null && board.getPiece(pos).getTeamColor() == teamColor) {
-                    validMoves.addAll(validMoves(pos));
+                    validMoves.addAll(validMoves(pos, board));
                 }
             }
         }

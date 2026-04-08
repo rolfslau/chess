@@ -91,7 +91,7 @@ public class GameService {
         if (game.game().getTeamTurn() != curr) {
             throw new ResponseException(ResponseException.Code.ClientError, "not that player's turn!!");
         }
-        Collection<ChessMove> moves = game.game().validMoves(command.getMove().getStartPosition());
+        Collection<ChessMove> moves = game.game().validMoves(command.getMove().getStartPosition(), game.game().getBoard());
         if (!moves.contains(command.getMove())) {
             throw new ResponseException(ResponseException.Code.ClientError, "not a legal move!!");
         }

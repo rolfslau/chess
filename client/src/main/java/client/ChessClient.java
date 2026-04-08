@@ -287,7 +287,7 @@ public class ChessClient implements NotificationHandler {
            int col = coords.get(String.valueOf(pos.charAt(0)));
            ChessPosition piecePos = new ChessPosition(Integer.parseInt(String.valueOf(pos.charAt(1))), col);
            GameID gameID = new GameID(currGameID);
-           Collection<ChessMove> moves = currGame.game().validMoves(piecePos);
+           Collection<ChessMove> moves = currGame.game().validMoves(piecePos, currGame.game().getBoard());
            Collection<ChessPosition> endMoves = moves.stream().map(ChessMove::getEndPosition).toList();
            new DrawingChess(currGame.game().getBoard(), currColor, endMoves, piecePos);
            return String.format("\npotential moves for piece at %s\n\n", pos);
@@ -319,8 +319,6 @@ public class ChessClient implements NotificationHandler {
     public String makeMove() {
         String start = "";
         String end = "";
-        GameID gameid = new GameID(currGameID);
-//        Game game = server.getGame(currAuth, gameid);
         if (Objects.equals(currGame.playing(), "false")) {
             return "this game already ended!";
         }
@@ -335,17 +333,11 @@ public class ChessClient implements NotificationHandler {
             ChessPosition pos2 = new ChessPosition(Integer.parseInt(String.valueOf(end.charAt(1))), col2);
             ChessMove move = new ChessMove(pos1, pos2, null);
             MakeMoveCommand makeMove = new MakeMoveCommand(UserGameCommand.CommandType.MAKE_MOVE, currAuth, currUser, currGameID, move);
-            // resign has a bug
-
-            // make move is no longer broadcasting the board and I have no idea why
             ws.makeMove(makeMove);
+            return String.format("\nyou moved from %s to %s\n\n", start, end);
         } catch(RuntimeException ex) {
-            // do I send an error notification here?
             return "\ninvalid move -- not your turn or not a legal move\n\n";
-            // catch if an invalid move and print out to the user that it is
-//            throw new RuntimeException(ex.getMessage());
         }
-        return String.format("\nyou moved from %s to %s\n\n", start, end);
     }
 
     public void notify(ServerMessage notification) {
