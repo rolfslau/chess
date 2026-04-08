@@ -6,7 +6,7 @@ import chess.ChessBoard;
 import chess.ChessGame;
 import chess.ChessMove;
 import chess.ChessPosition;
-import exceptions.ResponseException;
+import com.google.gson.Gson;
 import model.*;
 import websocket.commands.*;
 
@@ -35,6 +35,7 @@ public class ChessClient implements NotificationHandler {
     private boolean player = false;
     int currGameID = 0;
     String currColor = "";
+    ChessGame currGame = null;
 
     private final Map<String, Integer> coords = Map.of(
             "A", 1,
@@ -55,12 +56,12 @@ public class ChessClient implements NotificationHandler {
     public void run() {
         System.out.print(RESET_BG_COLOR);
         System.out.print("✨welcome to chess!!✨\n");
-
+        System.out.print(help());
 
         var result = "";
         while (!result.equals("quit")) {
-            System.out.print(help());
-            System.out.print("\n >>> ");
+//            System.out.print(help());
+            System.out.print("\n");
             String line = scanner.nextLine();
             if (state == State.SIGNEDIN) {
                 if (gameState == State.SIGNEDIN && player) {
@@ -87,6 +88,7 @@ public class ChessClient implements NotificationHandler {
             case "list" -> listGames();
             case "observe" -> observeGame();
             case "logout" -> logout();
+            case "help" -> help();
             default -> "";
         };
     }
@@ -96,6 +98,7 @@ public class ChessClient implements NotificationHandler {
             case "register" -> register();
             case "login" -> login();
             case "quit" -> "quit";
+            case "help" -> help();
             default -> "";
         };
     }
@@ -107,6 +110,7 @@ public class ChessClient implements NotificationHandler {
             case "move" -> makeMove();
             case "resign" -> resign();
             case "highlight" -> highlight();
+            case "help" -> help();
             default -> "";
         };
     }
@@ -117,6 +121,7 @@ public class ChessClient implements NotificationHandler {
             case "leave" -> leave();
             case "move", "resign" -> "you are an observer!!";
             case "highlight" -> highlight();
+            case "help" -> help();
             default -> "";
         };
     }
@@ -147,6 +152,7 @@ public class ChessClient implements NotificationHandler {
             User user = new User(username, password, email);
             String authToken = server.register(user);
             currAuth = authToken;
+            currUser = user.username();
             state = State.SIGNEDIN;
         } catch (RuntimeException e) {
             System.out.print("\n\uD83D\uDEA8username already taken\uD83D\uDEA8\n\n");
@@ -209,7 +215,8 @@ public class ChessClient implements NotificationHandler {
             // server uses the gameid and auth token to look up the player's role they joined as
             GameID id = new GameID(currGameID);
             ChessBoard board = server.getGame(currAuth, id).game().getBoard();
-            new DrawingChess(board, color.toUpperCase(), new ArrayList<>(), null);
+//            currGame = server.getGame(currAuth, id).game();
+//            new DrawingChess(board, color.toUpperCase(), new ArrayList<>(), null);
             gameState = State.SIGNEDIN;
             return String.format("game %d joined as %s\n\n", gameID, color);
         } catch (RuntimeException e) {
@@ -219,17 +226,23 @@ public class ChessClient implements NotificationHandler {
     }
 
     public String resign() {
-        System.out.print("are you sure you want to resign? [y/n] >>> ");
-        String confirm = scanner.nextLine();
+        // after resign, you can still make moves -- fix that
+        // notifications ab what move is made need to be converted to letters
+        // if highlighting a piece with no legal moves -- error
+        try {
+            System.out.print("are you sure you want to resign? [y/n] >>> ");
+            String confirm = scanner.nextLine();
 
-        if (confirm.equalsIgnoreCase("y")) {
-            ResignCommand resign = new ResignCommand(UserGameCommand.CommandType.RESIGN, currAuth, currGameID, currUser);
-            ws.resign(resign);
+            if (confirm.equalsIgnoreCase("y")) {
+                ResignCommand resign = new ResignCommand(UserGameCommand.CommandType.RESIGN, currAuth, currGameID, currUser);
+                ws.resign(resign);
+            } else if (confirm.equalsIgnoreCase("n")) {
+                return "ok!";
+            }
+        } catch(RuntimeException ex) {
+            return String.format("non valid response %s", ex.getMessage());
         }
-        else if (confirm.equalsIgnoreCase("n")) {
-            return "ok!";
-        }
-        return "non valid response";
+        return "";
     }
 
     public String leave() {
@@ -239,6 +252,7 @@ public class ChessClient implements NotificationHandler {
             currGameID = 0;
             currColor = "";
             gameState = State.SIGNEDOUT;
+            currGame = null;
             return "\nyou have left the game\n\n";
         } catch (RuntimeException e) {
             System.out.print("\nyou were not able to leave the game\n\n");
@@ -267,23 +281,27 @@ public class ChessClient implements NotificationHandler {
         ChessBoard board = server.getGame(currAuth, gameNum).game().getBoard();
         JoinGameReq game = new JoinGameReq("AN OBSERVER", gameID);
         ws.joinGame(currAuth, game, currUser);
-        new DrawingChess(board, "WHITE", new ArrayList<>(), null);
+//        new DrawingChess(board, "WHITE", new ArrayList<>(), null);
         gameState = State.SIGNEDIN;
+//        currGame = server.getGame(currAuth, gameNum).game();
         return String.format("watching game %d\n\n", gameID);
     }
 
     public String highlight() {
         String pos = "";
         try {
+            // should this also be a websocket thing?
            System.out.print("piece position >>> ");
            pos = scanner.nextLine().toUpperCase();
            int col = coords.get(String.valueOf(pos.charAt(0)));
            ChessPosition piecePos = new ChessPosition(Integer.parseInt(String.valueOf(pos.charAt(1))), col);
            GameID gameID = new GameID(currGameID);
-           ChessGame game = server.getGame(currAuth, gameID).game();
-           Collection<ChessMove> moves = game.validMoves(piecePos);
+           // save currGame as a game not a board
+           // use that to get valid moves instead
+//           ChessGame game = server.getGame(currAuth, gameID).game();
+           Collection<ChessMove> moves = currGame.validMoves(piecePos);
            Collection<ChessPosition> endMoves = moves.stream().map(ChessMove::getEndPosition).toList();
-           new DrawingChess(game.getBoard(), currColor, endMoves, piecePos);
+           new DrawingChess(currGame.getBoard(), currColor, endMoves, piecePos);
            return String.format("\npotential moves for piece at %s\n\n", pos);
         } catch(RuntimeException ex) {
             System.out.printf("\nunable to highlight moves for piece at %s\n\n%s\n\n", pos, ex.getMessage());
@@ -300,9 +318,10 @@ public class ChessClient implements NotificationHandler {
 
     public String reload() {
         try {
+            // should I be calling websocket here to reload? that seemed to fix my other issue
             GameID gameId = new GameID(currGameID);
             ChessBoard board = server.getGame(currAuth, gameId).game().getBoard();
-            new DrawingChess(board, currColor, new ArrayList<>(), null);
+            new DrawingChess(currGame.getBoard(), currColor, new ArrayList<>(), null);
             return "";
         } catch(RuntimeException ex) {
             return"\ncannot reload game\n\n";
@@ -328,17 +347,33 @@ public class ChessClient implements NotificationHandler {
             ChessPosition pos2 = new ChessPosition(Integer.parseInt(String.valueOf(end.charAt(1))), col2);
             ChessMove move = new ChessMove(pos1, pos2, null);
             MakeMoveCommand makeMove = new MakeMoveCommand(UserGameCommand.CommandType.MAKE_MOVE, currAuth, currUser, currGameID, move);
+            // resign has a bug
+
+            // make move is no longer broadcasting the board and I have no idea why
             ws.makeMove(makeMove);
         } catch(RuntimeException ex) {
-            throw new RuntimeException(ex.getMessage());
+            // do I send an error notification here?
+            System.out.print("\ninvalid move -- not your turn or not a legal move\n\n");
+            // catch if an invalid move and print out to the user that it is
+//            throw new RuntimeException(ex.getMessage());
         }
         return String.format("\nyou moved from %s to %s\n\n", start, end);
     }
 
-    public void notify(Notification notification) {
-        System.out.println(notification.message());
+    public void notify(ServerMessage notification) {
+        System.out.println(notification.getMessage());
     }
 
+    public void notifyReload(ReloadNotification notification) {
+        Game game = new Gson().fromJson(notification.getGame(), Game.class);
+        ChessBoard board = game.game().getBoard();
+        currGame = game.game();
+        new DrawingChess(board, currColor, new ArrayList<>(), null);
+    }
+
+    public void notifyError(ErrorNotification notification) {
+        System.out.println(notification.getMessage());
+    }
 
 
     public String help() {

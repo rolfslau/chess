@@ -1,7 +1,10 @@
 package service;
 
+import chess.ChessGame;
+import chess.ChessMove;
 import dataaccess.GameDataAccess;
 import dataaccess.UserDataAccess;
+import exceptions.ResponseException;
 import model.Game;
 import exceptions.AlreadyExistsException;
 import exceptions.DoesNotExistException;
@@ -78,6 +81,16 @@ public class GameService {
         Game game = dataAccess.getGame(command.getGameID());
         if (game == null) {
             throw new DoesNotExistException("Error: no game by that id", 400);
+        }
+        ChessGame.TeamColor curr;
+        if (Objects.equals(command.getUsername(), game.whiteUsername())) { curr = ChessGame.TeamColor.WHITE; }
+        else { curr = ChessGame.TeamColor.BLACK; }
+        if (game.game().getTeamTurn() != curr) {
+            throw new ResponseException(ResponseException.Code.ClientError, "not that player's turn!!");
+        }
+        Collection<ChessMove> moves = game.game().validMoves(command.getMove().getStartPosition());
+        if (!moves.contains(command.getMove())) {
+            throw new ResponseException(ResponseException.Code.ClientError, "not a legal move!!");
         }
         dataAccess.updateGame(command);
     }

@@ -1101,6 +1101,14 @@ COMMAND-LINE BUILDS
   jacoco (test coverage), exec (execute java programs)
 
 
+DEPLOYING THIS
++ we would need to use an ec2 bc its java to java
++ there is a tutorial on the github
++ inbound rules are like a firewall i guess?
++ you don't need to change any outbound rules (but need them or else your server won't be able to access things)
++ 
+
+
 TO DO
 + the type of my data access should be the interface
 + bad request -- info that doesn't make sense based on the request they made

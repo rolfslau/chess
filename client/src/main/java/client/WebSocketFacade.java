@@ -3,7 +3,6 @@ package client;
 import com.google.gson.Gson;
 import exceptions.ResponseException;
 import jakarta.websocket.*;
-import model.Game;
 import model.JoinGameReq;
 import websocket.commands.*;
 
@@ -28,8 +27,20 @@ public class WebSocketFacade extends Endpoint {
             this.session.addMessageHandler(new MessageHandler.Whole<String>() {
                 @Override
                 public void onMessage(String message) {
-                    Notification notification = new Gson().fromJson(message, Notification.class);
-                    notificationHandler.notify(notification);
+                    // i need to make subclasses of Notification for the different types of messages the server can send
+                    // check type of server message and depending on type, deserialize further into that subclass
+                    ServerMessage notification = new Gson().fromJson(message, ServerMessage.class);
+                    if (notification.getServerMessageType() == ServerMessage.ServerMessageType.LOAD_GAME) {
+                        ReloadNotification reload = new Gson().fromJson(message, ReloadNotification.class);
+                        notificationHandler.notifyReload(reload);
+                    }
+                    else if (notification.getServerMessageType() == ServerMessage.ServerMessageType.ERROR) {
+                        ErrorNotification error = new Gson().fromJson(message, ErrorNotification.class);
+                        notificationHandler.notifyError(error);
+                    }
+                    else {
+                        notificationHandler.notify(notification);
+                    }
                 }
             });
         } catch (DeploymentException | IOException | URISyntaxException ex) {

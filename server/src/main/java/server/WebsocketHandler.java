@@ -2,15 +2,12 @@ package server;
 
 import chess.ChessGame;
 import com.google.gson.Gson;
-import dataaccess.UserDataAccess;
 import exceptions.DoesNotExistException;
 import io.javalin.websocket.*;
 import model.Game;
 import org.eclipse.jetty.websocket.api.Session;
 import service.GameService;
-import service.UserService;
 import websocket.commands.*;
-import websocket.messages.ServerMessage;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -64,34 +61,50 @@ public class WebsocketHandler implements WsConnectHandler, WsMessageHandler, WsC
     }
 
 
-    // I don't understand how any information gets passed and is able to be used
-    // make sub classes of user game command
-    // should I make another record class where one of the parts is the user game command ???
     private void connect(String authToken, Session session, int gameID, String username, String color) throws IOException {
-        connections.add(session, gameID);
-        // how do I get the username here if I only have the auth token ?
-        var message = String.format("%s joined game %d as %s", username, gameID, color);
-        var notification = new Notification(Notification.Type.NOTIFICATION, message);
-        connections.broadcast(session, gameID, notification);
+        try {
+            connections.add(session, gameID);
+            var message = String.format("%s joined game %d as %s", username, gameID, color);
+            var notification = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, message);
+            ReloadNotification reload = new ReloadNotification(ServerMessage.ServerMessageType.LOAD_GAME, null, service.getGame(authToken, gameID));
+            session.getRemote().sendString(new Gson().toJson(reload));
+            connections.broadcast(session, gameID, notification);
+        } catch (IOException ex) {
+            ErrorNotification errorNotification = new ErrorNotification(ServerMessage.ServerMessageType.ERROR, "unable to join game");
+            session.getRemote().sendString(new Gson().toJson(errorNotification));
+        }
     }
 
-    private void makeMove(MakeMoveCommand action, Session session) throws IOException, DoesNotExistException {
-        Game game = service.getGame(action.getAuthToken(), action.getGameID());
-        if (Objects.equals(game.playing(), "false")) {
-            throw new DoesNotExistException("game already over!!", 400);
+    private void makeMove(MakeMoveCommand action, Session session) throws IOException, RuntimeException {
+        Game game;
+        try {
+            game = service.getGame(action.getAuthToken(), action.getGameID());
+            if (Objects.equals(game.playing(), "false")) {
+                throw new DoesNotExistException("game already over!!", 400);
+            }
+        } catch(DoesNotExistException ex) {
+            ErrorNotification errorNotification = new ErrorNotification(ServerMessage.ServerMessageType.ERROR, "game is not currently active!");
+            session.getRemote().sendString(new Gson().toJson(errorNotification));
+//            throw new RuntimeException("no auth token");
         }
-        service.updateGame(action);
+        try {
+            service.updateGame(action);
+        } catch(RuntimeException ex) {
+            ErrorNotification errorNotification = new ErrorNotification(ServerMessage.ServerMessageType.ERROR, "invalid move");
+            session.getRemote().sendString(new Gson().toJson(errorNotification));
+//            throw new RuntimeException("invalid move!!");
+        }
         var message2 = "";
         game = service.getGame(action.getAuthToken(), action.getGameID());
         if (Objects.equals(game.whiteUsername(), action.getUsername())) {
-                if (game.game().isInCheckmate(ChessGame.TeamColor.BLACK) || game.game().isInStalemate(ChessGame.TeamColor.BLACK)) {
-                    message2 = String.format("%s is in checkmate or stalemate - game over", game.blackUsername());
-                    GameOnCommand command = new GameOnCommand(UserGameCommand.CommandType.MAKE_MOVE, action.getAuthToken(), action.getUsername(), action.getGameID(), "false");
-                    service.updateGame(command);
-                }
-                else if (game.game().isInCheck(ChessGame.TeamColor.BLACK)) {
-                    message2 = String.format("%s is in check!", game.blackUsername());
-                }
+            if (game.game().isInCheckmate(ChessGame.TeamColor.BLACK) || game.game().isInStalemate(ChessGame.TeamColor.BLACK)) {
+                message2 = String.format("%s is in checkmate or stalemate - game over", game.blackUsername());
+                GameOnCommand command = new GameOnCommand(UserGameCommand.CommandType.MAKE_MOVE, action.getAuthToken(), action.getUsername(), action.getGameID(), "false");
+                service.updateGame(command);
+            } else if (game.game().isInCheck(ChessGame.TeamColor.BLACK)) {
+                message2 = String.format("%s is in check!", game.blackUsername());
+            }
+        }
         else {
                 if (game.game().isInCheckmate(ChessGame.TeamColor.WHITE) || game.game().isInStalemate(ChessGame.TeamColor.WHITE)) {
                     message2 = String.format("%s is in checkmate or stalemate - game over", game.whiteUsername());
@@ -101,11 +114,12 @@ public class WebsocketHandler implements WsConnectHandler, WsMessageHandler, WsC
                 else if (game.game().isInCheck(ChessGame.TeamColor.WHITE)) {
                     message2 = String.format("%s is in check!", game.whiteUsername());
                 }
-            }
         }
         var message = String.format("%s moved from %s to %s", action.getUsername(), action.getMove().getStartPosition(), action.getMove().getEndPosition());
-        var notification = new Notification(Notification.Type.NOTIFICATION, message);
-        var notification2 = new Notification(Notification.Type.NOTIFICATION, message2);
+        var notification = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, message);
+        var notification2 = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, message2);
+        var newBoard = new ReloadNotification(ServerMessage.ServerMessageType.LOAD_GAME, null, service.getGame(action.getAuthToken(), action.getGameID()));
+        connections.broadcast(null, action.getGameID(), newBoard);
         connections.broadcast(session, action.getGameID(), notification);
         connections.broadcast(null, action.getGameID(), notification2);
     }
@@ -115,7 +129,7 @@ public class WebsocketHandler implements WsConnectHandler, WsMessageHandler, WsC
         service.updateGame(action);
         // update the game somehow
         var message = String.format("%s left the game", action.getUsername());
-        var notification = new Notification(Notification.Type.NOTIFICATION, message);
+        var notification = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, message);
         connections.broadcast(session, action.getGameID(), notification);
     }
 
@@ -124,7 +138,7 @@ public class WebsocketHandler implements WsConnectHandler, WsMessageHandler, WsC
         GameOnCommand gameOnCommand = new GameOnCommand(UserGameCommand.CommandType.RESIGN, action.getAuthToken(), action.getUsername(), action.getGameID(), "false");
         service.updateGame(gameOnCommand);
         var message = String.format("%s resigned", action.getUsername());
-        var notification = new Notification(Notification.Type.NOTIFICATION, message);
+        var notification = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, message);
         connections.broadcast(session, action.getGameID(), notification);
     }
 

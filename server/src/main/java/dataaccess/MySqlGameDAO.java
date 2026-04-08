@@ -108,7 +108,8 @@ public class MySqlGameDAO implements GameDataAccess {
             ChessGame game = getGame(command.getGameID()).game();
             try {
                 game.makeMove(command.getMove());
-                executeUpdate(statement, game, command.getGameID());
+                String gameJson = new Gson().toJson(game);
+                executeUpdate(statement, gameJson, command.getGameID());
             } catch(InvalidMoveException ex) {
                 throw new RuntimeException("invalid move!!!");
             }

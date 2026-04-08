@@ -1,7 +1,11 @@
 package client;
 
-import websocket.commands.Notification;
+import websocket.commands.ErrorNotification;
+import websocket.commands.ServerMessage;
+import websocket.commands.ReloadNotification;
 
 public interface NotificationHandler {
-    void notify(Notification notification);
+    void notify(ServerMessage notification);
+    void notifyReload(ReloadNotification reload);
+    void notifyError(ErrorNotification error);
 }
