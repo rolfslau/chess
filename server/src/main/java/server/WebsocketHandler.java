@@ -41,7 +41,8 @@ public class WebsocketHandler implements WsConnectHandler, WsMessageHandler, WsC
                 // how do I get the color ?? user game command doesn't seem set up right
                 case CONNECT -> {
                     ConnectCommand connecting = new Gson().fromJson(ctx.message(), ConnectCommand.class);
-                    connect(connecting.getAuthToken(), ctx.session, connecting.getGameID(), connecting.getUsername(), connecting.getColor()); // when other people connect to the game i receive a message
+                    connect(connecting.getAuthToken(), ctx.session, connecting.getGameID(),
+                            connecting.getUsername(), connecting.getColor()); // when other people connect to the game i receive a message
                 }
                 case MAKE_MOVE -> {
                     MakeMoveCommand move = new Gson().fromJson(ctx.message(), MakeMoveCommand.class);
@@ -96,7 +97,8 @@ public class WebsocketHandler implements WsConnectHandler, WsMessageHandler, WsC
         }
         try {
             String username = uData.getAuth(action.getAuthToken());
-            MakeMoveCommand makeMoveCommand = new MakeMoveCommand(action.getCommandType(), action.getAuthToken(), username, action.getGameID(), action.getMove());
+            MakeMoveCommand makeMoveCommand = new MakeMoveCommand(action.getCommandType(), action.getAuthToken(),
+                    username, action.getGameID(), action.getMove());
             service.updateGame(makeMoveCommand);
         } catch(RuntimeException ex) {
             ErrorNotification errorNotification = new ErrorNotification(ServerMessage.ServerMessageType.ERROR, "invalid move");
@@ -109,7 +111,8 @@ public class WebsocketHandler implements WsConnectHandler, WsMessageHandler, WsC
         if (Objects.equals(game.whiteUsername(), action.getUsername())) {
             if (game.game().isInCheckmate(ChessGame.TeamColor.BLACK) || game.game().isInStalemate(ChessGame.TeamColor.BLACK)) {
                 message2 = String.format("%s is in checkmate or stalemate - game over", game.blackUsername());
-                GameOnCommand command = new GameOnCommand(UserGameCommand.CommandType.MAKE_MOVE, action.getAuthToken(), action.getUsername(), action.getGameID(), "false");
+                GameOnCommand command = new GameOnCommand(UserGameCommand.CommandType.MAKE_MOVE, action.getAuthToken(),
+                        action.getUsername(), action.getGameID(), "false");
                 service.updateGame(command);
                 var notification2 = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, message2);
                 connections.broadcast(null, action.getGameID(), notification2);
@@ -122,7 +125,8 @@ public class WebsocketHandler implements WsConnectHandler, WsMessageHandler, WsC
         else {
                 if (game.game().isInCheckmate(ChessGame.TeamColor.WHITE) || game.game().isInStalemate(ChessGame.TeamColor.WHITE)) {
                     message2 = String.format("%s is in checkmate or stalemate - game over", game.whiteUsername());
-                    GameOnCommand command = new GameOnCommand(UserGameCommand.CommandType.MAKE_MOVE, action.getAuthToken(), action.getUsername(), action.getGameID(), "false");
+                    GameOnCommand command = new GameOnCommand(UserGameCommand.CommandType.MAKE_MOVE, action.getAuthToken(),
+                            action.getUsername(), action.getGameID(), "false");
                     service.updateGame(command);
                     var notification2 = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, message2);
                     connections.broadcast(null, action.getGameID(), notification2);
@@ -137,7 +141,8 @@ public class WebsocketHandler implements WsConnectHandler, WsMessageHandler, WsC
         String end = convertPosition(action.getMove().getEndPosition());
         var message = String.format("%s moved from %s to %s", action.getUsername(), start, end);
         var notification = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, message);
-        var newBoard = new ReloadNotification(ServerMessage.ServerMessageType.LOAD_GAME, null, service.getGame(action.getAuthToken(), action.getGameID()));
+        var newBoard = new ReloadNotification(ServerMessage.ServerMessageType.LOAD_GAME, null,
+                service.getGame(action.getAuthToken(), action.getGameID()));
         connections.broadcast(null, action.getGameID(), newBoard);
         connections.broadcast(session, action.getGameID(), notification);
     }
@@ -165,7 +170,8 @@ public class WebsocketHandler implements WsConnectHandler, WsMessageHandler, WsC
 
 
     private void resign(ResignCommand action, Session session) throws IOException {
-        GameOnCommand gameOnCommand = new GameOnCommand(UserGameCommand.CommandType.RESIGN, action.getAuthToken(), action.getUsername(), action.getGameID(), "false");
+        GameOnCommand gameOnCommand = new GameOnCommand(UserGameCommand.CommandType.RESIGN, action.getAuthToken(),
+                action.getUsername(), action.getGameID(), "false");
         String username = uData.getAuth(action.getAuthToken());
         Game game = service.getGame(action.getAuthToken(), action.getGameID());
         if (!Objects.equals(username, game.whiteUsername()) && !Objects.equals(username, game.blackUsername())) {

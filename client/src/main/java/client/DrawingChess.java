@@ -97,17 +97,7 @@ public class DrawingChess {
         // for loop (to go across the row)
         // 0/even = pink; 1/odd = orange (bg)
         for (int i = 1; i < 9; i++) {
-            String color = setBGColor(turn);
-            ChessPosition currPos = new ChessPosition(row, i);
-            if (moves.contains(currPos)) {
-                switch (color) {
-                case ("PINK") -> System.out.print(SET_BG_COLOR_LIGHT_BLUE_1);
-                case ("ORANGE") -> System.out.print(SET_BG_COLOR_LIGHT_BLUE_2);
-                }
-            }
-            if (currPos.equals(specialPos)) {
-                System.out.print(SET_BG_COLOR_PURPLE_4);
-            }
+            colors(row, turn, i);
             turn++;
             printPiece(row, i);
         }
@@ -117,19 +107,23 @@ public class DrawingChess {
         // for loop (to go across the row)
         // 0/even = pink; 1/odd = orange (bg)
         for (int i = 8; i > 0; i--) {
-            String color = setBGColor(turn);
-            ChessPosition currPos = new ChessPosition(row, i);
-            if (moves.contains(currPos)) {
-                switch (color) {
-                    case ("PINK") -> System.out.print(SET_BG_COLOR_LIGHT_BLUE_1);
-                    case ("ORANGE") -> System.out.print(SET_BG_COLOR_LIGHT_BLUE_2);
-                }
-            }
-            if (currPos.equals(specialPos)) {
-                System.out.print(SET_BG_COLOR_PURPLE_4);
-            }
+            colors(row, turn, i);
             turn++;
             printPiece(row, i);
+        }
+    }
+
+    private void colors(int row, int turn, int i) {
+        String color = setBGColor(turn);
+        ChessPosition currPos = new ChessPosition(row, i);
+        if (moves.contains(currPos)) {
+            switch (color) {
+                case ("PINK") -> System.out.print(SET_BG_COLOR_LIGHT_BLUE_1);
+                case ("ORANGE") -> System.out.print(SET_BG_COLOR_LIGHT_BLUE_2);
+            }
+        }
+        if (currPos.equals(specialPos)) {
+            System.out.print(SET_BG_COLOR_PURPLE_4);
         }
     }
 
