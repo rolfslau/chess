@@ -116,6 +116,7 @@ public class MySqlGameDAO implements GameDataAccess {
     }
 
     public void updateGame(GameOnCommand command) {
+        // add try catch i think
         var statement = "";
         statement = "UPDATE games SET playing=? WHERE id=?";
         executeUpdate(statement, command.getPlaying(), command.getGameID());

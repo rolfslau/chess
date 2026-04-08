@@ -41,6 +41,7 @@ public class DrawingChess {
         else { System.out.print("invalid color option provided"); }
         System.out.print(SET_TEXT_COLOR_WHITE);
         System.out.print(RESET_BG_COLOR);
+        System.out.print("\n");
     }
 
     public void drawHeaders(String[] headers) {
@@ -72,7 +73,7 @@ public class DrawingChess {
 
     private void drawingRows(int i, int turn) {
         drawLabel(i);
-        setTextColor(i);
+//        setTextColor(i);
         if (Objects.equals(colorOfPlayer, "WHITE")) { drawRowWhite(i, turn); }
         else { drawRowBlack(i, turn); }
         drawLabel(i);
@@ -140,6 +141,12 @@ public class DrawingChess {
     private void printPiece(int row, int i) {
         ChessPosition pos = new ChessPosition(row, i);
         ChessPiece piece = board.getPiece(pos);
+        if (piece != null && piece.getTeamColor() == ChessGame.TeamColor.WHITE) {
+            System.out.print(SET_TEXT_COLOR_WHITE);
+        }
+        else if (piece != null && piece.getTeamColor() == ChessGame.TeamColor.BLACK) {
+            System.out.print(SET_TEXT_COLOR_BLACK);
+        }
         String p = "";
         if (piece == null) { p = " "; }
         else {
@@ -153,6 +160,7 @@ public class DrawingChess {
             }
         }
         System.out.printf(" %s ", p);
+        System.out.print(RESET_TEXT_COLOR);
     }
 
     public void setOrange() {

@@ -12,13 +12,8 @@ import websocket.commands.*;
 
 import static ui.EscapeSequences.*;
 
-// how do I keep the auth token?
-// can two people log in from the same terminal? -- open two terminals
-// if not how do they play each other?
-// can you explain the server facade from pet shop -- make request body
-// why in pet shop do they create a pet object instead of just passing the values they need
-// --- check how I did it in my server, if I deserialized from an object then it needs to be an object on this end
-
+// to do:
+// figure out why my tests are not passing -- why am I not sending error notifications when I literally am
 public class ChessClient implements NotificationHandler {
 
 
@@ -35,7 +30,7 @@ public class ChessClient implements NotificationHandler {
     private boolean player = false;
     int currGameID = 0;
     String currColor = "";
-    ChessGame currGame = null;
+    Game currGame = null;
 
     private final Map<String, Integer> coords = Map.of(
             "A", 1,
@@ -226,9 +221,6 @@ public class ChessClient implements NotificationHandler {
     }
 
     public String resign() {
-        // after resign, you can still make moves -- fix that
-        // notifications ab what move is made need to be converted to letters
-        // if highlighting a piece with no legal moves -- error
         try {
             System.out.print("are you sure you want to resign? [y/n] >>> ");
             String confirm = scanner.nextLine();
@@ -236,13 +228,15 @@ public class ChessClient implements NotificationHandler {
             if (confirm.equalsIgnoreCase("y")) {
                 ResignCommand resign = new ResignCommand(UserGameCommand.CommandType.RESIGN, currAuth, currGameID, currUser);
                 ws.resign(resign);
+                currGame = new Game(currGame.gameID(), currGame.whiteUsername(), currGame.blackUsername(),
+                        currGame.gameName(), "false", currGame.game());
             } else if (confirm.equalsIgnoreCase("n")) {
                 return "ok!";
             }
         } catch(RuntimeException ex) {
             return String.format("non valid response %s", ex.getMessage());
         }
-        return "";
+        return "you resigned";
     }
 
     public String leave() {
@@ -281,30 +275,24 @@ public class ChessClient implements NotificationHandler {
         ChessBoard board = server.getGame(currAuth, gameNum).game().getBoard();
         JoinGameReq game = new JoinGameReq("AN OBSERVER", gameID);
         ws.joinGame(currAuth, game, currUser);
-//        new DrawingChess(board, "WHITE", new ArrayList<>(), null);
         gameState = State.SIGNEDIN;
-//        currGame = server.getGame(currAuth, gameNum).game();
         return String.format("watching game %d\n\n", gameID);
     }
 
     public String highlight() {
         String pos = "";
         try {
-            // should this also be a websocket thing?
            System.out.print("piece position >>> ");
            pos = scanner.nextLine().toUpperCase();
            int col = coords.get(String.valueOf(pos.charAt(0)));
            ChessPosition piecePos = new ChessPosition(Integer.parseInt(String.valueOf(pos.charAt(1))), col);
            GameID gameID = new GameID(currGameID);
-           // save currGame as a game not a board
-           // use that to get valid moves instead
-//           ChessGame game = server.getGame(currAuth, gameID).game();
-           Collection<ChessMove> moves = currGame.validMoves(piecePos);
+           Collection<ChessMove> moves = currGame.game().validMoves(piecePos);
            Collection<ChessPosition> endMoves = moves.stream().map(ChessMove::getEndPosition).toList();
-           new DrawingChess(currGame.getBoard(), currColor, endMoves, piecePos);
+           new DrawingChess(currGame.game().getBoard(), currColor, endMoves, piecePos);
            return String.format("\npotential moves for piece at %s\n\n", pos);
         } catch(RuntimeException ex) {
-            System.out.printf("\nunable to highlight moves for piece at %s\n\n%s\n\n", pos, ex.getMessage());
+            System.out.printf("\nunable to highlight moves for piece at %s\n\n", pos);
         }
         return "";
     }
@@ -321,7 +309,7 @@ public class ChessClient implements NotificationHandler {
             // should I be calling websocket here to reload? that seemed to fix my other issue
             GameID gameId = new GameID(currGameID);
             ChessBoard board = server.getGame(currAuth, gameId).game().getBoard();
-            new DrawingChess(currGame.getBoard(), currColor, new ArrayList<>(), null);
+            new DrawingChess(currGame.game().getBoard(), currColor, new ArrayList<>(), null);
             return "";
         } catch(RuntimeException ex) {
             return"\ncannot reload game\n\n";
@@ -332,8 +320,8 @@ public class ChessClient implements NotificationHandler {
         String start = "";
         String end = "";
         GameID gameid = new GameID(currGameID);
-        Game game = server.getGame(currAuth, gameid);
-        if (Objects.equals(game.playing(), "false")) {
+//        Game game = server.getGame(currAuth, gameid);
+        if (Objects.equals(currGame.playing(), "false")) {
             return "this game already ended!";
         }
         try {
@@ -353,7 +341,7 @@ public class ChessClient implements NotificationHandler {
             ws.makeMove(makeMove);
         } catch(RuntimeException ex) {
             // do I send an error notification here?
-            System.out.print("\ninvalid move -- not your turn or not a legal move\n\n");
+            return "\ninvalid move -- not your turn or not a legal move\n\n";
             // catch if an invalid move and print out to the user that it is
 //            throw new RuntimeException(ex.getMessage());
         }
@@ -362,17 +350,21 @@ public class ChessClient implements NotificationHandler {
 
     public void notify(ServerMessage notification) {
         System.out.println(notification.getMessage());
+        if (notification.getMessage().contains("resigned")) {
+            currGame = new Game(currGame.gameID(), currGame.whiteUsername(), currGame.blackUsername(),
+                    currGame.gameName(), "false", currGame.game());
+        }
     }
 
     public void notifyReload(ReloadNotification notification) {
         Game game = new Gson().fromJson(notification.getGame(), Game.class);
         ChessBoard board = game.game().getBoard();
-        currGame = game.game();
+        currGame = game;
         new DrawingChess(board, currColor, new ArrayList<>(), null);
     }
 
     public void notifyError(ErrorNotification notification) {
-        System.out.println(notification.getMessage());
+        System.out.println(notification.getErrorMessage());
     }
 
 

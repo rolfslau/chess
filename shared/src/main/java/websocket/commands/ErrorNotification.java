@@ -2,7 +2,14 @@ package websocket.commands;
 
 public class ErrorNotification extends ServerMessage {
 
-    public ErrorNotification(ServerMessageType type, String message) {
-        super(type, message);
+    private final String errorMessage;
+
+    public ErrorNotification(ServerMessageType serverMessageType, String errorMessage) {
+        super(ServerMessageType.ERROR);
+        this.errorMessage = errorMessage;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
     }
 }

@@ -64,15 +64,15 @@ public class ChessGame {
             for (ChessMove p : potMoves) {
                 ChessBoard cloneBoard = board.clone(board);
                 cloneBoard.makeMove(p);
-                System.out.println(isInCheck(team, cloneBoard));
-                System.out.println(p);
-                System.out.println(team);
+//                System.out.println(isInCheck(team, cloneBoard));
+//                System.out.println(p);
+//                System.out.println(team);
                 if (!isInCheck(board.getPiece(startPosition).getTeamColor(), cloneBoard)) {
                     muvs.add(p);
                 }
             }
         }
-        System.out.println(muvs);
+//        System.out.println(muvs);
         return muvs;
     }
 

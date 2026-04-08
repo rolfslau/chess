@@ -12,6 +12,11 @@ public class ServerMessage {
         this.message = message;
     }
 
+    public ServerMessage(ServerMessageType serverMessageType) {
+        this.serverMessageType = serverMessageType;
+        this.message = null;
+    }
+
     public enum ServerMessageType {
         LOAD_GAME,
         ERROR,

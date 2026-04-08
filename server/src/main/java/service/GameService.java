@@ -82,6 +82,9 @@ public class GameService {
         if (game == null) {
             throw new DoesNotExistException("Error: no game by that id", 400);
         }
+        if (game.playing() == "false") {
+            throw new DoesNotExistException("game already over", 400);
+        }
         ChessGame.TeamColor curr;
         if (Objects.equals(command.getUsername(), game.whiteUsername())) { curr = ChessGame.TeamColor.WHITE; }
         else { curr = ChessGame.TeamColor.BLACK; }

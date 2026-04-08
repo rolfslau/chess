@@ -107,6 +107,7 @@ public class ChessBoard {
             this.addPiece(move.getEndPosition(), new ChessPiece(this.getPiece(move.getStartPosition()).getTeamColor(), move.getPromotionPiece()));
         }
         else {
+            // do I have to delete the other piece first somehow?
             this.addPiece(move.getEndPosition(), this.getPiece(move.getStartPosition()));
         }
         this.addPiece(move.getStartPosition(), null);
