@@ -81,11 +81,6 @@ public class DrawingChess {
         System.out.print("\n");
     }
 
-    private void setTextColor(int i) {
-        if (i > 4) { System.out.print(SET_TEXT_COLOR_BLACK); }
-        else { System.out.print(SET_TEXT_COLOR_WHITE); }
-    }
-
 
     public void drawLabel(int h) {
         System.out.print(SET_BG_COLOR_WHITE);
